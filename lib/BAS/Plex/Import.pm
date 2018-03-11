@@ -40,17 +40,17 @@ sub new
   return $self;
 }
 
-sub showDir
+sub showDest
 {
   my ($self) = @_;
-  return $self->{_showDir};
+  return $self->{_showDest};
 } 
 
-sub set_showDir
+sub set_showDest
 {
   my ($self, $path) = @_;
-  $self->{_showDir} = $path if defined($path);
-  return $self->{_showDir};
+  $self->{_showDest} = $path unless !(-e $path);
+  return $self->{_showDest};
 }
 
 sub newDownloads
@@ -62,7 +62,7 @@ sub newDownloads
 sub set_newDownloads
 {
   my ($self, $path) = @_;
-  $self->{_newDownloads} = $path if defined($path);
+  $self->{_newDownloads} = $path unless !(-e $path);
   return $self->{_newDownloads};
 
 }
@@ -94,7 +94,33 @@ Blah blah blah.
 
 None by default.
 
+=head1 Methods
 
+=cut
+
+=head2 new
+
+	This subroutine creates a new object of type BAS::Plex::Import
+
+=head2 showDest
+
+	Access the Show Folder path set using set_showDest()
+
+=head2 set_showDest
+
+	Set the Show Folder path.
+
+	This is where the TV Show Folder resides on the file system.
+
+=head2 newDownloads
+
+	Access the download folder where TV Shows are downloaded into.
+
+=head2 set_newDownloads
+
+	Set where to look for new downloads that need to be processed.
+
+=cut
 
 =head1 SEE ALSO
 
