@@ -106,19 +106,27 @@ None by default.
 
 	Access the Show Folder path set using set_showDest()
 
+	Always confirm this does not return undef before using.
+
 =head2 set_showDest
 
 	Set the Show Folder path.
 
 	This is where the TV Show Folder resides on the file system.
+	If the path is invalid this would leave the internal value as being undef.
+
 
 =head2 newDownloads
 
 	Access the download folder where TV Shows are downloaded into.
 
+	Always confirm this does not return undef before using.
+
 =head2 set_newDownloads
 
 	Set where to look for new downloads that need to be processed.
+
+	If the path is invalid this would leave the internal value as being undef.
 
 =cut
 
