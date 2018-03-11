@@ -52,6 +52,21 @@ sub set_showDir
   $self->{_showDir} = $path if defined($path);
   return $self->{_showDir};
 }
+
+sub newDownloads
+{
+  my ($self) = @_;
+  return $self->{_newDownloads};
+} 
+
+sub set_newDownloads
+{
+  my ($self, $path) = @_;
+  $self->{_newDownloads} = $path if defined($path);
+  return $self->{_newDownloads};
+
+}
+
 1;
 
 

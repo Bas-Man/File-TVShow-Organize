@@ -29,11 +29,18 @@ my $filename = $sourceDir . ".testdir";
 ok (-e $filename, 'Show Source Directory path is valid');
 
 can_ok ($obj, 'showDir');
-is ($obj->showDir, undef, "Show Source Directory is undefined as expected");
+is ($obj->showDir, undef, "Show destination Directory is undefined as expected");
 can_ok ($obj, 'set_showDir');
 
 $obj->set_showDir($sourceDir);
-ok($obj->showDir =~ m/$sourceDir/, "Source directory as be set as expected");
+ok($obj->showDir =~ m/$sourceDir/, "Destination directory as be set as expected");
+
+can_ok ($obj, 'newDownloads');
+is ($obj->newDownloads, undef, "Show Source Directory is undefined as expected");
+can_ok ($obj, 'set_newDownloads');
+
+$obj->set_newDownloads($sourceDir);
+ok($obj->newDownloads =~ m/$sourceDir/, "Source directory as be set as expected");
 
 
 done_testing();
