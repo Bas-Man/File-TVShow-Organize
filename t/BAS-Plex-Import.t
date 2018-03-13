@@ -7,14 +7,16 @@
 
 use strict;
 use warnings;
-use BAS::Plex::Import;
 
 use Test::More; #tests => 6;
+use Test::Carp;
+use BAS::Plex::Import;
 BEGIN { use_ok('BAS::Plex::Import') };
 BEGIN { use_ok('Video::Filename') };
 BEGIN { use_ok('File::Path')};
 BEGIN { use_ok('File::Copy')};
 BEGIN { use_ok('Cwd')};
+BEGIN { use_ok('Carp')};
 
 #########################
 
@@ -26,6 +28,8 @@ isa_ok($obj, 'BAS::Plex::Import');
 
 my $sourceDir = getcwd . '/t/test-data/';
 my $sourceDirInValid = $sourceDir . 't/invalid';
+my $ShowDirectory = getcwd . '/t/TV Shows';
+
 my $filename = $sourceDir . ".testdir";
 ok (-e $filename, 'Show Source Directory path is valid');
 
@@ -33,8 +37,8 @@ can_ok ($obj, 'showDest');
 is ($obj->showDest, undef, "Show Destination Directory is undefined as expected");
 can_ok ($obj, 'set_showDest');
 
-$obj->set_showDest($sourceDir);
-ok($obj->showDest =~ m/$sourceDir/, "Destination directory as be set as expected and is valid");
+$obj->set_showDest($ShowDirectory);
+ok($obj->showDest =~ m/$ShowDirectory/, "Destination directory as be set as expected and is valid");
 
 my $invalidshowDest = BAS::Plex::Import->new();
 $invalidshowDest->set_showDest($sourceDirInValid);
@@ -50,5 +54,7 @@ ok($obj->newDownloads =~ m/$sourceDir/, "Source directory as be set as expected"
 my $invalidnewDownloads = BAS::Plex::Import->new();
 $invalidnewDownloads->set_newDownloads($sourceDirInValid);
 is($invalidnewDownloads->newDownloads, undef, "Passed invalid path should be undef");
+
+can_ok($obj, 'createShowHash');
 
 done_testing();
