@@ -16,7 +16,7 @@
 #     BUILD_REQUIRES => {  }
 #     CONFIGURE_REQUIRES => {  }
 #     NAME => q[BAS::Plex::Import]
-#     PREREQ_PM => { File::Copy=>q[0], Video::Filename=>q[0], File::Path=>q[0] }
+#     PREREQ_PM => { Video::Filename=>q[0], File::Copy=>q[0], File::Path=>q[0] }
 #     TEST_REQUIRES => {  }
 #     VERSION_FROM => q[lib/BAS/Plex/Import.pm]
 
@@ -437,22 +437,22 @@ clean_subdirs :
 
 clean :: clean_subdirs
 	- $(RM_F) \
-	  pm_to_blib.ts core.[0-9][0-9] \
-	  core.[0-9][0-9][0-9] MYMETA.json \
-	  pm_to_blib tmon.out \
-	  $(INST_ARCHAUTODIR)/extralibs.all $(BASEEXT).def \
+	  core.[0-9][0-9][0-9][0-9] MYMETA.json \
+	  core.[0-9] perl.exe \
+	  tmon.out core \
+	  core.*perl.*.? $(INST_ARCHAUTODIR)/extralibs.all \
+	  $(BASEEXT).bso $(BASEEXT).def \
+	  core.[0-9][0-9][0-9][0-9][0-9] core.[0-9][0-9][0-9] \
+	  blibdirs.ts perlmain.c \
+	  pm_to_blib perl \
 	  $(MAKE_APERL_FILE) perl$(EXE_EXT) \
-	  perl perlmain.c \
-	  *$(OBJ_EXT) perl.exe \
+	  *perl.core *$(OBJ_EXT) \
+	  MYMETA.yml $(BASEEXT).exp \
+	  pm_to_blib.ts $(BASEEXT).x \
 	  *$(LIB_EXT) so_locations \
-	  core.[0-9][0-9][0-9][0-9] $(BASEEXT).exp \
-	  $(BASEEXT).bso *perl.core \
-	  core core.[0-9][0-9][0-9][0-9][0-9] \
-	  $(BOOTSTRAP) lib$(BASEEXT).def \
-	  blibdirs.ts core.*perl.*.? \
-	  $(BASEEXT).x mon.out \
-	  core.[0-9] MYMETA.yml \
-	  $(INST_ARCHAUTODIR)/extralibs.ld 
+	  lib$(BASEEXT).def core.[0-9][0-9] \
+	  $(INST_ARCHAUTODIR)/extralibs.ld mon.out \
+	  $(BOOTSTRAP) 
 	- $(RM_RF) \
 	  blib 
 	- $(MV) $(FIRST_MAKEFILE) $(MAKEFILE_OLD) $(DEV_NULL)

@@ -3,6 +3,7 @@ package BAS::Plex::Import;
 use 5.012004;
 use strict;
 use warnings;
+use Carp;
 
 require Exporter;
 
@@ -34,7 +35,9 @@ sub new
 {
   my $class = shift;
   my $self = {
+	my %shows = (),
              };
+
   
   bless $self, $class;
   return $self;
@@ -64,6 +67,15 @@ sub set_newDownloads
   my ($self, $path) = @_;
   $self->{_newDownloads} = $path unless !(-e $path);
   return $self->{_newDownloads};
+
+}
+
+sub createShowHash {
+
+  my ($self) = @_;
+  
+  croak unless defined($self->{_showDest});
+  return $self->{_shows};
 
 }
 
@@ -128,6 +140,9 @@ None by default.
 
 	If the path is invalid this would leave the internal value as being undef.
 
+=head2 createShowHash
+
+       Place holder for createShowHash
 =cut
 
 =head1 SEE ALSO

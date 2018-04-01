@@ -7,6 +7,7 @@
 
 use strict;
 use warnings;
+use Data::Dumper;
 
 use Test::More; #tests => 6;
 use Test::Carp;
@@ -22,6 +23,8 @@ BEGIN { use_ok('Carp')};
 
 # Insert your test code below, the Test::More module is use()ed here so read
 # its man page ( perldoc Test::More ) for help writing this test script.
+
+my $countries = "(US|UK)";
 
 my $obj = BAS::Plex::Import->new();
 isa_ok($obj, 'BAS::Plex::Import');
@@ -56,5 +59,10 @@ $invalidnewDownloads->set_newDownloads($sourceDirInValid);
 is($invalidnewDownloads->newDownloads, undef, "Passed invalid path should be undef");
 
 can_ok($obj, 'createShowHash');
+
+$obj->createShowHash();
+
+my $d = Data::Dumper->new([$obj]);
+print $d->Dump;
 
 done_testing();

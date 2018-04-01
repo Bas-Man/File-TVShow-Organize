@@ -28,6 +28,7 @@ our @EXPORT = qw(
 
 our $VERSION = '0.01';
 
+my $countries = "(US|UK)";
 
 # Preloaded methods go here.
 
@@ -75,6 +76,29 @@ sub createShowHash {
   my ($self) = @_;
   
   croak unless defined($self->{_showDest});
+  my $directory = $self->showDest();
+  my $showNameHolder;
+
+  opendir(DIR, $directory) or die $!;
+  while (my $file = readdir(DIR)) {
+    next if ($file =~ m/^\./); # skip hidden files and folders
+    chomp($file);
+    $self->{_shows}{lc($file)}{path} = $file;
+    if ($file =~ m/\s\(?$countries\)?$/i) {
+      $showNameHolder = $file;
+      $showNameHolder =~ s/(.*) \(?($countries)\)?/$1/gi;
+      $self->{_shows}{lc($showNameHolder . " ($2)")}{path} = $file;
+      $self->{_shows}{lc($showNameHolder)}{path} = $file unless (exists $self->{_shows}{lc($showNameHolder)});
+    }
+    if ($file =~ m/\s\(?\d{4}\)?$/i) {
+      $showNameHolder = $file;
+      $showNameHolder =~ s/(.*) \(?(\d\d\d\d)\)?/$1/gi;
+      $self->{_shows}{lc($showNameHolder . " ($2)")}{path} = $file;
+      $self->{_shows}{lc($showNameHolder . " $2")}{path} = $file;
+      $self->{_shows}{lc($showNameHolder)}{path} = $file unless (exists $self->{_shows}{lc($showNameHolder)});
+    }
+  }
+  closedir(DIR);
   return $self->{_shows};
 
 }
