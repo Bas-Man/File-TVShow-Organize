@@ -103,6 +103,13 @@ sub createShowHash {
 
 }
 
+
+sub getShowPath {
+
+  my ($self, $show) = @_;
+  return $self->{_shows}{lc($show)}{path}; 
+}
+
 1;
 
 

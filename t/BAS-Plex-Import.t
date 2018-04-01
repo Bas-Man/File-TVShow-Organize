@@ -62,7 +62,14 @@ can_ok($obj, 'createShowHash');
 
 $obj->createShowHash();
 
-my $d = Data::Dumper->new([$obj]);
-print $d->Dump;
+#my $d = Data::Dumper->new([$obj]);
+#print $d->Dump;
+
+can_ok($obj, 'getShowPath');
+
+is ($obj->getShowPath("Agent X"), "Agent X US", "Got Agent X US");
+is ($obj->getShowPath("Agent X US"), "Agent X US", "Got Agent X US");
+is ($obj->getShowPath("Agent X (US)"), "Agent X US", "Got Agent X US");
+
 
 done_testing();
