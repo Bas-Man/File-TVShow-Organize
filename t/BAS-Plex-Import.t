@@ -62,8 +62,6 @@ can_ok($obj, 'createShowHash');
 
 $obj->createShowHash();
 
-#my $d = Data::Dumper->new([$obj]);
-#print $d->Dump;
 
 can_ok($obj, 'getShowPath');
 
@@ -72,4 +70,41 @@ is ($obj->getShowPath("Agent X US"), "Agent X US", "Got Agent X US");
 is ($obj->getShowPath("Agent X (US)"), "Agent X US", "Got Agent X US");
 
 
+is ($obj->getShowPath("Travelers"), "Travelers (2016)", "Travelers");
+is ($obj->getShowPath("Travelers 2016"), "Travelers (2016)", "Travelers 2016");
+is ($obj->getShowPath("Travelers (2016)"), "Travelers (2016)", "Travelers (2016)");
+
+is ($obj->getShowPath("Bull"), "Bull (2016)", "Bull");
+is ($obj->getShowPath("Bull 2016"), "Bull (2016)", "Bull 2016");
+is ($obj->getShowPath("Bull (2016)"), "Bull (2016)", "Bull (2016)");
+
+is ($obj->getShowPath("Doctor Who"), "Doctor Who (2005)", "Doctor Who");
+is ($obj->getShowPath("Doctor Who 2005"), "Doctor Who (2005)", "Doctor Who 2005");
+is ($obj->getShowPath("Doctor Who (2005)"), "Doctor Who (2005)", "Doctor Who (205)");
+
+is ($obj->getShowPath("Hawaii Five-0"), "Hawaii Five-0 2010", "Hawaii Five-0");
+is ($obj->getShowPath("Hawaii Five-0 2010"), "Hawaii Five-0 2010", "Hawaii Five-0");
+is ($obj->getShowPath("Hawaii Five-0 (2010)"), "Hawaii Five-0 2010", "Hawaii Five-0");
+
+is ($obj->getShowPath("S.W.A.T"), "S.W.A.T 2017", "SWAT");
+is ($obj->getShowPath("S.W.A.T 2017"), "S.W.A.T 2017", "SWAT");
+is ($obj->getShowPath("S.W.A.T (2017)"), "S.W.A.T 2017", "SWAT");
+
+is ($obj->getShowPath("The Librarian"), "The Librarian", "The Librarian");
+
+is ($obj->getShowPath("The Librarians"), "The Librarians US", "The Librarian US");
+is ($obj->getShowPath("The Librarians US"), "The Librarians US", "The Librarian US");
+is ($obj->getShowPath("The Librarians (US)"), "The Librarians US", "The Librarian US");
+
+is ($obj->getShowPath("The Tomorrow People (1992) - The New Generation"), "The Tomorrow People (1992) - The New Generation", "The Tomorrow People (1992) - The New Generation");
+
+is ($obj->getShowPath("The Tomorrow People"), "The Tomorrow People", "The Tomorrow People");
+
+is ($obj->getShowPath("The Tomorrow People US"), "The Tomorrow People US", "The Tomorrow People US");
+is ($obj->getShowPath("The Tomorrow People (US)"), "The Tomorrow People US", "The Tomorrow People (US)");
+isnt ($obj->getShowPath("The Tomorrow People"), "The Tomorrow People US", "Isnt The Tomorrow People");
+
+#my $d = Data::Dumper->new([$obj]);
+#print $d->Dump;
 done_testing();
+
