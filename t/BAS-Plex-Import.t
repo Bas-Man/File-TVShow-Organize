@@ -104,6 +104,13 @@ is ($obj->getShowPath("The Tomorrow People US"), "The Tomorrow People US", "The 
 is ($obj->getShowPath("The Tomorrow People (US)"), "The Tomorrow People US", "The Tomorrow People (US)");
 isnt ($obj->getShowPath("The Tomorrow People"), "The Tomorrow People US", "Isnt The Tomorrow People");
 
+is ($obj->getShowPath("bogus"), undef, "Get undef result");
+
+can_ok($obj, 'processNewDownloads');
+
+$obj->processNewDownloads();
+
+
 #my $d = Data::Dumper->new([$obj]);
 #print $d->Dump;
 done_testing();

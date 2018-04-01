@@ -110,6 +110,24 @@ sub getShowPath {
   return $self->{_shows}{lc($show)}{path}; 
 }
 
+sub processNewDownloads {
+
+  my ($self) = @_;
+
+  opendir(DIR, $self->{_newDownloads}) or die $!;
+  while (my $file = readdir(DIR)) {
+    next if ($file =~ m/^\./);
+    chomp($file);
+    next if ($file =~ m/\.done$/);
+    next if -d $self->{_newDownloads} . "/" . $file; ## Skip non-Files
+    next if ($file !~ m/s\d\de\d\d/i); # skip if SXXEXX is not present in file name
+    my $showData = Video::Filename::new($file);
+  }
+
+  return $self;
+}
+
+
 1;
 
 
@@ -173,7 +191,17 @@ None by default.
 
 =head2 createShowHash
 
-       Place holder for createShowHash
+       This function creates a hash of show names with the correct path to store data based on the directories that are found the in the showDest path.
+
+=head2 getShowPath
+
+       Return the Folder that stores the tv shows seasons folder.
+     
+
+=head2 processNewDownloads
+
+Folders are excluded from processing
+       
 =cut
 
 =head1 SEE ALSO
