@@ -36,16 +36,16 @@ my $ShowDirectory = getcwd . '/t/TV Shows';
 my $filename = $sourceDir . ".testdir";
 ok (-e $filename, 'Show Source Directory path is valid');
 
-can_ok ($obj, 'showDest');
-is ($obj->showDest, undef, "Show Destination Directory is undefined as expected");
-can_ok ($obj, 'set_showDest');
+can_ok ($obj, 'showFolder');
+is ($obj->showFolder, undef, "Show Destination Directory is undefined as expected");
+can_ok ($obj, 'set_showFolder');
 
-$obj->set_showDest($ShowDirectory);
-ok($obj->showDest =~ m/$ShowDirectory/, "Destination directory as be set as expected and is valid");
+$obj->set_showFolder($ShowDirectory);
+ok($obj->showFolder =~ m/$ShowDirectory/, "Destination directory as be set as expected and is valid");
 
-my $invalidshowDest = BAS::Plex::Import->new();
-$invalidshowDest->set_showDest($sourceDirInValid);
-is($invalidshowDest->showDest, undef, "Passed invalid path should be undef");
+my $invalidshowFolder = BAS::Plex::Import->new();
+$invalidshowFolder->set_showFolder($sourceDirInValid);
+is($invalidshowFolder->showFolder, undef, "Passed invalid path should be undef");
 
 can_ok ($obj, 'newDownloads');
 is ($obj->newDownloads, undef, "Show Source Directory is undefined as expected");
@@ -110,6 +110,7 @@ can_ok($obj, 'processNewDownloads');
 
 $obj->processNewDownloads();
 
+## I need to remove SeasonFolders for future testing and cleaning up structure.
 
 #my $d = Data::Dumper->new([$obj]);
 #print $d->Dump;

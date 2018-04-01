@@ -4,6 +4,10 @@ use 5.012004;
 use strict;
 use warnings;
 use Carp;
+use File::Path qw(make_path);
+use File::Copy;
+
+use Data::Dumper;
 
 require Exporter;
 
@@ -29,6 +33,7 @@ our @EXPORT = qw(
 our $VERSION = '0.01';
 
 my $countries = "(US|UK)";
+my $ShowNameExceptions = "(S.W.A.T)";
 
 # Preloaded methods go here.
 
@@ -44,17 +49,17 @@ sub new
   return $self;
 }
 
-sub showDest
+sub showFolder
 {
   my ($self) = @_;
-  return $self->{_showDest};
+  return $self->{_showFolder};
 } 
 
-sub set_showDest
+sub set_showFolder
 {
   my ($self, $path) = @_;
-  $self->{_showDest} = $path unless !(-e $path);
-  return $self->{_showDest};
+  $self->{_showFolder} = $path unless !(-e $path);
+  return $self->{_showFolder};
 }
 
 sub newDownloads
@@ -75,8 +80,8 @@ sub createShowHash {
 
   my ($self) = @_;
   
-  croak unless defined($self->{_showDest});
-  my $directory = $self->showDest();
+  croak unless defined($self->{_showFolder});
+  my $directory = $self->showFolder();
   my $showNameHolder;
 
   opendir(DIR, $directory) or die $!;
@@ -113,18 +118,44 @@ sub getShowPath {
 sub processNewDownloads {
 
   my ($self) = @_;
-
+  my $destination;
+  
   opendir(DIR, $self->{_newDownloads}) or die $!;
   while (my $file = readdir(DIR)) {
+    $destination = undef;
     next if ($file =~ m/^\./);
     chomp($file);
     next if ($file =~ m/\.done$/);
     next if -d $self->{_newDownloads} . "/" . $file; ## Skip non-Files
     next if ($file !~ m/s\d\de\d\d/i); # skip if SXXEXX is not present in file name
-    my $showData = Video::Filename::new($file);
+    my $showData = Video::Filename::new($file, { spaces => '.'});
+    print "file: $file\n";
+    if ($file =~ m/^$ShowNameExceptions/i) { ##Handle special cases like "S.W.A.T"
+      $showData->{name} = $ShowNameExceptions;
+      $showData->{name} =~ s/\(//;
+      $showData->{name} =~ s/\)//;
+    }
+    $destination = $self->showFolder() . "/" . $self->getShowPath($showData->{name});
+    $destination = $self->createSeasonFolder($destination, $showData->{season});
+    print $destination . "\n";
   }
 
   return $self;
+}
+
+sub createSeasonFolder {
+
+  my ($self, $_path, $season) = @_;
+
+  my $path = $_path .  '/';
+ 
+  if (length($season) == 0) {
+    $path = $path . 'Specials'
+  } else {
+    $path = $path . 'Season' . $season;
+  }
+  make_path($path, { verbose => 1 }) unless -e $path;
+  return $path;
 }
 
 
@@ -163,13 +194,13 @@ None by default.
 
 	This subroutine creates a new object of type BAS::Plex::Import
 
-=head2 showDest
+=head2 showFolder
 
-	Access the Show Folder path set using set_showDest()
+	Access the Show Folder path set using set_showFolder()
 
 	Always confirm this does not return undef before using.
 
-=head2 set_showDest
+=head2 set_showFolder
 
 	Set the Show Folder path.
 
@@ -191,7 +222,7 @@ None by default.
 
 =head2 createShowHash
 
-       This function creates a hash of show names with the correct path to store data based on the directories that are found the in the showDest path.
+       This function creates a hash of show names with the correct path to store data based on the directories that are found the in the showFolder path.
 
 =head2 getShowPath
 
@@ -202,6 +233,9 @@ None by default.
 
 Folders are excluded from processing
        
+=head2 createSeasonFolder
+
+
 =cut
 
 =head1 SEE ALSO
