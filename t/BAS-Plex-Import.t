@@ -117,7 +117,7 @@ $obj->processNewDownloads();
 
 can_ok($obj, 'importShow');
 
-diag explain $obj;
+#diag explain $obj;
 #$obj->importShow($obj->showFolder);
 
 #my $d = Data::Dumper->new([$obj]);

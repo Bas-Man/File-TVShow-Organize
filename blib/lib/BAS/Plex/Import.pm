@@ -4,10 +4,10 @@ use 5.012004;
 use strict;
 use warnings;
 use Carp;
+
 use File::Path qw(make_path);
 use File::Copy;
-
-use Data::Dumper;
+#use File::Basename;
 
 require Exporter;
 
@@ -129,7 +129,6 @@ sub processNewDownloads {
     next if -d $self->{_newDownloads} . "/" . $file; ## Skip non-Files
     next if ($file !~ m/s\d\de\d\d/i); # skip if SXXEXX is not present in file name
     my $showData = Video::Filename::new($file, { spaces => '.'});
-    print "file: $file\n";
     if ($file =~ m/^$ShowNameExceptions/i) { ##Handle special cases like "S.W.A.T"
       $showData->{name} = $ShowNameExceptions;
       $showData->{name} =~ s/\(//;
@@ -137,7 +136,6 @@ sub processNewDownloads {
     }
     $destination = $self->showFolder() . "/" . $self->getShowPath($showData->{name});
     $destination = $self->createSeasonFolder($destination, $showData->{season});
-    print $destination . "\n";
   }
 
   return $self;
@@ -158,6 +156,19 @@ sub createSeasonFolder {
   return $path;
 }
 
+
+sub importShow {
+
+  my ($self, $destination, $file) = @_;
+
+  carp "Destination not passed." unless defined($destination);
+  carp "File not passed." unless defined($file);
+
+  $destination = $destination . "/";
+  print $destination . "\n";
+  return $self;
+
+}
 
 1;
 
