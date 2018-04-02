@@ -1,0 +1,24 @@
+---
+abstract: 'Perl extension for blah blah blah'
+author:
+  - 'Adam Spann <aspann@apple.com>'
+build_requires:
+  ExtUtils::MakeMaker: 0
+configure_requires:
+  ExtUtils::MakeMaker: 0
+dynamic_config: 0
+generated_by: 'ExtUtils::MakeMaker version 6.66, CPAN::Meta::Converter version 2.133380'
+license: unknown
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: BAS-Plex-Import
+no_index:
+  directory:
+    - t
+    - inc
+requires:
+  File::Copy: 0
+  File::Path: 0
+  Video::Filename: 0
+version: 0.01
