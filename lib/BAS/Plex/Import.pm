@@ -136,8 +136,9 @@ sub processNewDownloads {
     }
     $destination = $self->showFolder() . "/" . $self->getShowPath($showData->{name});
     $destination = $self->createSeasonFolder($destination, $showData->{season});
+  
+    $self->importShow($destination,$file); 
   }
-
   return $self;
 }
 
@@ -164,8 +165,20 @@ sub importShow {
   carp "Destination not passed." unless defined($destination);
   carp "File not passed." unless defined($file);
 
+  # replace space with \space for rsync to work
+  $destination =~ s/\(/\\(/g;
+  $destination =~ s/\)/\\)/g;
+  $destination =~ s/ /\\ /g;
   $destination = $destination . "/";
-  print $destination . "\n";
+
+  my $command = "rsync -ta --progress " . $self->newDownloads() . "/" . $file . " " . $destination;
+
+  system($command);
+  print "Rsync Return Code: " . $? . "\n";
+  if($? == 0) { 
+  print "We can Delete $file\n";
+  #move($source . $show,$source . $show . ".done")
+  }
   return $self;
 
 }
