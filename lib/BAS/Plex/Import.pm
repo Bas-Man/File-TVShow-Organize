@@ -161,15 +161,12 @@ sub createSeasonFolder {
 sub importShow {
 
   my ($self, $destination, $file) = @_;
+  my $source;
 
   carp "Destination not passed." unless defined($destination);
   carp "File not passed." unless defined($file);
 
-  # replace space with \space for rsync to work
-  $destination =~ s/\(/\\(/g;
-  $destination =~ s/\)/\\)/g;
-  $destination =~ s/ /\\ /g;
-  $destination = $destination . "/";
+  ($destination, $source) = _rsyncPrep($destination,$self->showFolder());
 
   my $command = "rsync -ta --progress " . $self->newDownloads() . "/" . $file . " " . $destination;
 
@@ -177,10 +174,28 @@ sub importShow {
   print "Rsync Return Code: " . $? . "\n";
   if($? == 0) { 
   print "We can Delete $file\n";
-  #move($source . $show,$source . $show . ".done")
+  move($source . $file, $source . $file . ".done")
   }
   return $self;
 
+}
+
+# This interal sub-routine prepares paths for use with external rsynch command
+# Need to escape special characters
+sub _rsyncPrep {
+  
+  my ($dest, $source) = @_;
+
+  # replace space with \space for rsync to work
+  $dest =~ s/\(/\\(/g;
+  $dest =~ s/\)/\\)/g;
+  $dest =~ s/ /\\ /g;
+  $dest = $dest . "/";
+
+  $source =~ s/ /\\ /g;
+  $source = $source . "/";
+
+  return $dest, $source;
 }
 
 1;
