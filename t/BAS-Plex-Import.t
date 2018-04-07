@@ -24,11 +24,19 @@ BEGIN { use_ok('Carp')};
 # Insert your test code below, the Test::More module is use()ed here so read
 # its man page ( perldoc Test::More ) for help writing this test script.
 
-my $countries = "(US|UK)";
-
 diag "\nCreate Testing Object BAS::Plex::Import";
 my $obj = BAS::Plex::Import->new();
 isa_ok($obj, 'BAS::Plex::Import');
+
+diag "\nCheck default Countries value\n";
+ok($obj->countries() =~ m/\(UK\|US\)/, "countries is (UK|US)");
+
+diag "Change countries to new value";
+ok($obj->countries("USA") =~ m/USA/, "countries is now equal to USA");
+
+diag "Destroy and recreate test obj with default countries values for testing purposes\n";
+$obj = undef;
+$obj = BAS::Plex::Import->new();
 
 diag "\nSet Source dir and invalid source dir as well as TV Show dir";
 my $sourceDir = getcwd . '/t/test-data/';

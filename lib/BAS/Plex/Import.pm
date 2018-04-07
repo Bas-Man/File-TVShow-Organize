@@ -42,16 +42,16 @@ sub new
         showNameExceptions => "(S.W.A.T)",
              };
 
-  
   bless $self, $class;
   return $self;
 }
 
-sub setCountries {
+sub countries {
 
-  my ($self) = @_;
-
-  return $self;
+  my ($self, $countries) = @_;
+  $self->{countries} = $countries if defined $countries;
+  print "test " . $self->{countries} . "\n";
+  return $self->{countries};
 }
 
 sub showFolder
@@ -142,7 +142,7 @@ sub processNewDownloads {
     $destination = $self->showFolder() . "/" . $self->getShowPath($showData->{name});
     $destination = $self->createSeasonFolder($destination, $showData->{season});
   
-    $self->importShow($destination,$file); 
+##    $self->importShow($destination,$file); 
   }
   return $self;
 }
@@ -237,6 +237,13 @@ None by default.
 =head2 new
 
 	This subroutine creates a new object of type BAS::Plex::Import
+
+=head2 countries
+
+	This subroutine sets the countries internal value and returns it.
+
+        The default value is (UK|US)
+	This allows the system to match against programs names such as Agent X US / Agent X (US) / Agent X and reference the same single folder
 
 =head2 showFolder
 
