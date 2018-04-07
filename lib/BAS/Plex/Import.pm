@@ -56,27 +56,19 @@ sub countries {
 
 sub showFolder
 {
-  my ($self) = @_;
-  return $self->{_showFolder};
-} 
-
-sub set_showFolder
-{
   my ($self, $path) = @_;
-  $self->{_showFolder} = $path unless !(-e $path);
+  if (defined $path) {
+    $self->{_showFolder} = $path unless !(-e $path);
+  }
   return $self->{_showFolder};
 }
 
 sub newDownloads
 {
-  my ($self) = @_;
-  return $self->{_newDownloads};
-} 
-
-sub set_newDownloads
-{
   my ($self, $path) = @_;
-  $self->{_newDownloads} = $path unless !(-e $path);
+  if(defined $path) {
+    $self->{_newDownloads} = $path unless !(-e $path);
+  }
   return $self->{_newDownloads};
 
 }
@@ -114,7 +106,7 @@ sub createShowHash {
 }
 
 
-sub getShowPath {
+sub showPath {
 
   my ($self, $show) = @_;
   return $self->{_shows}{lc($show)}{path}; 
@@ -139,7 +131,7 @@ sub processNewDownloads {
       $showData->{name} =~ s/\(//;
       $showData->{name} =~ s/\)//;
     }
-    $destination = $self->showFolder() . "/" . $self->getShowPath($showData->{name});
+    $destination = $self->showFolder() . "/" . $self->showPath($showData->{name});
     $destination = $self->createSeasonFolder($destination, $showData->{season});
   
 ##    $self->importShow($destination,$file); 
@@ -247,13 +239,7 @@ None by default.
 
 =head2 showFolder
 
-	Access the Show Folder path set using set_showFolder()
-
 	Always confirm this does not return undef before using.
-
-=head2 set_showFolder
-
-	Set the Show Folder path.
 
 	This is where the TV Show Folder resides on the file system.
 	If the path is invalid this would leave the internal value as being undef.
@@ -265,8 +251,6 @@ None by default.
 
 	Always confirm this does not return undef before using.
 
-=head2 set_newDownloads
-
 	Set where to look for new downloads that need to be processed.
 
 	If the path is invalid this would leave the internal value as being undef.
@@ -275,7 +259,7 @@ None by default.
 
        This function creates a hash of show names with the correct path to store data based on the directories that are found the in the showFolder path.
 
-=head2 getShowPath
+=head2 showPath
 
        Return the Folder that stores the tv shows seasons folder.
      
