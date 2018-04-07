@@ -63,7 +63,7 @@ sub showFolder
   return $self->{_showFolder};
 }
 
-sub newDownloads
+sub newShowFolder
 {
   my ($self, $path) = @_;
   if(defined $path) {
@@ -112,7 +112,7 @@ sub showPath {
   return $self->{_shows}{lc($show)}{path}; 
 }
 
-sub processNewDownloads {
+sub processNewShows {
 
   my ($self) = @_;
   my $destination;
@@ -245,15 +245,7 @@ None by default.
 	If the path is invalid this would leave the internal value as being undef.
 
 
-=head2 newDownloads
-
-	Access the download folder where TV Shows are downloaded into.
-
-	Always confirm this does not return undef before using.
-
-	Set where to look for new downloads that need to be processed.
-
-	If the path is invalid this would leave the internal value as being undef.
+=head2 newShowFolder
 
 =head2 createShowHash
 
@@ -264,7 +256,7 @@ None by default.
        Return the Folder that stores the tv shows seasons folder.
      
 
-=head2 processNewDownloads
+=head2 processNewShows
 
 Folders are excluded from processing
        

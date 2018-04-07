@@ -61,17 +61,16 @@ my $invalidshowFolder = BAS::Plex::Import->new();
 $invalidshowFolder->showFolder($sourceDirInValid);
 is($invalidshowFolder->showFolder, undef, "Passed invalid path should be undef");
 
-can_ok ($obj, 'newDownloads');
-is ($obj->newDownloads, undef, "New TV Show download folder is undefined as expected");
-can_ok ($obj, 'newDownloads');
+can_ok ($obj, 'newShowFolder');
+is ($obj->newShowFolder, undef, "New TV Show download folder is undefined as expected");
 
 diag "Set Download folder to a valid path\n";
-$obj->newDownloads($sourceDir);
-ok($obj->newDownloads =~ m/$sourceDir/, "Download path is set and is valid");
+$obj->newShowFolder($sourceDir);
+ok($obj->newShowFolder =~ m/$sourceDir/, "Download path is set and is valid");
 
 my $invalidnewDownloads = BAS::Plex::Import->new();
-$invalidnewDownloads->newDownloads($sourceDirInValid);
-is($invalidnewDownloads->newDownloads, undef, "Passed invalid path should be undef");
+$invalidnewDownloads->newShowFolder($sourceDirInValid);
+is($invalidnewDownloads->newShowFolder, undef, "Passed invalid path should be undef");
 
 can_ok($obj, 'createShowHash');
 
@@ -117,10 +116,10 @@ isnt ($obj->showPath("The Tomorrow People"), "The Tomorrow People US", "The Tomo
 
 is ($obj->showPath("bogus"), undef, "If a show Folder does not exist return undef");
 
-can_ok($obj, 'processNewDownloads');
+can_ok($obj, 'processNewShows');
 
-diag "Begin processing Download Folder. This loops through files in this folder.";
-$obj->processNewDownloads();
+diag "Begin processing New Shows Folder. This loops through files in this folder.";
+$obj->processNewShows();
 
 can_ok($obj, 'importShow');
 
