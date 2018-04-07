@@ -7,7 +7,6 @@ use Carp;
 
 use File::Path qw(make_path);
 use File::Copy;
-#use File::Basename;
 
 require Exporter;
 
@@ -32,9 +31,6 @@ our @EXPORT = qw(
 
 our $VERSION = '0.01';
 
-my $countries = "(US|UK)";
-my $ShowNameExceptions = "(S.W.A.T)";
-
 # Preloaded methods go here.
 
 sub new
@@ -42,10 +38,19 @@ sub new
   my $class = shift;
   my $self = {
 	my %shows = (),
+        countries => "(UK|US)",
+        showNameExceptions => "(S.W.A.T)",
              };
 
   
   bless $self, $class;
+  return $self;
+}
+
+sub setCountries {
+
+  my ($self) = @_;
+
   return $self;
 }
 
@@ -89,9 +94,9 @@ sub createShowHash {
     next if ($file =~ m/^\./); # skip hidden files and folders
     chomp($file);
     $self->{_shows}{lc($file)}{path} = $file;
-    if ($file =~ m/\s\(?$countries\)?$/i) {
+    if ($file =~ m/\s\(?$self->{countries}\)?$/i) {
       $showNameHolder = $file;
-      $showNameHolder =~ s/(.*) \(?($countries)\)?/$1/gi;
+      $showNameHolder =~ s/(.*) \(?($self->{countries})\)?/$1/gi;
       $self->{_shows}{lc($showNameHolder . " ($2)")}{path} = $file;
       $self->{_shows}{lc($showNameHolder)}{path} = $file unless (exists $self->{_shows}{lc($showNameHolder)});
     }
@@ -129,8 +134,8 @@ sub processNewDownloads {
     next if -d $self->{_newDownloads} . "/" . $file; ## Skip non-Files
     next if ($file !~ m/s\d\de\d\d/i); # skip if SXXEXX is not present in file name
     my $showData = Video::Filename::new($file, { spaces => '.'});
-    if ($file =~ m/^$ShowNameExceptions/i) { ##Handle special cases like "S.W.A.T"
-      $showData->{name} = $ShowNameExceptions;
+    if ($file =~ m/^$self->{showNameExceptions}/i) { ##Handle special cases like "S.W.A.T"
+      $showData->{name} = $self->{showNameExceptions};
       $showData->{name} =~ s/\(//;
       $showData->{name} =~ s/\)//;
     }
