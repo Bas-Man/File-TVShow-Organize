@@ -132,14 +132,14 @@ sub processNewShows {
       $showData->{name} =~ s/\)//;
     }
     $destination = $self->showFolder() . "/" . $self->showPath($showData->{name});
-    $destination = $self->createSeasonFolder($destination, $showData->{season});
+    $destination = $self->_createSeasonFolder($destination, $showData->{season});
   
 ##    $self->importShow($destination,$file); 
   }
   return $self;
 }
 
-sub createSeasonFolder {
+sub _createSeasonFolder {
 
   my ($self, $_path, $season) = @_;
 
@@ -208,7 +208,11 @@ BAS::Plex::Import - Perl extension for blah blah blah
 =head1 SYNOPSIS
 
   use BAS::Plex::Import;
-  blah blah blah
+
+  my $obj = BAS::Plex::Import->new();
+
+  $obj->newShowsFolder("/tmp/");
+  $obj->showsFolder("/plex/TV Shows");
 
 =head1 DESCRIPTION
 
@@ -260,8 +264,13 @@ None by default.
 
 Folders are excluded from processing
        
-=head2 createSeasonFolder
+=head2 _createSeasonFolder
 
+        This is an internal function and should not be called by the programmer directly.
+
+	Create season folder with the TV Shows folder based on SXX
+        S01 creates Season1
+	S00 creates Specials
 
 =cut
 
