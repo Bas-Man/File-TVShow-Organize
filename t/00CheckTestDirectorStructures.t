@@ -1,4 +1,5 @@
 
+
 #########################
 
 use strict;
@@ -6,7 +7,17 @@ use warnings;
 
 use Test::More;
 use Cwd;
+use File::chdir;
 
+use Archive::Tar;
+
+diag "\n\nExtract TV Shows from tar.gz file for testing. This will be removed in the final test\n";
+my $tar = Archive::Tar->new;
+$tar->read("t/tvshow.tar.gz");
+{
+  local $CWD = getcwd . "/t/";
+  $tar->extract;
+}
 
 diag "\n\nCheck that we have working Testing directories test-data and TV Shows\n";
 my $sourceDir = getcwd . '/t/test-data/';

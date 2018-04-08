@@ -134,7 +134,7 @@ sub processNewShows {
     $destination = $self->showFolder() . "/" . $self->showPath($showData->{name});
     $destination = $self->_createSeasonFolder($destination, $showData->{season});
   
-##    $self->importShow($destination,$file); 
+    $self->importShow($destination,$file); 
   }
   return $self;
 }
@@ -165,7 +165,7 @@ sub importShow {
 
   ($destination, $source) = _rsyncPrep($destination,$self->showFolder());
 
-  my $command = "rsync -ta --progress " . $self->newDownloads() . "/" . $file . " " . $destination;
+  my $command = "rsync -ta --progress " . $self->newShowFolder() . "/" . $file . " " . $destination;
 
   system($command);
   print "Rsync Return Code: " . $? . "\n";
