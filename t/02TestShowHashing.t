@@ -28,13 +28,14 @@ my $sourceDir = getcwd . '/t/test-data/';
 
 my $ShowDirectory = getcwd . '/t/TV Shows';
 
-diag "Set showFolder path\n";
+diag "\n\nSet showFolder path\n";
 $obj->showFolder($ShowDirectory);
 
 can_ok($obj, 'createShowHash');
 
 diag "Call createShowHash which loads folders found in in the TV Show Folder where shows live for Plex\n";
 $obj->createShowHash();
+diag "Completed processing directory\n";
 
 diag "Long test to check that we can get the correct folder to store Shows in based on the filename\n";
 can_ok($obj, 'showPath');

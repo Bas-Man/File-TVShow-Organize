@@ -39,7 +39,7 @@ $obj->createShowHash();
 
 can_ok($obj, 'processNewShows');
 
-diag "Begin processing New Shows Folder. This loops through files in this folder.";
+diag "\n\nBegin processing New Shows Folder. This loops through files in this folder.";
 $obj->processNewShows();
 
 can_ok($obj, 'importShow');
