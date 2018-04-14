@@ -66,5 +66,16 @@ my $invalidnewDownloads = BAS::Plex::Import->new();
 $invalidnewDownloads->newShowFolder($sourceDirInValid);
 is($invalidnewDownloads->newShowFolder, undef, "Passed invalid path should be undef");
 
+diag "\n\nTest that we can set and check the value of delete() to determine if 'file' should be deleted or just renamed\n";
+can_ok ($obj, 'delete');
+
+is($obj->delete(), undef, "Delete is not defined. We should renamed files as we process them");
+
+is($obj->delete(1), defined, "Delete is defined. We should delete files as we process them");
+
+is($obj->delete(), defined, "Delete was defined. We should delete files as we process them");
+
+is($obj->delete(0), undef, "Delete is not defined again. We should delete files as we process them");
+
 done_testing();
 

@@ -40,6 +40,7 @@ sub new
 	my %shows = (),
         countries => "(UK|US)",
         showNameExceptions => "(S.W.A.T)",
+        _delete => undef
              };
 
   bless $self, $class;
@@ -50,7 +51,6 @@ sub countries {
 
   my ($self, $countries) = @_;
   $self->{countries} = $countries if defined $countries;
-  print "test " . $self->{countries} . "\n";
   return $self->{countries};
 }
 
@@ -117,26 +117,75 @@ sub processNewShows {
   my ($self) = @_;
   my $destination;
   
-  opendir(DIR, $self->{_newDownloads}) or die $!;
+  opendir(DIR, $self->newShowFolder()) or die $!;
   while (my $file = readdir(DIR)) {
     $destination = undef;
     next if ($file =~ m/^\./);
     chomp($file);
     next if ($file =~ m/\.done$/);
-    next if -d $self->{_newDownloads} . "/" . $file; ## Skip non-Files
+    next if -d $self->newShowFolder() . "/" . $file; ## Skip non-Files
     next if ($file !~ m/s\d\de\d\d/i); # skip if SXXEXX is not present in file name
-    my $showData = Video::Filename::new($file, { spaces => '.'});
+    my $showData;
+   ### This block needs to be re-worked to make it clearer and more robust 
     if ($file =~ m/^$self->{showNameExceptions}/i) { ##Handle special cases like "S.W.A.T"
-      $showData->{name} = $self->{showNameExceptions};
+      ## This code is probably not very robust and will break with other exceptions. Needs to be rethought.
+      $showData = Video::Filename::new($file);
       $showData->{name} =~ s/\(//;
       $showData->{name} =~ s/\)//;
+      $showData->{name} =~ m/($self->{showNameExceptions})+([^0-9])*(.{4})$/;
+      $showData->{name} = "$1 $4";
+   ### End of block to be worked on
+    } else {
+      $showData = Video::Filename::new($file, { spaces => '.'});
     }
+    
     $destination = $self->showFolder() . "/" . $self->showPath($showData->{name});
     $destination = $self->_createSeasonFolder($destination, $showData->{season});
   
     $self->importShow($destination,$file); 
   }
   return $self;
+}
+
+sub _handleExceptionsDatedFileNames {
+
+  my ($self) = @_;
+  my $destination;
+
+  opendir(DIR, $self->newShowFolder()) or die $!;
+  while (my $file = readdir(DIR)) {
+    $destination = undef;
+    next if ($file =~ m/^\./);
+    chomp($file);
+    next if ($file =~ m/\.done$/);
+    next if -d $self->newShowFolder() . "/" . $file; ## Skip non-Files
+    next if ($file !~ m/s\d\de\d\d/i); # skip if SXXEXX is not present in file name
+    my $showData = Video::Filename::new($file, { spaces => '.'});
+
+   if($showData->{name} =~ m/\(?\d{4}\)?$/) {
+     if ($file =~ m/^$self->{showNameExceptions}/i) { ##Handle special cases like "S.W.A.T"
+       print "Data & Exception\n";
+       $showData->{name} =~ m/(.*).*\s?\(?(\d{4})\)?/;
+       print "$1 $2\n"; 
+     }
+      print "Dated: $showData->{name}\n";
+   }
+  }
+}
+
+sub delete {
+
+  my $self;
+  my $delete;
+
+  ($self, $delete) = @_;
+
+  if ((defined $delete) && ($delete == 1)) {
+    $self->{_delete} = defined;
+  } elsif ((defined $delete) && ($delete == 0)) {
+    $self->{_delete} = undef;
+  }
+  return $self->{_delete};
 }
 
 sub _createSeasonFolder {
@@ -264,6 +313,13 @@ None by default.
 
 Folders are excluded from processing
        
+=head2 delete
+
+	Set if we should delete source file after successfully importing it to Plex or if we should rename it to $file.done
+        The default is false and the file is simply renamed.
+
+        return undef if we don\'t want to delete. Return defined if we do want to delete
+
 =head2 _createSeasonFolder
 
         This is an internal function and should not be called by the programmer directly.
