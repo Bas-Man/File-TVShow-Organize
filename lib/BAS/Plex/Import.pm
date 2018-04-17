@@ -50,7 +50,7 @@ sub new
   if (!defined $::exceptionList) {
   ## Do nothing
   } else {
-    # create an array of pairs based seperated by | character
+    # create an array of pairs seperated by | character
     my @list1 = split /\|/, $::exceptionList;
     # now split each item in the array with by the : character use the first value as the key and the second as value
     foreach my $item(@list1) {
@@ -262,6 +262,8 @@ BAS::Plex::Import - Perl extension for blah blah blah
 
   use BAS::Plex::Import;
 
+  our $excpetionList = "S.W.A.T.2017:S.W.A.T 2017|Other:other";
+
   my $obj = BAS::Plex::Import->new();
 
   $obj->newShowsFolder("/tmp/");
@@ -286,13 +288,19 @@ None by default.
 =head2 new
 
 	This subroutine creates a new object of type BAS::Plex::Import
+        If the global varible $exceptionList is defined we load this data into a hash for later use to handle naming
+	complications.
+	E.G file: S.W.A.T.2017.S01E01.avi is not handled correctly by Filename::Video so we need to know to handle this
+	differently. $exceptionList can be left undefined if you do not need to use it. Its format is
+	"MatchCase:DesiredValue|MatchCase:DesiredValue"
 
 =head2 countries
 
 	This subroutine sets the countries internal value and returns it.
 
         The default value is (UK|US)
-	This allows the system to match against programs names such as Agent X US / Agent X (US) / Agent X and reference the same single folder
+	This allows the system to match against programs names such as Agent X US / Agent X (US) / Agent X 
+	and reference the same single folder
 
 =head2 showFolder
 
@@ -301,12 +309,24 @@ None by default.
 	This is where the TV Show Folder resides on the file system.
 	If the path is invalid this would leave the internal value as being undef.
 
+        $obj->showFolder("/path/to/folder"); Set the path return undef is the path is invalid
+        $obj->showFolder(); 		     Return the path to the folder
+
 
 =head2 newShowFolder
 
+	Always confirm this does not return undef before using.
+
+	This is where new files to be add to Plex reside on the file system.
+	If the path is invalid this would leave the internal value as being undef.
+
+        $obj->newShowFolder("/path/to/folder"); Set the path return undef is the path is invalid
+        $obj->newShowFolder(); 		     Return the path to the folder
+
 =head2 createShowHash
 
-       This function creates a hash of show names with the correct path to store data based on the directories that are found the in the showFolder path.
+        This function creates a hash of show names with the correct path to store data based on the
+	directories that are found the in the showFolder path.
 
 =head2 showPath
 
@@ -315,14 +335,16 @@ None by default.
 
 =head2 processNewShows
 
-Folders are excluded from processing
+	Folders are excluded from processing
        
 =head2 delete
 
-	Set if we should delete source file after successfully importing it to Plex or if we should rename it to $file.done
+	Set if we should delete source file after successfully importing it to Plex or 
+	if we should rename it to $file.done
+
         The default is false and the file is simply renamed.
 
-        return undef if we don\'t want to delete. Return defined if we do want to delete
+        Return undef if we don't want to delete. Return defined if we do want to delete
 
 =head2 _createSeasonFolder
 
