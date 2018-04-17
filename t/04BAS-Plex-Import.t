@@ -10,9 +10,7 @@ use Data::Dumper;
 use Test::More; #tests => 6;
 use Test::Carp;
 use BAS::Plex::Import;
-BEGIN { use_ok('File::Path')};
-BEGIN { use_ok('File::Copy')};
-BEGIN { use_ok('Cwd')};
+use Cwd;
 
 #########################
 

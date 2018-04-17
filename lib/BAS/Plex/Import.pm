@@ -38,6 +38,7 @@ sub new
 {
   my $class = shift;
   my $self = {
+        #default data and states. Other data is created and stored during program execution
         countries => "(UK|US)",
         _delete => undef,
              };
@@ -62,13 +63,14 @@ sub new
 
 sub countries {
 
+  # Set and get countries in case you want to change or add to the defaults use | as your separator
   my ($self, $countries) = @_;
   $self->{countries} = $countries if defined $countries;
   return $self->{countries};
 }
 
-sub showFolder
-{
+sub showFolder {
+  # Set and get path for where new shows are to be stored in Plex
   my ($self, $path) = @_;
   if (defined $path) {
     $self->{_showFolder} = $path unless !(-e $path);
@@ -76,8 +78,8 @@ sub showFolder
   return $self->{_showFolder};
 }
 
-sub newShowFolder
-{
+sub newShowFolder {
+  # Set and get path to find new files to be imported into Plex
   my ($self, $path) = @_;
   if(defined $path) {
     $self->{_newDownloads} = $path unless !(-e $path);
@@ -90,21 +92,33 @@ sub createShowHash {
 
   my ($self) = @_;
   
+  # exit loudly if the path has not been defined by the time this is called
   croak unless defined($self->{_showFolder});
+
+  # Get the root path of the TV Show folder
   my $directory = $self->showFolder();
   my $showNameHolder;
 
   opendir(DIR, $directory) or die $!;
   while (my $file = readdir(DIR)) {
     next if ($file =~ m/^\./); # skip hidden files and folders
-    chomp($file);
+    chomp($file); # trim and end of line character
+    # create the inital hash strings are converted to lower case so "Doctor Who (2005)" becomes
+    # "doctor who (2005)" key="doctor who (2005), path="doctor who (2005)
     $self->{_shows}{lc($file)}{path} = $file;
+    # hanle if there is US or UK in the show name
     if ($file =~ m/\s\(?$self->{countries}\)?$/i) {
       $showNameHolder = $file;
+      # name minus country in $1 country in $2
       $showNameHolder =~ s/(.*) \(?($self->{countries})\)?/$1/gi;
+      #catinate them together again with () around country
+      #This now another key to the same path
       $self->{_shows}{lc($showNameHolder . " ($2)")}{path} = $file;
+      # create a key to the same path again with out country unless one has been already defined by another show
+      # this handles something like "Prey" which is US version and "Prey UK" which is the UK version
       $self->{_shows}{lc($showNameHolder)}{path} = $file unless (exists $self->{_shows}{lc($showNameHolder)});
     }
+    # Handle shows with Year extensions in the same manner has UK|USA
     if ($file =~ m/\s\(?\d{4}\)?$/i) {
       $showNameHolder = $file;
       $showNameHolder =~ s/(.*) \(?(\d\d\d\d)\)?/$1/gi;
@@ -121,6 +135,7 @@ sub createShowHash {
 
 sub showPath {
 
+  # Access the _shows hash and return the correct directory path for the show name as passed to the funtion
   my ($self, $show) = @_;
   return $self->{_shows}{lc($show)}{path}; 
 }
@@ -133,30 +148,37 @@ sub processNewShows {
   opendir(DIR, $self->newShowFolder()) or die $!;
   while (my $file = readdir(DIR)) {
     $destination = undef;
+    ## Skip hiddenfiles
     next if ($file =~ m/^\./);
+    ## Trim the file name incase of end of line marker
     chomp($file);
+    ## Skip files that have been processed before. They have had .done appended to to them.
     next if ($file =~ m/\.done$/);
     next if -d $self->newShowFolder() . "/" . $file; ## Skip non-Files
     next if ($file !~ m/s\d\de\d\d/i); # skip if SXXEXX is not present in file name
     my $showData;
-    ### This block needs to be re-worked to make it clearer and more robust 
+    # Extract show name, Season and Episode
     $showData = Video::Filename::new($file);
-    print $showData->{name} . "\n";
+    # Apply special handling if they show is in the exceptionList
     if (exists $self->{_exceptionList}{$showData->{name}}) { ##Handle special cases like "S.W.A.T"
       $showData->{name} = $self->{_exceptionList}{$showData->{name}};
-   ### End of block to be worked on
     } else {
+      # Handle normally using '.' as the space marker Somthing.this becomes Something this
       $showData = Video::Filename::new($file, { spaces => '.'});
     }
     
+    # If we don't have a showPath skip. Probably an unhandled show name
+    # store it in the UnhandledFileNames hash for reporting later.
     if (!defined $self->showPath($showData->{name})) {
       $self->{UnhandledFileNames}{$file} = $showData->{name};
       next;
     }
+    # Create the path string for storing the file in the right place
     $destination = $self->showFolder() . "/" . $self->showPath($showData->{name});
     $destination = $self->_createSeasonFolder($destination, $showData->{season});
   
-    print $destination . "\n";
+    # Import the file. This will use rsync to copy the file into place and either rename or delete.
+    # see importShow() for implementation details
     $self->importShow($destination,$file); 
   }
   return $self;
@@ -166,6 +188,9 @@ sub wereThereErrors {
 
   my ($self) = @_;
   
+  # Check if there has been any files that Video::Filename could not handle
+  # Check that the hash UnHandledFileNames has actually been created before checking that is is not empty
+  # or you will get an error.
   if ((defined $self->{UnhandledFileNames}) && (keys $self->{UnhandledFileNames})) {
     print "\nThere were unhandled files in the directory\n";
     print "consider adding them to the exceptionList\n###\n";
