@@ -22,7 +22,7 @@ BEGIN { use_ok('Carp')};
 # Insert your test code below, the Test::More module is use()ed here so read
 # its man page ( perldoc Test::More ) for help writing this test script.
 
-diag "\nCreate Testing Object BAS::Plex::Import";
+diag "\nCreate Testing Object BAS::Plex::Import without exception list";
 my $obj = BAS::Plex::Import->new();
 isa_ok($obj, 'BAS::Plex::Import');
 
@@ -32,6 +32,17 @@ ok($obj->countries() =~ m/\(UK\|US\)/, "countries is (UK|US)");
 diag "Change countries to new value";
 ok($obj->countries("USA") =~ m/USA/, "countries is now equal to USA");
 
+ok(!defined $obj->{_exceptionList}, "Global variable: exceptionList is not defined\n");
+
+diag "\nTest new() function with exception list being defined\n";
+our $exceptionList = "S.W.A.T.2017:S.W.A.T 2017|Test.2018:Test 2018";
+
+$obj = undef;
+$obj = BAS::Plex::Import->new();
+ok(keys $obj->{_exceptionList}, "Global variable execptionList is defined\n");
+
+print Dumper(\%{$obj->{_exceptionList}});
+exit 1;
 diag "Destroy and recreate test obj with default countries values for testing purposes\n";
 $obj = undef;
 $obj = BAS::Plex::Import->new();

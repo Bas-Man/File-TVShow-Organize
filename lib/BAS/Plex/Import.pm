@@ -44,6 +44,18 @@ sub new
              };
 
   bless $self, $class;
+
+  ## Additional constructor code goes here.
+  ## $::exception is a gobal variable which may or may not exciting in the calling perl script that loads this module.
+  if (!defined $::exceptionList) {
+  ## Do nothing
+  } else {
+    my @list1 = split /\|/, $::exceptionList;
+    foreach my $item(@list1) {
+      my ($key, $value) = split(/:/, $item);
+      $self->{_exceptionList}{$key} = $value;
+    }
+  }
   return $self;
 }
 
@@ -149,28 +161,18 @@ sub processNewShows {
 
 sub _handleExceptionsDatedFileNames {
 
-  my ($self) = @_;
+  my ($self, $name) = @_;
   my $destination;
 
-  opendir(DIR, $self->newShowFolder()) or die $!;
-  while (my $file = readdir(DIR)) {
     $destination = undef;
-    next if ($file =~ m/^\./);
-    chomp($file);
-    next if ($file =~ m/\.done$/);
-    next if -d $self->newShowFolder() . "/" . $file; ## Skip non-Files
-    next if ($file !~ m/s\d\de\d\d/i); # skip if SXXEXX is not present in file name
-    my $showData = Video::Filename::new($file, { spaces => '.'});
-
-   if($showData->{name} =~ m/\(?\d{4}\)?$/) {
-     if ($file =~ m/^$self->{showNameExceptions}/i) { ##Handle special cases like "S.W.A.T"
-       print "Data & Exception\n";
-       $showData->{name} =~ m/(.*).*\s?\(?(\d{4})\)?/;
-       print "$1 $2\n"; 
-     }
-      print "Dated: $showData->{name}\n";
-   }
-  }
+    if($name =~ m/\(?\d{4}\)?$/) {
+      if ($name =~ m/^$self->{showNameExceptions}/i) { ##Handle special cases like "S.W.A.T"
+        print "Data & Exception\n";
+        $name =~ m/(.*)\s?\(?(\d{4})\)?/;
+        print "$1 $2\n"; 
+      }
+      print "Dated: $name\n";
+    }
 }
 
 sub delete {

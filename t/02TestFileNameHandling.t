@@ -31,7 +31,8 @@ my $sourceDir = getcwd . '/t/test-data/';
 
 $obj->newShowFolder($sourceDir);
 
-$obj->_handleExceptionsDatedFileNames();
+$obj->_handleExceptionsDatedFileNames("S.W.A.T.2017");
+$obj->_handleExceptionsDatedFileNames("The Flash 2014");
 
 done_testing();
 
