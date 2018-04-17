@@ -38,10 +38,8 @@ sub new
 {
   my $class = shift;
   my $self = {
-	my %shows = (),
         countries => "(UK|US)",
-        showNameExceptions => "(S.W.A.T)",
-        _delete => undef
+        _delete => undef,
              };
 
   bless $self, $class;
@@ -141,41 +139,56 @@ sub processNewShows {
     next if -d $self->newShowFolder() . "/" . $file; ## Skip non-Files
     next if ($file !~ m/s\d\de\d\d/i); # skip if SXXEXX is not present in file name
     my $showData;
-   ### This block needs to be re-worked to make it clearer and more robust 
-    if ($file =~ m/^$self->{showNameExceptions}/i) { ##Handle special cases like "S.W.A.T"
-      ## This code is probably not very robust and will break with other exceptions. Needs to be rethought.
-      $showData = Video::Filename::new($file);
-      $showData->{name} =~ s/\(//;
-      $showData->{name} =~ s/\)//;
-      $showData->{name} =~ m/($self->{showNameExceptions})+([^0-9])*(.{4})$/;
-      $showData->{name} = "$1 $4";
+    ### This block needs to be re-worked to make it clearer and more robust 
+    $showData = Video::Filename::new($file);
+    print $showData->{name} . "\n";
+    if (exists $self->{_exceptionList}{$showData->{name}}) { ##Handle special cases like "S.W.A.T"
+      $showData->{name} = $self->{_exceptionList}{$showData->{name}};
    ### End of block to be worked on
     } else {
       $showData = Video::Filename::new($file, { spaces => '.'});
     }
     
+    if (!defined $self->showPath($showData->{name})) {
+      $self->{UnhandledFileNames}{$file} = $showData->{name};
+      next;
+    }
     $destination = $self->showFolder() . "/" . $self->showPath($showData->{name});
     $destination = $self->_createSeasonFolder($destination, $showData->{season});
   
+    print $destination . "\n";
     $self->importShow($destination,$file); 
   }
   return $self;
 }
 
+sub wereThereErrors {
+
+  my ($self) = @_;
+  
+  if ((defined $self->{UnhandledFileNames}) && (keys $self->{UnhandledFileNames})) {
+    print "\nThere were unhandled files in the directory\n";
+    print "consider adding them to the exceptionList\n###\n";
+    foreach my $key (keys $self->{UnhandledFileNames}) {
+      print "### " .  $key . ": " . $self->{UnhandledFileNames}{$key} . "\n";
+    }
+    print "###\n";
+  }
+  
+  return $self;
+}
+
+## Legacy code. Not used anymore.
 sub _handleExceptionsDatedFileNames {
 
   my ($self, $name) = @_;
-  my $destination;
 
-    $destination = undef;
     if($name =~ m/\(?\d{4}\)?$/) {
-      if ($name =~ m/^$self->{showNameExceptions}/i) { ##Handle special cases like "S.W.A.T"
-        print "Data & Exception\n";
-        $name =~ m/(.*)\s?\(?(\d{4})\)?/;
-        print "$1 $2\n"; 
+      if (exists $self->{_exceptionList}{$name}) { ##Handle special cases like "S.W.A.T"
+        $name = $self->{_exceptionList}{$name};
       }
-      print "Dated: $name\n";
     }
+  return $name;
 }
 
 sub delete {
@@ -346,6 +359,15 @@ None by default.
         The default is false and the file is simply renamed.
 
         Return undef if we don't want to delete. Return defined if we do want to delete
+
+=head2 wereThereErrors
+
+	This should be called at the end of the program to report if any file names could not be handled correctly
+	resulting in files not being processd. These missed files can then be manually moved or their show name can
+	be added to the exceptionList variable. remember to match the NAME preceeding SXX and to give the corrected
+	name 
+	EG S.W.A.T.2017.SXX should get an entry such as:
+	exceptionList = "S.W.A.T.2017:S.W.A.T 2017";
 
 =head2 _createSeasonFolder
 

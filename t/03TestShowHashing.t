@@ -10,12 +10,9 @@ use Data::Dumper;
 use Test::More; #tests => 6;
 use Test::Carp;
 use BAS::Plex::Import;
-BEGIN { use_ok('BAS::Plex::Import') };
-BEGIN { use_ok('Video::Filename') };
-BEGIN { use_ok('File::Path')};
-BEGIN { use_ok('File::Copy')};
-BEGIN { use_ok('Cwd')};
-BEGIN { use_ok('Carp')};
+use Cwd;
+#BEGIN { use_ok('File::Path')};
+#BEGIN { use_ok('File::Copy')};
 
 #########################
 

@@ -10,17 +10,17 @@ use Data::Dumper;
 use Test::More; #tests => 6;
 use Test::Carp;
 use BAS::Plex::Import;
-BEGIN { use_ok('BAS::Plex::Import') };
-BEGIN { use_ok('Video::Filename') };
 BEGIN { use_ok('File::Path')};
 BEGIN { use_ok('File::Copy')};
 BEGIN { use_ok('Cwd')};
-BEGIN { use_ok('Carp')};
 
 #########################
 
 # Insert your test code below, the Test::More module is use()ed here so read
 # its man page ( perldoc Test::More ) for help writing this test script.
+
+#our $exceptionList = "S.W.A.T.2017:S.W.A.T 2017|S.W.A.T.2018:S.W.A.T 2018";
+our $exceptionList = "S.W.A.T.2017:S.W.A.T 2017";
 
 my $obj = BAS::Plex::Import->new();
 
@@ -37,6 +37,9 @@ $obj->newShowFolder($sourceDir);
 
 $obj->createShowHash();
 
+can_ok($obj, 'wereThereErrors');
+is($obj->{UnhandledFileNames}, undef, "No UnhandedFiles have been found"); 
+
 can_ok($obj, 'processNewShows');
 
 diag "\n\nBegin processing New Shows Folder. This loops through files in this folder.";
@@ -44,6 +47,8 @@ $obj->processNewShows();
 
 can_ok($obj, 'importShow');
 
+$obj->wereThereErrors();
+ok($obj->{UnhandledFileNames} =~ /HASH/, "Unhandled files were found");
 #diag explain $obj;
 
 #my $d = Data::Dumper->new([$obj]);
