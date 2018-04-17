@@ -7,6 +7,7 @@ use Carp;
 
 use File::Path qw(make_path);
 use File::Copy;
+use Video::Filename;
 
 require Exporter;
 
@@ -290,7 +291,7 @@ None by default.
 	This subroutine creates a new object of type BAS::Plex::Import
         If the global varible $exceptionList is defined we load this data into a hash for later use to handle naming
 	complications.
-	E.G file: S.W.A.T.2017.S01E01.avi is not handled correctly by Filename::Video so we need to know to handle this
+	E.G file: S.W.A.T.2017.S01E01.avi is not handled correctly by Video::Filename so we need to know to handle this
 	differently. $exceptionList can be left undefined if you do not need to use it. Its format is
 	"MatchCase:DesiredValue|MatchCase:DesiredValue"
 
