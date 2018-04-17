@@ -2,5 +2,13 @@ Changes
 Makefile.PL
 MANIFEST
 README
-t/BAS-Plex-Import.t
+t/00CheckTestDirectorStructures.t
+t/01TestDirectoryHandling.t
+t/02TestFileNameHandling.t
+t/03TestShowHashing.t
+t/04BAS-Plex-Import.t
+t/05CheckSuccessfulImport.t
+t/06Cleanup
+t/test-data.tar.gz
+t/tvshow.tar.gz
 lib/BAS/Plex/Import.pm

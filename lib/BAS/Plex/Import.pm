@@ -50,7 +50,9 @@ sub new
   if (!defined $::exceptionList) {
   ## Do nothing
   } else {
+    # create an array of pairs based seperated by | character
     my @list1 = split /\|/, $::exceptionList;
+    # now split each item in the array with by the : character use the first value as the key and the second as value
     foreach my $item(@list1) {
       my ($key, $value) = split(/:/, $item);
       $self->{_exceptionList}{$key} = $value;
