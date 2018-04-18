@@ -252,17 +252,19 @@ sub importShow {
   my ($self, $destination, $file) = @_;
   my $source;
 
+  # If the destination folder is not defined or no file is passed exit with errors
   carp "Destination not passed." unless defined($destination);
   carp "File not passed." unless defined($file);
 
+  # rewrite paths so they are rsync friendly. This means escape spaces and other special characters.
   ($destination, $source) = _rsyncPrep($destination,$self->showFolder());
 
+  # create the command string to be used in system() call
   my $command = "rsync -ta --progress " . $self->newShowFolder() . "/" . $file . " " . $destination;
 
   system($command);
-  print "Rsync Return Code: " . $? . "\n";
   if($? == 0) { 
-  print "We can Delete $file\n";
+  ## this is where we need to check the value of delete() to decide if we delete or rename the file.
   move($source . $file, $source . $file . ".done")
   }
   return $self;
@@ -275,7 +277,7 @@ sub _rsyncPrep {
   
   my ($dest, $source) = @_;
 
-  # replace space with \space for rsync to work
+  # escape spaces and () characters to work with the rsync command.
   $dest =~ s/\(/\\(/g;
   $dest =~ s/\)/\\)/g;
   $dest =~ s/ /\\ /g;
