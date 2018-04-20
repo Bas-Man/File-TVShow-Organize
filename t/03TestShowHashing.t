@@ -25,16 +25,16 @@ my $sourceDir = getcwd . '/t/test-data/';
 
 my $ShowDirectory = getcwd . '/t/TV Shows';
 
-diag "\n\nSet showFolder path\n";
+subtest "Set showFolder path" => sub {
 $obj->showFolder($ShowDirectory);
 
 can_ok($obj, 'createShowHash');
 
-diag "Call createShowHash which loads folders found in in the TV Show Folder where shows live for Plex\n";
-$obj->createShowHash();
-diag "Completed processing directory\n";
+};
 
-diag "Long test to check that we can get the correct folder to store Shows in based on the filename\n";
+$obj->createShowHash();
+
+subtest "Long test to check that we can get the correct folder to store Shows in based on the filename" => sub {
 can_ok($obj, 'showPath');
 
 is ($obj->showPath("Agent X"), "Agent X US", "Agent X returns Agent X US");
@@ -75,6 +75,8 @@ is ($obj->showPath("The Tomorrow People (US)"), "The Tomorrow People US", "The T
 isnt ($obj->showPath("The Tomorrow People"), "The Tomorrow People US", "The Tomorrow Poeple doesnt return The Tomorrow People US");
 
 is ($obj->showPath("bogus"), undef, "If a show Folder does not exist return undef");
+
+};
 
 done_testing();
 

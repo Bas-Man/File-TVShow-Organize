@@ -26,7 +26,7 @@ my $ShowDirectory = getcwd . '/t/TV Shows/';
 
 my $filename = $sourceDir . ".testdir";
 
-ok (-e $filename, 'Show Source Directory path is valid') or BAIL_OUT("test-dir is not valid.\n");
+ok (-e $filename, 'Show Source Directory path is valid') or BAIL_OUT("test-data is not valid.\n");
 
 $filename = $ShowDirectory . ".testdir";
 

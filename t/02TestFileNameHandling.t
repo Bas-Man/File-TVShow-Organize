@@ -21,7 +21,6 @@ our $exceptionList = "S.W.A.T.2017:S.W.A.T 2017";
 
 my $obj = BAS::Plex::Import->new();
 
-
 ok($obj->_handleExceptionsDatedFileNames("S.W.A.T.2017") =~ m/S.W.A.T 2017/, "Returned S.W.A.T 2017"); 
 
 done_testing();

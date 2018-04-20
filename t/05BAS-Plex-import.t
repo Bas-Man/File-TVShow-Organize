@@ -35,18 +35,18 @@ $obj->newShowFolder($sourceDir);
 
 $obj->createShowHash();
 
+subtest "About to process a folder. Check if there were any errors" => sub {
 can_ok($obj, 'wereThereErrors');
 is($obj->{UnhandledFileNames}, undef, "No UnhandedFiles have been found"); 
 
 can_ok($obj, 'processNewShows');
-
-diag "\n\nBegin processing New Shows Folder. This loops through files in this folder.";
 $obj->processNewShows();
-
 can_ok($obj, 'importShow');
 
 $obj->wereThereErrors();
 ok($obj->{UnhandledFileNames} =~ /HASH/, "Unhandled files were found");
+};
+
 #diag explain $obj;
 
 #my $d = Data::Dumper->new([$obj]);

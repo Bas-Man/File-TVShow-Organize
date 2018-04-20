@@ -73,7 +73,12 @@ sub showFolder {
   # Set and get path for where new shows are to be stored in Plex
   my ($self, $path) = @_;
   if (defined $path) {
-    $self->{_showFolder} = $path unless !(-e $path);
+    if ((-e $path) and (-d $path)) {
+      $self->{_showFolder} = $path;
+      if ($self->{_showFolder} !~ m/.*\/$/) {
+        $self->{_showFolder} = $self->{_showFolder} . '/';
+      }
+    }
   }
   return $self->{_showFolder};
 }
@@ -81,11 +86,15 @@ sub showFolder {
 sub newShowFolder {
   # Set and get path to find new files to be imported into Plex
   my ($self, $path) = @_;
-  if(defined $path) {
-    $self->{_newDownloads} = $path unless !(-e $path);
+  if (defined $path) {
+    if ((-e $path) and (-d $path)) {
+      $self->{_newShowFolder} = $path;
+      if ($self->{_newShowFolder} !~ m/.*\/$/) {
+        $self->{_newShowFolder} = $self->{_newShowFolder} . '/';
+      }
+    }
   }
-  return $self->{_newDownloads};
-
+  return $self->{_newShowFolder};
 }
 
 sub createShowHash {
@@ -154,7 +163,7 @@ sub processNewShows {
     chomp($file);
     ## Skip files that have been processed before. They have had .done appended to to them.
     next if ($file =~ m/\.done$/);
-    next if -d $self->newShowFolder() . "/" . $file; ## Skip non-Files
+    next if -d $self->newShowFolder() . $file; ## Skip non-Files
     next if ($file !~ m/s\d\de\d\d/i); # skip if SXXEXX is not present in file name
     my $showData;
     # Extract show name, Season and Episode
@@ -174,7 +183,7 @@ sub processNewShows {
       next;
     }
     # Create the path string for storing the file in the right place
-    $destination = $self->showFolder() . "/" . $self->showPath($showData->{name});
+    $destination = $self->showFolder() . $self->showPath($showData->{name});
     $destination = $self->_createSeasonFolder($destination, $showData->{season});
   
     # Import the file. This will use rsync to copy the file into place and either rename or delete.
@@ -257,15 +266,27 @@ sub importShow {
   carp "File not passed." unless defined($file);
 
   # rewrite paths so they are rsync friendly. This means escape spaces and other special characters.
-  ($destination, $source) = _rsyncPrep($destination,$self->showFolder());
+  ($destination, $source) = _rsyncPrep($destination,$self->newShowFolder());
+
+  print "Source: $source\n";
+  print "Destin: $destination\n";
 
   # create the command string to be used in system() call
-  my $command = "rsync -ta --progress " . $self->newShowFolder() . "/" . $file . " " . $destination;
+  #my $command = "rsync -ta --progress " . $self->newShowFolder() . "/" . $file . " " . $destination;
+  my $command = "rsync -ta --progress " . $source . "/" . $file . " " . $destination;
 
   system($command);
   if($? == 0) { 
   ## this is where we need to check the value of delete() to decide if we delete or rename the file.
-  move($source . $file, $source . $file . ".done")
+  
+  if(defined $self->delete) {
+    # Implement unlinking of file?
+  } else {
+  print "Turn this back on before release\n";
+  #move($source . $file, $source . $file . ".done")
+    }
+  } else {
+  #report failed processing?
   }
   return $self;
 
@@ -284,7 +305,7 @@ sub _rsyncPrep {
   $dest = $dest . "/";
 
   $source =~ s/ /\\ /g;
-  $source = $source . "/";
+  #$source = $source . "/";
 
   return $dest, $source;
 }
@@ -357,6 +378,9 @@ None by default.
 =head2 newShowFolder
 
 	Always confirm this does not return undef before using.
+        undef will be returned in the path is invalid. 
+
+	Also a valid "path/to/folder" will always return "path/to/folder/"
 
 	This is where new files to be add to Plex reside on the file system.
 	If the path is invalid this would leave the internal value as being undef.
@@ -371,9 +395,10 @@ None by default.
 
 =head2 showPath
 
-       Return the Folder that stores the tv shows seasons folder.
-     
+	Return the Folder that stores the tv shows seasons folder.
 
+	This function behaves as newShowFolder
+	
 =head2 processNewShows
 
 	Folders are excluded from processing
