@@ -39,6 +39,7 @@ subtest "About to process a folder. Check if there were any errors" => sub {
 can_ok($obj, 'wereThereErrors');
 is($obj->{UnhandledFileNames}, undef, "No UnhandedFiles have been found"); 
 
+$obj->delete(1);
 can_ok($obj, 'processNewShows');
 $obj->processNewShows();
 can_ok($obj, 'importShow');

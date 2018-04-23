@@ -268,25 +268,21 @@ sub importShow {
   # rewrite paths so they are rsync friendly. This means escape spaces and other special characters.
   ($destination, $source) = _rsyncPrep($destination,$self->newShowFolder());
 
-  print "Source: $source\n";
-  print "Destin: $destination\n";
-
   # create the command string to be used in system() call
-  #my $command = "rsync -ta --progress " . $self->newShowFolder() . "/" . $file . " " . $destination;
-  my $command = "rsync -ta --progress " . $source . "/" . $file . " " . $destination;
+  my $command = "rsync -ta --progress " . $source . $file . " " . $destination;
 
+  print "command: " . $command . "\n";
   system($command);
   if($? == 0) { 
-  ## this is where we need to check the value of delete() to decide if we delete or rename the file.
+    ## this is where we need to check the value of delete() to decide if we delete or rename the file.
   
-  if(defined $self->delete) {
-    # Implement unlinking of file?
-  } else {
-  print "Turn this back on before release\n";
-  #move($source . $file, $source . $file . ".done")
+    if(defined $self->delete) {
+      unlink($source . $file);
+    } else {
+      move($source . $file, $source . $file . ".done")
     }
   } else {
-  #report failed processing?
+    #report failed processing? Error on rsync command return code
   }
   return $self;
 

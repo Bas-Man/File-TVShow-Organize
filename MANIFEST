@@ -10,5 +10,5 @@ t/05BAS-Plex-Import.t
 t/08CheckSuccessfulImport.t
 t/10Cleanup
 t/test-data.tar.gz
-t/tvshow.tar.gz
+t/tv-show.tar.gz
 lib/BAS/Plex/Import.pm
