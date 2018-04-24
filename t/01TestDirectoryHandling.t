@@ -62,6 +62,10 @@ subtest "Pass a valid path" => sub {
 ok($obj->showFolder(getcwd . '/t/TV Shows') =~ m/.*\/TV Shows\/$/,  "Passed a valid Path without ending \/ character \/ was appended by funtion");
 };
 
+subtest "Pass an invalid path again to showfolder()" => sub {
+is($obj->showFolder(getcwd . 't/TV Shows'), undef, "t/TV Shows is not a valid path missing leading /");
+};
+
 subtest "Test newShowFolder method" => sub {
 can_ok ($obj, 'newShowFolder');
 is ($obj->newShowFolder, undef, "New TV Show download folder is undefined as expected");
@@ -73,22 +77,21 @@ is($obj->newShowFolder(getcwd . 'test-data'), undef, "Passed an invalid path");
 ok($obj->newShowFolder(getcwd . '/t/test-data') =~ m/.*\/$/, "newShowFolder was passed a valid path not ending with \/. but returned path ending in \/");
 };
 
-#print $obj->newShowFolder(getcwd . 't') . "\n";
-
-#my $invalidnewDownloads = BAS::Plex::Import->new();
-#$invalidnewDownloads->newShowFolder($sourceDirInValid);
-#is($invalidnewDownloads->newShowFolder, undef, "Passed invalid path should be undef");
+subtest "Pass an invalid path again to newShowFolder" => sub {
+is($obj->newShowFolder(getcwd . 't/test-data'), undef, "t/test-data is not a valid path missing leading /");
 };
 
-#subtest 'Testing if we should delete or rename processed files' => sub {
-#can_ok ($obj, 'delete');
-#
-#is($obj->delete(), undef, "Delete is not defined. We should renamed files as we process them");
-#is($obj->delete(1), defined, "Delete is defined. We should delete files as we process them");
-#is($obj->delete(), defined, "Delete was defined. We should delete files as we process them");
-#is($obj->delete(0), undef, "Delete is not defined again. We should delete files as we process them");
+};
 
-#};
+subtest 'Testing if we should delete or rename processed files' => sub {
+can_ok ($obj, 'delete');
+
+is($obj->delete(), undef, "Delete is not defined. We should renamed files as we process them");
+is($obj->delete(1), defined, "Delete is defined. We should delete files as we process them");
+is($obj->delete(), defined, "Delete was defined. We should delete files as we process them");
+is($obj->delete(0), undef, "Delete is not defined again. We should delete files as we process them");
+
+};
 
 done_testing();
 

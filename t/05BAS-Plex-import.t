@@ -22,12 +22,9 @@ our $exceptionList = "S.W.A.T.2017:S.W.A.T 2017";
 
 my $obj = BAS::Plex::Import->new();
 
-my $sourceDir = getcwd . '/t/test-data/';
-my $sourceDirInValid = $sourceDir . 't/invalid';
+my $sourceDir = getcwd . '/t/test-data/done_list/';
 
 my $ShowDirectory = getcwd . '/t/TV Shows';
-
-my $filename = $sourceDir . ".testdir";
 
 $obj->showFolder($ShowDirectory);
 
@@ -35,15 +32,22 @@ $obj->newShowFolder($sourceDir);
 
 $obj->createShowHash();
 
-subtest "About to process a folder. Check if there were any errors" => sub {
+subtest "About to process done_list Folder." => sub {
 can_ok($obj, 'wereThereErrors');
 is($obj->{UnhandledFileNames}, undef, "No UnhandedFiles have been found"); 
 
-$obj->delete(1);
 can_ok($obj, 'processNewShows');
 $obj->processNewShows();
 can_ok($obj, 'importShow');
 
+};
+
+$obj->delete(1);
+$obj->newShowFolder(getcwd . '/t/test-data/delete_list/');
+$obj->processNewShows();
+
+
+subtest "Check if there were errors" => sub {
 $obj->wereThereErrors();
 ok($obj->{UnhandledFileNames} =~ /HASH/, "Unhandled files were found");
 };

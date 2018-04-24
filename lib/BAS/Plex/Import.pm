@@ -78,6 +78,8 @@ sub showFolder {
       if ($self->{_showFolder} !~ m/.*\/$/) {
         $self->{_showFolder} = $self->{_showFolder} . '/';
       }
+    } else {
+      $self->{_showFolder} = undef;
     }
   }
   return $self->{_showFolder};
@@ -92,6 +94,8 @@ sub newShowFolder {
       if ($self->{_newShowFolder} !~ m/.*\/$/) {
         $self->{_newShowFolder} = $self->{_newShowFolder} . '/';
       }
+    } else {
+      $self->{_newShowFolder} = undef;
     }
   }
   return $self->{_newShowFolder};
@@ -212,19 +216,6 @@ sub wereThereErrors {
   return $self;
 }
 
-## Legacy code. Not used anymore.
-sub _handleExceptionsDatedFileNames {
-
-  my ($self, $name) = @_;
-
-    if($name =~ m/\(?\d{4}\)?$/) {
-      if (exists $self->{_exceptionList}{$name}) { ##Handle special cases like "S.W.A.T"
-        $name = $self->{_exceptionList}{$name};
-      }
-    }
-  return $name;
-}
-
 sub delete {
 
   my $self;
@@ -327,6 +318,20 @@ BAS::Plex::Import - Perl extension for blah blah blah
   $obj->newShowsFolder("/tmp/");
   $obj->showsFolder("/plex/TV Shows");
 
+  if((!defined $obj->newShowPath()) || (!defined $obj->showPath())) {
+    print "Verify your paths. Something in wrong\n";
+    exit;
+  }
+
+  $obj->createShowHash();
+
+  $obj->processNewShows();
+
+  $obj->wereThereErrors();
+
+  #end of program
+
+
 =head1 DESCRIPTION
 
 Stub documentation for BAS::Plex::Import, created by h2xs. It looks like the
@@ -363,6 +368,9 @@ None by default.
 =head2 showFolder
 
 	Always confirm this does not return undef before using.
+        undef will be returned in the path is invalid. 
+
+	Also a valid "path/to/folder" will always return "path/to/folder/"
 
 	This is where the TV Show Folder resides on the file system.
 	If the path is invalid this would leave the internal value as being undef.
@@ -393,7 +401,7 @@ None by default.
 
 	Return the Folder that stores the tv shows seasons folder.
 
-	This function behaves as newShowFolder
+        If there is no folder for the named show then return undef
 	
 =head2 processNewShows
 
@@ -421,7 +429,10 @@ None by default.
 
         This is an internal function and should not be called by the programmer directly.
 
-	Create season folder with the TV Shows folder based on SXX
+        $self-_createSeasonFolder("destination/path",$season);
+        creates a folder within "destintaton/path" by calling make_path()
+
+	Based on SXX
         S01 creates Season1
 	S00 creates Specials
 

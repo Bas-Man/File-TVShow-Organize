@@ -21,8 +21,6 @@ use Cwd;
 
 my $obj = BAS::Plex::Import->new();
 
-my $sourceDir = getcwd . '/t/test-data/';
-
 my $ShowDirectory = getcwd . '/t/TV Shows';
 
 subtest "Set showFolder path" => sub {
