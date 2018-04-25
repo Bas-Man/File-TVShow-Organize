@@ -188,7 +188,7 @@ sub processNewShows {
     }
     # Create the path string for storing the file in the right place
     $destination = $self->showFolder() . $self->showPath($showData->{name});
-    $destination = $self->_createSeasonFolder($destination, $showData->{season});
+    $destination = $self->createSeasonFolder($destination, $showData->{season});
   
     # Import the file. This will use rsync to copy the file into place and either rename or delete.
     # see importShow() for implementation details
@@ -208,7 +208,7 @@ sub wereThereErrors {
     print "\nThere were unhandled files in the directory\n";
     print "consider adding them to the exceptionList\n###\n";
     foreach my $key (keys $self->{UnhandledFileNames}) {
-      print "### " .  $key . ": " . $self->{UnhandledFileNames}{$key} . "\n";
+      print "### " .  $key . " ==> " . $self->{UnhandledFileNames}{$key} . "\n";
     }
     print "###\n";
   }
@@ -231,7 +231,7 @@ sub delete {
   return $self->{_delete};
 }
 
-sub _createSeasonFolder {
+sub createSeasonFolder {
 
   my ($self, $_path, $season) = @_;
 
@@ -425,12 +425,13 @@ None by default.
 	EG S.W.A.T.2017.SXX should get an entry such as:
 	exceptionList = "S.W.A.T.2017:S.W.A.T 2017";
 
-=head2 _createSeasonFolder
+=head2 createSeasonFolder
 
-        This is an internal function and should not be called by the programmer directly.
-
-        $self-_createSeasonFolder("destination/path",$season);
+        createSeasonFolder("destination/path",$season);
         creates a folder within "destintaton/path" by calling make_path()
+        returns the newly created path "destination/path/SeasonX/" or "destination/path/Specials/"
+
+        note: "destintaion/path" is not verified to be valid and is assumed to have been checked before being passed
 
 	Based on SXX
         S01 creates Season1
