@@ -6,9 +6,9 @@ t/00CheckTestDirectorStructures.t
 t/01TestDirectoryHandling.t
 t/02TestFileNameHandling.t
 t/03TestShowHashing.t
-t/05BAS-Plex-Import.t
+t/05BAS-TVShow-Import.t
 t/08CheckSuccessfulImport.t
 t/10Cleanup
 t/test-data.tar.gz
 t/tv-show.tar.gz
-lib/BAS/Plex/Import.pm
+lib/BAS/TVShow/Import.pm

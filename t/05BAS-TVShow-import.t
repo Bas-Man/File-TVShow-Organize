@@ -1,5 +1,5 @@
 # Before `make install' is performed this script should be runnable with
-# `make test'. After `make install' it should work as `perl BAS-Plex-Import.t'
+# `make test'. After `make install' it should work as `perl BAS-TVShow-Import.t'
 
 #########################
 
@@ -9,7 +9,7 @@ use Data::Dumper;
 
 use Test::More; #tests => 6;
 use Test::Carp;
-use BAS::Plex::Import;
+use BAS::TVShow::Import;
 use Cwd;
 
 #########################
@@ -20,7 +20,7 @@ use Cwd;
 #our $exceptionList = "S.W.A.T.2017:S.W.A.T 2017|S.W.A.T.2018:S.W.A.T 2018";
 our $exceptionList = "S.W.A.T.2017:S.W.A.T 2017";
 
-my $obj = BAS::Plex::Import->new();
+my $obj = BAS::TVShow::Import->new();
 
 my $sourceDir = getcwd . '/t/test-data/done_list/';
 

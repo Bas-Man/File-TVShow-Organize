@@ -1,5 +1,5 @@
 # Before `make install' is performed this script should be runnable with
-# `make test'. After `make install' it should work as `perl BAS-Plex-Import.t'
+# `make test'. After `make install' it should work as `perl BAS-TVShow-Import.t'
 
 #########################
 
@@ -9,8 +9,8 @@ use Data::Dumper;
 
 use Test::More;
 use Test::Carp;
-use BAS::Plex::Import;
-BEGIN { use_ok('BAS::Plex::Import') };
+use BAS::TVShow::Import;
+BEGIN { use_ok('BAS::TVShow::Import') };
 BEGIN { use_ok('Video::Filename') };
 BEGIN { use_ok('File::Path')};
 BEGIN { use_ok('File::Copy')};
@@ -21,8 +21,8 @@ BEGIN { use_ok('Cwd')};
 # Insert your test code below, the Test::More module is use()ed here so read
 # its man page ( perldoc Test::More ) for help writing this test script.
 
-my $obj = BAS::Plex::Import->new();
-isa_ok($obj, 'BAS::Plex::Import');
+my $obj = BAS::TVShow::Import->new();
+isa_ok($obj, 'BAS::TVShow::Import');
 
 subtest 'Test Default Countries value' => sub {
 
@@ -37,7 +37,7 @@ ok(!defined $obj->{_exceptionList}, "Global variable: exceptionList is not defin
 our $exceptionList = "S.W.A.T.2017:S.W.A.T 2017|Test.2018:Test 2018";
 
 $obj = undef;
-$obj = BAS::Plex::Import->new();
+$obj = BAS::TVShow::Import->new();
 ok(keys $obj->{_exceptionList}, "Global variable execptionList is defined");
 ok($obj->{_exceptionList}{'S.W.A.T.2017'} =~ m/S.W.A.T 2017/, "S.W.A.T.2017 gives S.W.A.T 2017");
 ok($obj->{_exceptionList}{'Test.2018'} =~ m/Test 2018/, "Test.2018 gives Test 2018");
@@ -45,7 +45,7 @@ ok($obj->{_exceptionList}{'Test.2018'} =~ m/Test 2018/, "Test.2018 gives Test 20
 };
 
 $obj = undef;
-$obj = BAS::Plex::Import->new();
+$obj = BAS::TVShow::Import->new();
 
 subtest "Test Destintaiton Directory handling" => sub {
 can_ok ($obj, 'showFolder');

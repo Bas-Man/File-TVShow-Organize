@@ -1,4 +1,4 @@
-package BAS::Plex::Import;
+package BAS::TVShow::Import;
 
 use 5.012004;
 use strict;
@@ -17,7 +17,7 @@ our @ISA = qw(Exporter);
 # names by default without a very good reason. Use EXPORT_OK instead.
 # Do not simply export all your public functions/methods/constants.
 
-# This allows declaration	use BAS::Plex::Import ':all';
+# This allows declaration	use BAS::TVShow::Import ':all';
 # If you do not need this, moving things directly into @EXPORT or @EXPORT_OK
 # will save memory.
 our %EXPORT_TAGS = ( 'all' => [ qw(
@@ -70,7 +70,7 @@ sub countries {
 }
 
 sub showFolder {
-  # Set and get path for where new shows are to be stored in Plex
+  # Set and get path for where new shows are to be stored in the file system
   my ($self, $path) = @_;
   if (defined $path) {
     if ((-e $path) and (-d $path)) {
@@ -86,7 +86,7 @@ sub showFolder {
 }
 
 sub newShowFolder {
-  # Set and get path to find new files to be imported into Plex
+  # Set and get path to find new files to be imported from live 
   my ($self, $path) = @_;
   if (defined $path) {
     if ((-e $path) and (-d $path)) {
@@ -305,15 +305,15 @@ __END__
 
 =head1 NAME
 
-BAS::Plex::Import - Perl extension for blah blah blah
+BAS::TVShow::Import - Perl extension for blah blah blah
 
 =head1 SYNOPSIS
 
-  use BAS::Plex::Import;
+  use BAS::TVShow::Import;
 
   our $excpetionList = "S.W.A.T.2017:S.W.A.T 2017|Other:other";
 
-  my $obj = BAS::Plex::Import->new();
+  my $obj = BAS::TVShow::Import->new();
 
   $obj->newShowsFolder("/tmp/");
   $obj->showsFolder("/plex/TV Shows");
@@ -334,7 +334,7 @@ BAS::Plex::Import - Perl extension for blah blah blah
 
 =head1 DESCRIPTION
 
-Stub documentation for BAS::Plex::Import, created by h2xs. It looks like the
+Stub documentation for BAS::TVShow::Import, created by h2xs. It looks like the
 author of the extension was negligent enough to leave the stub
 unedited.
 
@@ -350,7 +350,7 @@ None by default.
 
 =head2 new
 
-	This subroutine creates a new object of type BAS::Plex::Import
+	This subroutine creates a new object of type BAS::TVShow::Import
         If the global varible $exceptionList is defined we load this data into a hash for later use to handle naming
 	complications.
 	E.G file: S.W.A.T.2017.S01E01.avi is not handled correctly by Video::Filename so we need to know to handle this
@@ -386,7 +386,7 @@ None by default.
 
 	Also a valid "path/to/folder" will always return "path/to/folder/"
 
-	This is where new files to be add to Plex reside on the file system.
+	This is where new files to be add to the TV Show store reside on the file system.
 	If the path is invalid this would leave the internal value as being undef.
 
         $obj->newShowFolder("/path/to/folder"); Set the path return undef is the path is invalid
@@ -409,7 +409,7 @@ None by default.
        
 =head2 delete
 
-	Set if we should delete source file after successfully importing it to Plex or 
+	Set if we should delete source file after successfully importing it to the tv store or 
 	if we should rename it to $file.done
 
         The default is false and the file is simply renamed.

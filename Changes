@@ -1,6 +1,6 @@
-Revision history for Perl extension BAS::Plex::Import.
+Revision history for Perl extension BAS::TVShow::Import.
 
 0.01  Sun Nov 29 20:35:23 2015
 	- original version; created by h2xs 1.23 with options
-		-XAn BAS::Plex::Import
+		-XAn BAS::TVShow::Import
 
