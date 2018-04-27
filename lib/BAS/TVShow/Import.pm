@@ -316,9 +316,9 @@ BAS::TVShow::Import - Perl extension for blah blah blah
   my $obj = BAS::TVShow::Import->new();
 
   $obj->newShowsFolder("/tmp/");
-  $obj->showsFolder("/plex/TV Shows");
+  $obj->showsFolder("/absolute/path/to/TV Shows");
 
-  if((!defined $obj->newShowPath()) || (!defined $obj->showPath())) {
+  if((!defined $obj->newShowFolder()) || (!defined $obj->showFolder())) {
     print "Verify your paths. Something in wrong\n";
     exit;
   }
@@ -350,14 +350,23 @@ None by default.
 
 =head2 new
 
+	our $exceptionList = "S.W.A.T.2017:S.W.A.T 2017";
+
+	$obj = BAS::TVShow::Import->new();
+
 	This subroutine creates a new object of type BAS::TVShow::Import
+
         If the global varible $exceptionList is defined we load this data into a hash for later use to handle naming
 	complications.
+
 	E.G file: S.W.A.T.2017.S01E01.avi is not handled correctly by Video::Filename so we need to know to handle this
 	differently. $exceptionList can be left undefined if you do not need to use it. Its format is
 	"MatchCase:DesiredValue|MatchCase:DesiredValue"
 
 =head2 countries
+
+	$obj->countries("(US|UK|AU)");
+	$obj->countries();
 
 	This subroutine sets the countries internal value and returns it.
 
@@ -367,6 +376,9 @@ None by default.
 
 =head2 showFolder
 
+        $obj->showFolder("/path/to/folder"); Set the path return undef is the path is invalid
+        $obj->showFolder(); 		     Return the path to the folder
+
 	Always confirm this does not return undef before using.
         undef will be returned in the path is invalid. 
 
@@ -375,39 +387,93 @@ None by default.
 	This is where the TV Show Folder resides on the file system.
 	If the path is invalid this would leave the internal value as being undef.
 
-        $obj->showFolder("/path/to/folder"); Set the path return undef is the path is invalid
-        $obj->showFolder(); 		     Return the path to the folder
-
 
 =head2 newShowFolder
 
+        $obj->newShowFolder("/path/to/folder"); Set the path return undef is the path is invalid
+        $obj->newShowFolder(); 		        Return the path to the folder
+
 	Always confirm this does not return undef before using.
-        undef will be returned in the path is invalid. 
+        undef will be returned if the path is invalid. 
 
 	Also a valid "path/to/folder" will always return "path/to/folder/"
 
 	This is where new files to be add to the TV Show store reside on the file system.
-	If the path is invalid this would leave the internal value as being undef.
-
-        $obj->newShowFolder("/path/to/folder"); Set the path return undef is the path is invalid
-        $obj->newShowFolder(); 		     Return the path to the folder
 
 =head2 createShowHash
 
+	$obj->createShowHash;
+
         This function creates a hash of show names with the correct path to store data based on the
-	directories that are found the in the showFolder path.
+	directories that are found in showFolder.
+
+        Examples:
+	Life on Mars (US) creates a 3 keys which point to the same folder
+					key: life on mars (us) => folder: Life on Mars (US)
+					key: life on mars us   => folder: Life on Mars (US)
+					key: life on mars      => folder: Life on Mars (US)
+
+	However if there already exists a folder: "Life on Mars" and a folder "Life on Mars (US)
+	the following hash key:folder pairs will be created note that the folder differ
+					key: life on mars      => folder: Life on Mars
+					key: life on mars (us) => folder: Life on Mars (US)
+					key: life on mars us   => folder: Life on Mars (US)
+
+	As such file naming relating to country of origin is important if you are important to versions of the same show
+	based on country.
 
 =head2 showPath
 
-	Return the Folder that stores the tv shows seasons folder.
+	$obj->showPath("Life on Mars US") returns the name of the folder "Life on Mars (US)" 
+	or undef if "Life on Mars US" does not exist as a key. 
 
-        If there is no folder for the named show then return undef
+	No key will be found if there was no folder found when $obj->createShowHash was called.
+	
+	Example:
+
+	my $file = Video::Filename::new("Life.on.Mars.(US).S01E01.avi", { spaces => '.' });
+	# $file->{name} now contains "Life on Mars (US)" 
+	# $file->{season} now contains "1"
+
+	my $dest = "/path/to/basefolder/" . $obj->showPath($file->{name});
+        result => $dest now cotains "/path/to/basefolder/Life on Mars (US)/"
+
+	$dest = $obj->createSeasonFolder($dest,$file->{season});
+	result => $dest now contains "/path/to/basefolder/Life on Mars (US)/Season1/"
 	
 =head2 processNewShows
 
-	Folders are excluded from processing
-       
+	$obj->processNewShows();
+        
+	This function requires that $obj->showFolder("/absolute/path") and $obj->newShowFolder("absoute/path")
+	have already been called as they will be used with calls as $self->showFolder and $self->newShowFolder
+
+	This is the main process for batch processing of a folder of show files.
+	Hidden files, files named file.done as well as directories are excluded from being processed.
+
+=head2 importShow
+
+	$obj->importShow("absolute/path/to/folder/","absolute/path/to/file);
+
+	folder is where to store the file.
+
+	This function does the heavy lifting of actually moving the show file into the determined folder.
+ 	This function is called by processNewShows which does the work to
+	determine the paths to folder and file. 
+	This function could be called on its own after you have verified $destintion and $file
+
+	It uses a sytem() call to rsync which always checks that the copy was successful.
+
+	This function then checks the state of $obj->delete to decide if the processed file should be renamed $file.done
+	or should be removed using unlink();
+
 =head2 delete
+	
+	$obj->delete return the current true or false state (undef or defined)
+	$obj->delete(1) set delete to true
+	$obj->delete(0) set delete to false
+
+	Input should be 0 or 1 0 being do not delete 1 being delete.
 
 	Set if we should delete source file after successfully importing it to the tv store or 
 	if we should rename it to $file.done
@@ -418,20 +484,25 @@ None by default.
 
 =head2 wereThereErrors
 
+	$obj->wereThereErrors;
+
 	This should be called at the end of the program to report if any file names could not be handled correctly
-	resulting in files not being processd. These missed files can then be manually moved or their show name can
-	be added to the exceptionList variable. remember to match the NAME preceeding SXX and to give the corrected
+	resulting in files not being processed. These missed files can then be manually moved or their show name can
+	be added to the exceptionList variable. Remember to match the NAME preceeding SXX and to give the corrected
 	name 
 	EG S.W.A.T.2017.SXX should get an entry such as:
 	exceptionList = "S.W.A.T.2017:S.W.A.T 2017";
 
 =head2 createSeasonFolder
 
-        createSeasonFolder("destination/path",$season);
-        creates a folder within "destintaton/path" by calling make_path()
-        returns the newly created path "destination/path/SeasonX/" or "destination/path/Specials/"
+	$obj->createSeasonFolder("/absolute/path/to/show/folder/",$seasonNumber)
 
-        note: "destintaion/path" is not verified to be valid and is assumed to have been checked before being passed
+        creates a folder within "/absolute/path/to/show/folder/" by calling make_path()
+        returns the newly created path "absolute/path/to/show/folder/SeasonX/" or 
+	"/absolute/path/to/show/folder/Specials/"
+
+        note: "/absolute/path/to/show/folder/" is not verified to be valid and is assumed to have been
+	checked before being passed
 
 	Based on SXX
         S01 creates Season1
@@ -441,22 +512,18 @@ None by default.
 
 =head1 SEE ALSO
 
-Mention other useful documentation such as the documentation of
-related modules or operating system documentation (such as man pages
-in UNIX), or any relevant external documentation such as RFCs or
-standards.
 
-If you have a mailing list set up for your module, mention it here.
-
-If you have a web site set up for your module, mention it here.
+ File::Path
+ File::Copy
+ Video::Filename
 
 =head1 AUTHOR
 
-Adam Spann, E<lt>aspann@apple.comE<gt>
+Adam Spann, E<lt>adam_spann@hotmail.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2015 by Adam Spann
+Copyright (C) 2018 by Adam Spann
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.12.4 or,
