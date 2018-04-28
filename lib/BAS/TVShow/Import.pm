@@ -334,15 +334,18 @@ BAS::TVShow::Import - Perl extension for blah blah blah
 
 =head1 DESCRIPTION
 
-Stub documentation for BAS::TVShow::Import, created by h2xs. It looks like the
-author of the extension was negligent enough to leave the stub
-unedited.
+      This module moves TV show files from the folder where they currently exist into the correct folder based on
+      show name and season.
 
-Blah blah blah.
+      Folder structure: /base/folder/Castle -> Season1 -> Castle.S01E01.avi
+                                               Season2 -> Castle.S02E01.avi 
+                                               Specials -> Castle.S00E01.avi
+
+      Source files are renamed or deleted upon successful relocation.
 
 =head2 EXPORT
 
-None by default.
+  None by default.
 
 =head1 Methods
 
@@ -350,64 +353,65 @@ None by default.
 
 =head2 new
 
-	our $exceptionList = "S.W.A.T.2017:S.W.A.T 2017";
+  our $exceptionList = "S.W.A.T.2017:S.W.A.T 2017";
 
-	$obj = BAS::TVShow::Import->new();
+  $obj = BAS::TVShow::Import->new();
 
-	This subroutine creates a new object of type BAS::TVShow::Import
+  This subroutine creates a new object of type BAS::TVShow::Import
 
-        If the global varible $exceptionList is defined we load this data into a hash for later use to handle naming
-	complications.
+  If the global varible $exceptionList is defined we load this data into a hash for later use to handle naming
+  complications.
 
-	E.G file: S.W.A.T.2017.S01E01.avi is not handled correctly by Video::Filename so we need to know to handle this
-	differently. $exceptionList can be left undefined if you do not need to use it. Its format is
-	"MatchCase:DesiredValue|MatchCase:DesiredValue"
+  E.G file: S.W.A.T.2017.S01E01.avi is not handled correctly by Video::Filename so we need to know to handle this
+  differently. $exceptionList can be left undefined if you do not need to use it. Its format is
+  "MatchCase:DesiredValue|MatchCase:DesiredValue"
 
 =head2 countries
 
-	$obj->countries("(US|UK|AU)");
-	$obj->countries();
+  $obj->countries("(US|UK|AU)");
+  $obj->countries();
 
-	This subroutine sets the countries internal value and returns it.
+  This subroutine sets the countries internal value and returns it.
 
-        The default value is (UK|US)
-	This allows the system to match against programs names such as Agent X US / Agent X (US) / Agent X 
-	and reference the same single folder
+  The default value is (UK|US)
+
+  This allows the system to match against programs names such as Agent X US / Agent X (US) / Agent X 
+  and reference the same single folder
 
 =head2 showFolder
 
-        $obj->showFolder("/path/to/folder"); Set the path return undef is the path is invalid
-        $obj->showFolder(); 		     Return the path to the folder
+  $obj->showFolder("/path/to/folder"); Set the path return undef is the path is invalid
+  $obj->showFolder();         		     Return the path to the folder
 
-	Always confirm this does not return undef before using.
-        undef will be returned in the path is invalid. 
+  Always confirm this does not return undef before using.
+  undef will be returned in the path is invalid. 
 
-	Also a valid "path/to/folder" will always return "path/to/folder/"
+  Also a valid "path/to/folder" will always return "path/to/folder/"
 
-	This is where the TV Show Folder resides on the file system.
-	If the path is invalid this would leave the internal value as being undef.
+  This is where the TV Show Folder resides on the file system.
+  If the path is invalid this would leave the internal value as being undef.
 
 
 =head2 newShowFolder
 
-        $obj->newShowFolder("/path/to/folder"); Set the path return undef is the path is invalid
-        $obj->newShowFolder(); 		        Return the path to the folder
+  $obj->newShowFolder("/path/to/folder"); Set the path return undef is the path is invalid
+  $obj->newShowFolder(); 		              Return the path to the folder
 
-	Always confirm this does not return undef before using.
-        undef will be returned if the path is invalid. 
+  Always confirm this does not return undef before using.
+  undef will be returned if the path is invalid. 
 
-	Also a valid "path/to/folder" will always return "path/to/folder/"
+  Also a valid "path/to/folder" will always return "path/to/folder/"
 
-	This is where new files to be add to the TV Show store reside on the file system.
+  This is where new files to be add to the TV Show store reside on the file system.
 
 =head2 createShowHash
 
-	$obj->createShowHash;
+  $obj->createShowHash;
 
-        This function creates a hash of show names with the correct path to store data based on the
-	directories that are found in showFolder.
+  This function creates a hash of show names with the correct path to store data based on the
+  directories that are found in showFolder.
 
-        Examples:
+  Examples:
 	Life on Mars (US) creates a 3 keys which point to the same folder
 					key: life on mars (us) => folder: Life on Mars (US)
 					key: life on mars us   => folder: Life on Mars (US)
@@ -419,103 +423,104 @@ None by default.
 					key: life on mars (us) => folder: Life on Mars (US)
 					key: life on mars us   => folder: Life on Mars (US)
 
-	As such file naming relating to country of origin is important if you are important to versions of the same show
-	based on country.
+  As such file naming relating to country of origin is important if you are important to versions of the
+  same show based on country.
 
 =head2 showPath
 
-	$obj->showPath("Life on Mars US") returns the name of the folder "Life on Mars (US)" 
-	or undef if "Life on Mars US" does not exist as a key. 
+  $obj->showPath("Life on Mars US") returns the name of the folder "Life on Mars (US)" 
+  or undef if "Life on Mars US" does not exist as a key. 
 
-	No key will be found if there was no folder found when $obj->createShowHash was called.
+  No key will be found if there was no folder found when $obj->createShowHash was called.
 	
-	Example:
+  Example:
 
-	my $file = Video::Filename::new("Life.on.Mars.(US).S01E01.avi", { spaces => '.' });
-	# $file->{name} now contains "Life on Mars (US)" 
-	# $file->{season} now contains "1"
+  my $file = Video::Filename::new("Life.on.Mars.(US).S01E01.avi", { spaces => '.' });
+  # $file->{name} now contains "Life on Mars (US)" 
+  # $file->{season} now contains "1"
 
-	my $dest = "/path/to/basefolder/" . $obj->showPath($file->{name});
-        result => $dest now cotains "/path/to/basefolder/Life on Mars (US)/"
+  my $dest = "/path/to/basefolder/" . $obj->showPath($file->{name});
+  result => $dest now cotains "/path/to/basefolder/Life on Mars (US)/"
 
-	$dest = $obj->createSeasonFolder($dest,$file->{season});
-	result => $dest now contains "/path/to/basefolder/Life on Mars (US)/Season1/"
+  $dest = $obj->createSeasonFolder($dest,$file->{season});
+  result => $dest now contains "/path/to/basefolder/Life on Mars (US)/Season1/"
 	
 =head2 processNewShows
 
-	$obj->processNewShows();
+  $obj->processNewShows();
         
-	This function requires that $obj->showFolder("/absolute/path") and $obj->newShowFolder("absoute/path")
-	have already been called as they will be used with calls as $self->showFolder and $self->newShowFolder
+  This function requires that $obj->showFolder("/absolute/path") and $obj->newShowFolder("absoute/path")
+  have already been called as they will be used with calls as $self->showFolder and $self->newShowFolder
 
-	This is the main process for batch processing of a folder of show files.
-	Hidden files, files named file.done as well as directories are excluded from being processed.
+  This is the main process for batch processing of a folder of show files.
+  Hidden files, files named file.done as well as directories are excluded from being processed.
 
 =head2 importShow
 
-	$obj->importShow("absolute/path/to/folder/","absolute/path/to/file);
+  $obj->importShow("absolute/path/to/folder/","absolute/path/to/file);
 
-	folder is where to store the file.
+  folder is where to store the file.
 
-	This function does the heavy lifting of actually moving the show file into the determined folder.
- 	This function is called by processNewShows which does the work to
-	determine the paths to folder and file. 
-	This function could be called on its own after you have verified $destintion and $file
+  This function does the heavy lifting of actually moving the show file into the determined folder.
+  This function is called by processNewShows which does the work to
+  determine the paths to folder and file. 
+  This function could be called on its own after you have verified $destintion and $file
 
-	It uses a sytem() call to rsync which always checks that the copy was successful.
+  It uses a sytem() call to rsync which always checks that the copy was successful.
 
-	This function then checks the state of $obj->delete to decide if the processed file should be renamed $file.done
-	or should be removed using unlink();
+  This function then checks the state of $obj->delete to decide if the processed file should be renamed $file.done
+  or should be removed using unlink();
 
 =head2 delete
 	
-	$obj->delete return the current true or false state (undef or defined)
-	$obj->delete(1) set delete to true
-	$obj->delete(0) set delete to false
+  $obj->delete return the current true or false state (undef or defined)
+  $obj->delete(1) set delete to true
+  $obj->delete(0) set delete to false
 
-	Input should be 0 or 1 0 being do not delete 1 being delete.
+  Input should be 0 or 1 0 being do not delete 1 being delete.
 
-	Set if we should delete source file after successfully importing it to the tv store or 
-	if we should rename it to $file.done
+  Set if we should delete source file after successfully importing it to the tv store or 
+  if we should rename it to $file.done
 
-        The default is false and the file is simply renamed.
+  The default is false and the file is simply renamed.
 
-        Return undef if we don't want to delete. Return defined if we do want to delete
+  Return undef if we don't want to delete. Return defined if we do want to delete
 
 =head2 wereThereErrors
 
-	$obj->wereThereErrors;
+  $obj->wereThereErrors;
 
-	This should be called at the end of the program to report if any file names could not be handled correctly
-	resulting in files not being processed. These missed files can then be manually moved or their show name can
-	be added to the exceptionList variable. Remember to match the NAME preceeding SXX and to give the corrected
-	name 
-	EG S.W.A.T.2017.SXX should get an entry such as:
-	exceptionList = "S.W.A.T.2017:S.W.A.T 2017";
+  This should be called at the end of the program to report if any file names could not be handled correctly
+  resulting in files not being processed. These missed files can then be manually moved or their show name can
+  be added to the exceptionList variable. Remember to match the NAME preceeding SXX and to give the corrected
+  name 
+
+  EG S.W.A.T.2017.SXX should get an entry such as:
+  exceptionList = "S.W.A.T.2017:S.W.A.T 2017";
 
 =head2 createSeasonFolder
 
-	$obj->createSeasonFolder("/absolute/path/to/show/folder/",$seasonNumber)
+  $obj->createSeasonFolder("/absolute/path/to/show/folder/",$seasonNumber)
 
-        creates a folder within "/absolute/path/to/show/folder/" by calling make_path()
-        returns the newly created path "absolute/path/to/show/folder/SeasonX/" or 
-	"/absolute/path/to/show/folder/Specials/"
+  creates a folder within "/absolute/path/to/show/folder/" by calling make_path()
+  returns the newly created path "absolute/path/to/show/folder/SeasonX/" or 
+  "/absolute/path/to/show/folder/Specials/"
 
-        note: "/absolute/path/to/show/folder/" is not verified to be valid and is assumed to have been
-	checked before being passed
+  note: "/absolute/path/to/show/folder/" is not verified to be valid and is assumed to have been
+  checked before being passed
 
-	Based on SXX
-        S01 creates Season1
-	S00 creates Specials
+  Based on SXX
+  S01 creates Season1
+  S00 creates Specials
 
 =cut
 
 =head1 SEE ALSO
 
 
- File::Path
- File::Copy
- Video::Filename
+  File::Path
+  File::Copy
+  Video::Filename
 
 =head1 AUTHOR
 
