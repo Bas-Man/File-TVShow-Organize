@@ -32,6 +32,8 @@ $obj->newShowFolder($sourceDir);
 
 $obj->createShowHash();
 
+can_ok($obj, 'verbose');
+
 subtest "About to process done_list Folder." => sub {
 can_ok($obj, 'wereThereErrors');
 is($obj->{UnhandledFileNames}, undef, "No UnhandedFiles have been found"); 
@@ -43,6 +45,14 @@ can_ok($obj, 'importShow');
 };
 
 $obj->delete(1);
+
+subtest "Testing Verbose mode setting" => sub {
+is($obj->verbose, undef, "Verbose mode is not set.");
+$obj->verbose(1);
+is($obj->verbose, defined, "Verbose mode is set.");
+
+};
+
 $obj->newShowFolder(getcwd . '/t/test-data/delete_list/');
 $obj->processNewShows();
 

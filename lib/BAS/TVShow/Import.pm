@@ -41,6 +41,7 @@ sub new
         #default data and states. Other data is created and stored during program execution
         countries => "(UK|US)",
         _delete => undef,
+        verbose => undef,
              };
 
   bless $self, $class;
@@ -231,6 +232,20 @@ sub delete {
   return $self->{_delete};
 }
 
+sub verbose {
+  my $self;
+  my $verbose;
+  
+  ($self,$verbose) = @_;
+  
+  if((defined $verbose) && ($verbose == 1)) {
+    $self->{verbose} = defined;
+  } elsif ((defined $verbose) && ($verbose == 0)) {
+    $self->{verbose} = undef;
+  }
+  return $self->{verbose};
+}
+
 sub createSeasonFolder {
 
   my ($self, $_path, $season) = @_;
@@ -242,7 +257,13 @@ sub createSeasonFolder {
   } else {
     $path = $path . 'Season' . $season;
   }
-  make_path($path, { verbose => 1 }) unless -e $path;
+  # Show Season folder being created if verbose mode is true.
+  if(defined $self->verbose) {
+    make_path($path, { verbose => 1 }) unless -e $path;
+  } else {
+    # Verbose mode is false so work silently.
+    make_path($path) unless -e $path;
+  }
   return $path;
 }
 
@@ -260,20 +281,23 @@ sub importShow {
   ($destination, $source) = _rsyncPrep($destination,$self->newShowFolder());
 
   # create the command string to be used in system() call
-  my $command = "rsync -ta --progress " . $source . $file . " " . $destination;
+  # Set --progress if verbose is true
+  my $command = "rsync -ta ";
+  $command = $command . "--progress " if (defined $self->verbose);
+  $command = $command . $source . $file . " " . $destination;
 
-  print "command: " . $command . "\n";
   system($command);
   if($? == 0) { 
-    ## this is where we need to check the value of delete() to decide if we delete or rename the file.
-  
+    # If delete is true unlink file.  
     if(defined $self->delete) {
       unlink($source . $file);
     } else {
+      # delete is false so merely rename the file by appending .done
       move($source . $file, $source . $file . ".done")
     }
   } else {
     #report failed processing? Error on rsync command return code
+    print "Something went very wrong. Rsync failed for some reason.¥n"
   }
   return $self;
 
@@ -342,6 +366,8 @@ BAS::TVShow::Import - Perl extension for blah blah blah
                                                Specials -> Castle.S00E01.avi
 
       Source files are renamed or deleted upon successful relocation.
+      
+      Works on Mac OS and *nix systems.
 
 =head2 EXPORT
 
@@ -512,6 +538,15 @@ BAS::TVShow::Import - Perl extension for blah blah blah
   Based on SXX
   S01 creates Season1
   S00 creates Specials
+
+=head2 verbose
+  $obj->verbose();
+  $obj->verbose(0);
+  $obj->verbose(1);
+
+  Return undef if verbose mode is off. Return defined if verbose mode is on.
+  
+  This state is checked by createSeasonFolder(), importShow()
 
 =cut
 
