@@ -4,8 +4,9 @@ MANIFEST
 README
 t/00CheckTestDirectorStructures.t
 t/01TestDirectoryHandling.t
-t/02TestFileNameHandling.t
-t/03TestShowHashing.t
+t/03TestFileNameHandling.t
+t/02TestBaseFunctions.t
+t/04TestShowHashing.t
 t/05BAS-TVShow-Import.t
 t/08CheckSuccessfulImport.t
 t/10Cleanup

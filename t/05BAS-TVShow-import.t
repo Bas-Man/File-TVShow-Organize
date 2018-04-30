@@ -46,13 +46,6 @@ can_ok($obj, 'importShow');
 
 $obj->delete(1);
 
-subtest "Testing Verbose mode setting" => sub {
-is($obj->verbose, undef, "Verbose mode is not set.");
-$obj->verbose(1);
-is($obj->verbose, defined, "Verbose mode is set.");
-
-};
-
 $obj->newShowFolder(getcwd . '/t/test-data/delete_list/');
 $obj->processNewShows();
 

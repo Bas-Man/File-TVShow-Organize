@@ -93,4 +93,13 @@ is($obj->delete(0), 0, "Delete is false (0) again. We should delete files as we 
 is($obj->delete("A"), undef, "I was passed an invalid imput returning undef");
 };
 
+subtest "Testing verbose function." => sub {
+is($obj->verbose(), 0, "Delete is false (0). We should renamed files as we process them");
+is($obj->verbose(1), 1, "Delete is true (1). We should delete files as we process them");
+is($obj->verbose(),1 , "Delete is still true (1). We should delete files as we process them");
+is($obj->verbose(0), 0, "Delete is false (0) again. We should delete files as we process them");
+is($obj->verbose("A"), undef, "I was passed an invalid imput returning undef");
+
+};
+
 done_testing();

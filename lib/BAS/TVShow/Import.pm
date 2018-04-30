@@ -40,8 +40,8 @@ sub new
   my $self = {
         #default data and states. Other data is created and stored during program execution
         countries => "(UK|US)",
-        _delete => undef,
-        verbose => undef,
+        delete => 0,
+        verbose => 0,
              };
 
   bless $self, $class;
@@ -219,31 +219,39 @@ sub wereThereErrors {
 
 sub delete {
 
-  my $self;
-  my $delete;
+  my ($self, $delete) = @_;
 
-  ($self, $delete) = @_;
-
-  if ((defined $delete) && ($delete == 1)) {
-    $self->{_delete} = defined;
-  } elsif ((defined $delete) && ($delete == 0)) {
-    $self->{_delete} = undef;
+  return $self->{delete} if(@_ == 1);
+  
+  if (($delete =~ m/[[:alpha:]]/) || ($delete != 0) && ($delete != 1)) {
+    print STDERR "Invalid arguments passed. Value not updated\n";
+    return undef;
+  } else {
+    if ($delete == 1) {
+      $self->{delete} = 1;
+    } elsif ($delete == 0) {
+      $self->{delete} = 0;
+    }
+    return $self->{delete};
   }
-  return $self->{_delete};
 }
 
 sub verbose {
-  my $self;
-  my $verbose;
+   my ($self, $verbose) = @_;
+
+  return $self->{verbose} if(@_ == 1);
   
-  ($self,$verbose) = @_;
-  
-  if((defined $verbose) && ($verbose == 1)) {
-    $self->{verbose} = defined;
-  } elsif ((defined $verbose) && ($verbose == 0)) {
-    $self->{verbose} = undef;
+  if (($verbose =~ m/[[:alpha:]]/) || ($verbose != 0) && ($verbose != 1)) {
+    print STDERR "\n### Invalid arguments passed. Value not updated\n";
+    return undef;
+  } else {
+    if ($verbose == 1) {
+      $self->{verbose} = 1;
+    } elsif ($verbose == 0) {
+      $self->{verbose} = 0;
+    }
+    return $self->{verbose};
   }
-  return $self->{verbose};
 }
 
 sub createSeasonFolder {
@@ -258,7 +266,7 @@ sub createSeasonFolder {
     $path = $path . 'Season' . $season;
   }
   # Show Season folder being created if verbose mode is true.
-  if(defined $self->verbose) {
+  if($self->verbose) {
     make_path($path, { verbose => 1 }) unless -e $path;
   } else {
     # Verbose mode is false so work silently.
@@ -283,13 +291,14 @@ sub importShow {
   # create the command string to be used in system() call
   # Set --progress if verbose is true
   my $command = "rsync -ta ";
-  $command = $command . "--progress " if (defined $self->verbose);
+  $command = $command . "--progress " if ($self->verbose);
   $command = $command . $source . $file . " " . $destination;
 
   system($command);
+  
   if($? == 0) { 
     # If delete is true unlink file.  
-    if(defined $self->delete) {
+    if($self->delete) {
       unlink($source . $file);
     } else {
       # delete is false so merely rename the file by appending .done
@@ -374,8 +383,6 @@ BAS::TVShow::Import - Perl extension for blah blah blah
   None by default.
 
 =head1 Methods
-
-=cut
 
 =head2 new
 
@@ -499,18 +506,18 @@ BAS::TVShow::Import - Perl extension for blah blah blah
 
 =head2 delete
 	
-  $obj->delete return the current true or false state (undef or defined)
+  $obj->delete return the current true or false state (1 or 0)
   $obj->delete(1) set delete to true
   $obj->delete(0) set delete to false
 
-  Input should be 0 or 1 0 being do not delete 1 being delete.
+  Input should be 0 or 1. 0 being do not delete. 1 being delete.
 
   Set if we should delete source file after successfully importing it to the tv store or 
   if we should rename it to $file.done
 
   The default is false and the file is simply renamed.
 
-  Return undef if we don't want to delete. Return defined if we do want to delete
+  Return undef if the varible passed to the function is not valid. Do not change the current state of delete.
 
 =head2 wereThereErrors
 
@@ -544,11 +551,11 @@ BAS::TVShow::Import - Perl extension for blah blah blah
   $obj->verbose(0);
   $obj->verbose(1);
 
-  Return undef if verbose mode is off. Return defined if verbose mode is on.
+  Return undef if passed an invalid imput and write to STDERR. Current value of verbose is not changed.
+  Return 0 if verbose mode is off. Return 1 if verbose mode is on.
   
   This state is checked by createSeasonFolder(), importShow()
 
-=cut
 
 =head1 SEE ALSO
 
