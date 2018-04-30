@@ -19,6 +19,13 @@ $tar->read("t/tv-shows.tar.gz");
   $tar->extract;
 }
 
+my $testdata = Archive::Tar->new;
+$testdata->read("t/test-data.tar.gz");
+{
+  local $CWD = getcwd . "/t/";
+  $testdata->extract;
+}
+
 diag "\n\nCheck that we have working Testing directories test-data and TV Shows\n";
 my $sourceDir = getcwd . '/t/test-data/';
 
