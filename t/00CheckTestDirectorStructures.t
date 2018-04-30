@@ -13,7 +13,7 @@ use Archive::Tar;
 
 diag "\n\nExtract TV Shows from tar.gz file for testing. This will be removed in the final test\n";
 my $tar = Archive::Tar->new;
-$tar->read("t/tvshow.tar.gz");
+$tar->read("t/tv-shows.tar.gz");
 {
   local $CWD = getcwd . "/t/";
   $tar->extract;
