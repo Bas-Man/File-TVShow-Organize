@@ -47,7 +47,7 @@ sub new
   bless $self, $class;
 
   ## Additional constructor code goes here.
-  ## $::exception is a gobal variable which may or may not exciting in the calling perl script that loads this module.
+  ## $::exception is a gobal variable which may or may not exist in the calling perl script that loads this module.
   if (!defined $::exceptionList) {
   ## Do nothing
   } else {
@@ -173,11 +173,12 @@ sub processNewShows {
     my $showData;
     # Extract show name, Season and Episode
     $showData = Video::Filename::new($file);
-    # Apply special handling if they show is in the exceptionList
+    # Apply special handling if the show is in the exceptionList
     if (exists $self->{_exceptionList}{$showData->{name}}) { ##Handle special cases like "S.W.A.T"
+      # Replace the original name value with the one found in _exceptionList
       $showData->{name} = $self->{_exceptionList}{$showData->{name}};
     } else {
-      # Handle normally using '.' as the space marker Somthing.this becomes Something this
+      # Handle normally using '.' as the space marker name "Somthing.this" becomes "Something this"
       $showData = Video::Filename::new($file, { spaces => '.'});
     }
     
