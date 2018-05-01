@@ -338,7 +338,8 @@ __END__
 
 =head1 NAME
 
-Video::File::TVShow::Import - Perl extension for blah blah blah
+Video::File::TVShow::Import - Perl module to move TVShow Files into their matching Show Folder
+on a media server. 
 
 =head1 SYNOPSIS
 
@@ -356,10 +357,13 @@ Video::File::TVShow::Import - Perl extension for blah blah blah
     exit;
   }
 
+  # Create a hash for matching file name to Folders
   $obj->createShowHash();
 
+  # Batch process a folder containing TVShow files
   $obj->processNewShows();
 
+  # Report any file names which could not be handled automatically.
   $obj->wereThereErrors();
 
   #end of program
@@ -375,7 +379,12 @@ Video::File::TVShow::Import - Perl extension for blah blah blah
                                                Specials -> Castle.S00E01.avi
 
       Source files are renamed or deleted upon successful relocation.
-      
+
+      possible uses might include moving the files from an original rip directory and moving them into the correct
+      folder structure for media servers such as Plex or Kodi. Another use might be to sort shows that are already
+      in a single folder and to move them to a Season by Season or Special folder struture for better folder 
+      management.
+
       Works on Mac OS and *nix systems.
 
 =head2 EXPORT
@@ -385,8 +394,6 @@ Video::File::TVShow::Import - Perl extension for blah blah blah
 =head1 Methods
 
 =head2 new
-
-  our $exceptionList = "S.W.A.T.2017:S.W.A.T 2017";
 
   $obj = Video::File::TVShow::Import->new();
 
@@ -482,7 +489,7 @@ Video::File::TVShow::Import - Perl extension for blah blah blah
 
   $obj->processNewShows();
         
-  This function requires that $obj->showFolder("/absolute/path") and $obj->newShowFolder("absoute/path")
+  This function requires that $obj->showFolder("/absolute/path") and $obj->newShowFolder("/absoute/path")
   have already been called as they will be used with calls as $self->showFolder and $self->newShowFolder
 
   This is the main process for batch processing of a folder of show files.
@@ -490,18 +497,18 @@ Video::File::TVShow::Import - Perl extension for blah blah blah
 
 =head2 importShow
 
-  $obj->importShow("absolute/path/to/folder/","absolute/path/to/file);
+  $obj->importShow("/absolute/path/to/folder/", "/absolute/path/to/file");
 
   folder is where to store the file.
 
   This function does the heavy lifting of actually moving the show file into the determined folder.
   This function is called by processNewShows which does the work to
   determine the paths to folder and file. 
-  This function could be called on its own after you have verified $destintion and $file
+  This function could be called on its own after you have verified "folder" and "file"
 
   It uses a sytem() call to rsync which always checks that the copy was successful.
 
-  This function then checks the state of $obj->delete to decide if the processed file should be renamed $file.done
+  This function then checks the state of $obj->delete to decide if the processed file should be renamed "file.done"
   or should be removed using unlink();
 
 =head2 delete
