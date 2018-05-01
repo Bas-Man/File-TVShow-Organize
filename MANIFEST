@@ -9,7 +9,7 @@ t/03TestFileNameHandling
 t/04TestShowHashing.t
 t/05BAS-TVShow-Import.t
 t/08CheckSuccessfulImport.t
-t/10Clean
+t/10Clean.t
 t/test-data.tar.gz
 t/tv-shows.tar.gz
 lib/Video/File/TVShow/Import.pm
