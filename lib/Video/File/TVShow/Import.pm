@@ -556,6 +556,10 @@ Video::File::TVShow::Import - Perl extension for blah blah blah
   
   This state is checked by createSeasonFolder(), importShow()
 
+=head1 INCOMPATIBILITIES
+
+Windows systems.
+
 
 =head1 SEE ALSO
 

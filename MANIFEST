@@ -7,7 +7,7 @@ t/01TestDirectoryHandling.t
 t/02TestBaseFunctions.t
 t/03TestFileNameHandling
 t/04TestShowHashing.t
-t/05BAS-TVShow-Import.t
+t/05MainTestImport.t
 t/08CheckSuccessfulImport.t
 t/10Clean.t
 t/test-data.tar.gz
