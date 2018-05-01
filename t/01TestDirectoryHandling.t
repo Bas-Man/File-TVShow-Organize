@@ -9,8 +9,7 @@ use Data::Dumper;
 
 use Test::More;
 use Test::Carp;
-use BAS::TVShow::Import;
-BEGIN { use_ok('BAS::TVShow::Import') };
+BEGIN { use_ok('Video::File::TVShow::Import') };
 BEGIN { use_ok('Video::Filename') };
 BEGIN { use_ok('File::Path')};
 BEGIN { use_ok('File::Copy')};
@@ -21,8 +20,8 @@ BEGIN { use_ok('Cwd')};
 # Insert your test code below, the Test::More module is use()ed here so read
 # its man page ( perldoc Test::More ) for help writing this test script.
 
-my $obj = BAS::TVShow::Import->new();
-isa_ok($obj, 'BAS::TVShow::Import');
+my $obj = Video::File::TVShow::Import->new();
+isa_ok($obj, 'Video::File::TVShow::Import');
 
 subtest 'Test Default Countries value' => sub {
 
@@ -37,7 +36,7 @@ ok(!defined $obj->{_exceptionList}, "Global variable: exceptionList is not defin
 our $exceptionList = "S.W.A.T.2017:S.W.A.T 2017|Test.2018:Test 2018";
 
 $obj = undef;
-$obj = BAS::TVShow::Import->new();
+$obj = Video::File::TVShow::Import->new();
 ok(keys $obj->{_exceptionList}, "Global variable execptionList is defined");
 ok($obj->{_exceptionList}{'S.W.A.T.2017'} =~ m/S.W.A.T 2017/, "S.W.A.T.2017 gives S.W.A.T 2017");
 ok($obj->{_exceptionList}{'Test.2018'} =~ m/Test 2018/, "Test.2018 gives Test 2018");
@@ -45,7 +44,7 @@ ok($obj->{_exceptionList}{'Test.2018'} =~ m/Test 2018/, "Test.2018 gives Test 20
 };
 
 $obj = undef;
-$obj = BAS::TVShow::Import->new();
+$obj = Video::File::TVShow::Import->new();
 
 subtest "Test Destintaiton Directory handling" => sub {
 can_ok ($obj, 'showFolder');

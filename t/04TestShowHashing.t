@@ -9,7 +9,7 @@ use Data::Dumper;
 
 use Test::More; #tests => 6;
 use Test::Carp;
-use BAS::TVShow::Import;
+use Video::File::TVShow::Import;
 use Cwd;
 #BEGIN { use_ok('File::Path')};
 #BEGIN { use_ok('File::Copy')};
@@ -19,7 +19,7 @@ use Cwd;
 # Insert your test code below, the Test::More module is use()ed here so read
 # its man page ( perldoc Test::More ) for help writing this test script.
 
-my $obj = BAS::TVShow::Import->new();
+my $obj = Video::File::TVShow::Import->new();
 
 my $ShowDirectory = getcwd . '/t/TV Shows';
 

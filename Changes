@@ -1,6 +1,6 @@
-Revision history for Perl extension BAS::TVShow::Import.
+Revision history for Perl extension Video::File::TVShow::Import.
 
 0.01  Sun Nov 29 20:35:23 2015
 	- original version; created by h2xs 1.23 with options
-		-XAn BAS::TVShow::Import
+		-XAn Video::File::TVShow::Import
 

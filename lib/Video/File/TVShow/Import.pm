@@ -1,4 +1,4 @@
-package BAS::TVShow::Import;
+package Video::File::TVShow::Import;
 
 use 5.012004;
 use strict;
@@ -17,7 +17,7 @@ our @ISA = qw(Exporter);
 # names by default without a very good reason. Use EXPORT_OK instead.
 # Do not simply export all your public functions/methods/constants.
 
-# This allows declaration	use BAS::TVShow::Import ':all';
+# This allows declaration	use Video::File::TVShow::Import ':all';
 # If you do not need this, moving things directly into @EXPORT or @EXPORT_OK
 # will save memory.
 our %EXPORT_TAGS = ( 'all' => [ qw(
@@ -338,15 +338,15 @@ __END__
 
 =head1 NAME
 
-BAS::TVShow::Import - Perl extension for blah blah blah
+Video::File::TVShow::Import - Perl extension for blah blah blah
 
 =head1 SYNOPSIS
 
-  use BAS::TVShow::Import;
+  use Video::File::TVShow::Import;
 
   our $excpetionList = "S.W.A.T.2017:S.W.A.T 2017|Other:other";
 
-  my $obj = BAS::TVShow::Import->new();
+  my $obj = Video::File::TVShow::Import->new();
 
   $obj->newShowsFolder("/tmp/");
   $obj->showsFolder("/absolute/path/to/TV Shows");
@@ -388,9 +388,9 @@ BAS::TVShow::Import - Perl extension for blah blah blah
 
   our $exceptionList = "S.W.A.T.2017:S.W.A.T 2017";
 
-  $obj = BAS::TVShow::Import->new();
+  $obj = Video::File::TVShow::Import->new();
 
-  This subroutine creates a new object of type BAS::TVShow::Import
+  This subroutine creates a new object of type Video::File::TVShow::Import
 
   If the global varible $exceptionList is defined we load this data into a hash for later use to handle naming
   complications.

@@ -12,4 +12,4 @@ t/08CheckSuccessfulImport.t
 t/10Clean
 t/test-data.tar.gz
 t/tv-shows.tar.gz
-lib/BAS/TVShow/Import.pm
+lib/Video/File/TVShow/Import.pm
