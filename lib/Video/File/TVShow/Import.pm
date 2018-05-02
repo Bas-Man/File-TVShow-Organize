@@ -76,6 +76,7 @@ sub showFolder {
   if (defined $path) {
     if ((-e $path) and (-d $path)) {
       $self->{_showFolder} = $path;
+      # Append / if missing from path
       if ($self->{_showFolder} !~ m/.*\/$/) {
         $self->{_showFolder} = $self->{_showFolder} . '/';
       }
@@ -92,6 +93,7 @@ sub newShowFolder {
   if (defined $path) {
     if ((-e $path) and (-d $path)) {
       $self->{_newShowFolder} = $path;
+      # Append / if missing from path
       if ($self->{_newShowFolder} !~ m/.*\/$/) {
         $self->{_newShowFolder} = $self->{_newShowFolder} . '/';
       }
@@ -119,7 +121,7 @@ sub createShowHash {
     chomp($file); # trim and end of line character
     # create the inital hash strings are converted to lower case so "Doctor Who (2005)" becomes
     # "doctor who (2005)" key="doctor who (2005), path="doctor who (2005)
-    $self->{_shows}{lc($file)}{path} = $file;
+    $self->{shows}{lc($file)}{path} = $file;
     # hanle if there is US or UK in the show name
     if ($file =~ m/\s\(?$self->{countries}\)?$/i) {
       $showNameHolder = $file;
@@ -127,31 +129,31 @@ sub createShowHash {
       $showNameHolder =~ s/(.*) \(?($self->{countries})\)?/$1/gi;
       #catinate them together again with () around country
       #This now another key to the same path
-      $self->{_shows}{lc($showNameHolder . " ($2)")}{path} = $file;
+      $self->{shows}{lc($showNameHolder . " ($2)")}{path} = $file;
       # create a key to the same path again with out country unless one has been already defined by another show
       # this handles something like "Prey" which is US version and "Prey UK" which is the UK version
-      $self->{_shows}{lc($showNameHolder)}{path} = $file unless (exists $self->{_shows}{lc($showNameHolder)});
+      $self->{shows}{lc($showNameHolder)}{path} = $file unless (exists $self->{shows}{lc($showNameHolder)});
     }
     # Handle shows with Year extensions in the same manner has UK|USA
     if ($file =~ m/\s\(?\d{4}\)?$/i) {
       $showNameHolder = $file;
       $showNameHolder =~ s/(.*) \(?(\d\d\d\d)\)?/$1/gi;
-      $self->{_shows}{lc($showNameHolder . " ($2)")}{path} = $file;
-      $self->{_shows}{lc($showNameHolder . " $2")}{path} = $file;
-      $self->{_shows}{lc($showNameHolder)}{path} = $file unless (exists $self->{_shows}{lc($showNameHolder)});
+      $self->{shows}{lc($showNameHolder . " ($2)")}{path} = $file;
+      $self->{shows}{lc($showNameHolder . " $2")}{path} = $file;
+      $self->{shows}{lc($showNameHolder)}{path} = $file unless (exists $self->{shows}{lc($showNameHolder)});
     }
   }
   closedir(DIR);
-  return $self->{_shows};
+  return $self->{shows};
 
 }
 
 
 sub showPath {
 
-  # Access the _shows hash and return the correct directory path for the show name as passed to the funtion
+  # Access the shows hash and return the correct directory path for the show name as passed to the funtion
   my ($self, $show) = @_;
-  return $self->{_shows}{lc($show)}{path}; 
+  return $self->{shows}{lc($show)}{path}; 
 }
 
 sub processNewShows {
