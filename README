@@ -1,4 +1,4 @@
-Video-File-TVShow-Import version 0.01
+Video-File-TVShow-Import version 0.20
 ============================
 
 This module makes it easier to import TV Show files into the correct Show folder and also
@@ -54,9 +54,7 @@ File::Copy;
 
 COPYRIGHT AND LICENCE
 
-Put the correct copyright and licence information here.
-
-Copyright (C) 2015 by Adam Spann
+Copyright (C) 2018 by Adam Spann
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.12.4 or,

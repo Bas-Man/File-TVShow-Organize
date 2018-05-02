@@ -9,7 +9,7 @@ use Data::Dumper;
 
 use Test::More;
 use Test::Carp;
-use Video::File::TVShow::Import;
+BEGIN { use_ok('Video::File::TVShow::Import') };
 BEGIN { use_ok('Video::Filename') };
 BEGIN { use_ok('File::Path')};
 BEGIN { use_ok('File::Copy')};
