@@ -1,5 +1,5 @@
 # Before `make install' is performed this script should be runnable with
-# `make test'. After `make install' it should work as `perl 01TestDirectoryHandling.t'
+# `make test'. After `make install' it should work as `perl 02TestBaseFunctions.t'
 
 #########################
 
@@ -9,7 +9,7 @@ use Data::Dumper;
 
 use Test::More;
 use Test::Carp;
-BEGIN { use_ok('Video::File::TVShow::Import') };
+use Video::File::TVShow::Import;
 BEGIN { use_ok('Video::Filename') };
 BEGIN { use_ok('File::Path')};
 BEGIN { use_ok('File::Copy')};
@@ -65,8 +65,6 @@ subtest "Pass an invalid path again to showfolder()" => sub {
 is($obj->showFolder(getcwd . 't/TV Shows'), undef, "t/TV Shows is not a valid path missing leading /");
 };
 
-};
-
 subtest "Test newShowFolder method" => sub {
 can_ok ($obj, 'newShowFolder');
 is ($obj->newShowFolder, undef, "New TV Show download folder is undefined as expected");
@@ -76,11 +74,30 @@ is($obj->newShowFolder(getcwd . 'test-data'), undef, "Passed an invalid path");
 };
 
 ok($obj->newShowFolder(getcwd . '/t/test-data') =~ m/.*\/$/, "newShowFolder was passed a valid path not ending with \/. but returned path ending in \/");
-
+};
 
 subtest "Pass an invalid path again to newShowFolder" => sub {
 is($obj->newShowFolder(getcwd . 't/test-data'), undef, "t/test-data is not a valid path missing leading /");
 };
+
+};
+
+subtest 'Testing if we should delete or rename processed files' => sub {
+can_ok ($obj, 'delete');
+
+is($obj->delete(), 0, "Delete is false (0). We should renamed files as we process them");
+is($obj->delete(1), 1, "Delete is true (1). We should delete files as we process them");
+is($obj->delete(),1 , "Delete is still true (1). We should delete files as we process them");
+is($obj->delete(0), 0, "Delete is false (0) again. We should delete files as we process them");
+is($obj->delete("A"), undef, "I was passed an invalid imput returning undef");
+};
+
+subtest "Testing verbose function." => sub {
+is($obj->verbose(), 0, "Delete is false (0). We should renamed files as we process them");
+is($obj->verbose(1), 1, "Delete is true (1). We should delete files as we process them");
+is($obj->verbose(),1 , "Delete is still true (1). We should delete files as we process them");
+is($obj->verbose(0), 0, "Delete is false (0) again. We should delete files as we process them");
+is($obj->verbose("A"), undef, "I was passed an invalid imput returning undef");
 
 };
 

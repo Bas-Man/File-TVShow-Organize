@@ -1,5 +1,5 @@
 # Before `make install' is performed this script should be runnable with
-# `make test'. After `make install' it should work as `perl BAS-TVShow-Import.t'
+# `make test'. After `make install' it should work as `perl 03TestFileNameHandling.t'
 
 #########################
 
@@ -9,7 +9,7 @@ use Data::Dumper;
 
 use Test::More tests => 0;
 use Test::Carp;
-use BAS::TVShow::Import;
+use Video::File::TVShow::Import;
 use Cwd;
 
 #########################
@@ -19,7 +19,7 @@ use Cwd;
 
 our $exceptionList = "S.W.A.T.2017:S.W.A.T 2017";
 
-my $obj = BAS::TVShow::Import->new();
+my $obj = Video::File::TVShow::Import->new();
 
 #ok($obj->_handleExceptionsDatedFileNames("S.W.A.T.2017") =~ m/S.W.A.T 2017/, "Returned S.W.A.T 2017"); 
 

@@ -13,10 +13,17 @@ use Archive::Tar;
 
 diag "\n\nExtract TV Shows from tar.gz file for testing. This will be removed in the final test\n";
 my $tar = Archive::Tar->new;
-$tar->read("t/tvshow.tar.gz");
+$tar->read("t/tv-shows.tar.gz");
 {
   local $CWD = getcwd . "/t/";
   $tar->extract;
+}
+
+my $testdata = Archive::Tar->new;
+$testdata->read("t/test-data.tar.gz");
+{
+  local $CWD = getcwd . "/t/";
+  $testdata->extract;
 }
 
 diag "\n\nCheck that we have working Testing directories test-data and TV Shows\n";

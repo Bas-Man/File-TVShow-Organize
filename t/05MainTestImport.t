@@ -1,5 +1,5 @@
 # Before `make install' is performed this script should be runnable with
-# `make test'. After `make install' it should work as `perl BAS-TVShow-Import.t'
+# `make test'. After `make install' it should work as `perl 05MainTestImport.t'
 
 #########################
 
@@ -9,7 +9,7 @@ use Data::Dumper;
 
 use Test::More; #tests => 6;
 use Test::Carp;
-use BAS::TVShow::Import;
+use Video::File::TVShow::Import;
 use Cwd;
 
 #########################
@@ -20,7 +20,7 @@ use Cwd;
 #our $exceptionList = "S.W.A.T.2017:S.W.A.T 2017|S.W.A.T.2018:S.W.A.T 2018";
 our $exceptionList = "S.W.A.T.2017:S.W.A.T 2017";
 
-my $obj = BAS::TVShow::Import->new();
+my $obj = Video::File::TVShow::Import->new();
 
 my $sourceDir = getcwd . '/t/test-data/done_list/';
 
@@ -31,6 +31,8 @@ $obj->showFolder($ShowDirectory);
 $obj->newShowFolder($sourceDir);
 
 $obj->createShowHash();
+
+can_ok($obj, 'verbose');
 
 subtest "About to process done_list Folder." => sub {
 can_ok($obj, 'wereThereErrors');
@@ -43,6 +45,7 @@ can_ok($obj, 'importShow');
 };
 
 $obj->delete(1);
+
 $obj->newShowFolder(getcwd . '/t/test-data/delete_list/');
 $obj->processNewShows();
 
