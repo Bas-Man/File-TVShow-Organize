@@ -410,9 +410,12 @@ on a media server.
                                                Season2 -> Castle.S02E01.avi 
                                                Specials -> Castle.S00E01.avi
 
+      This season folder behaviour can be disabled by calling seasonFolder(0). In this case
+      all files would simply be placed under Castle without sorting into SeasonX
+      
       Source files are renamed or deleted upon successful relocation.
 
-      possible uses might include moving the files from an original rip directory and moving them into the correct
+      Possible uses might include moving the files from an original rip directory and moving them into the correct
       folder structure for media servers such as Plex or Kodi. Another use might be to sort shows that are already
       in a single folder and to move them to a Season by Season or Special folder struture for better folder 
       management.
