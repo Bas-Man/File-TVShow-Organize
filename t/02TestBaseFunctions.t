@@ -101,4 +101,16 @@ is($obj->verbose("A"), undef, "I was passed an invalid imput returning undef");
 
 };
 
+subtest "Testing seasonFolder function." => sub {
+can_ok($obj, 'seasonFolder');
+
+is($obj->seasonFolder(),1, "The default is true. (1) We will create season folders under the parent folder.");
+is($obj->seasonFolder(0),0 ,"SeasonFolder has been set to False. (0) Show files will not be put into seasons sub folders.");
+is($obj->seasonFolder(), 0, "SeasonFolder is still set to False (0)");
+is($obj->seasonFolder(1),1, "SeasonFolder has been set to true (1)");
+is($obj->seasonFolder("A"), undef, "I was passed an invalid arugment. Returning undef")
+
+
+};
+
 done_testing();

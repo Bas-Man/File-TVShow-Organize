@@ -42,6 +42,7 @@ sub new
         countries => "(UK|US)",
         delete => 0,
         verbose => 0,
+        seasonFolder => 1,
              };
 
   bless $self, $class;
@@ -192,8 +193,11 @@ sub processNewShows {
     }
     # Create the path string for storing the file in the right place
     $destination = $self->showFolder() . $self->showPath($showData->{name});
-    $destination = $self->createSeasonFolder($destination, $showData->{season});
-  
+    # if this is true. Update the $destination and create the season subfolder if required.
+    # if this is false. Do not append the season folder. files should just be stored in the root of the show folder. 
+    if($self->seasonFolder()) {
+      $destination = $self->createSeasonFolder($destination, $showData->{season});
+    };
     # Import the file. This will use rsync to copy the file into place and either rename or delete.
     # see importShow() for implementation details
     $self->importShow($destination,$file); 
@@ -254,6 +258,24 @@ sub verbose {
       $self->{verbose} = 0;
     }
     return $self->{verbose};
+  }
+}
+
+sub seasonFolder {
+   my ($self, $seasonFolder) = @_;
+
+  return $self->{seasonFolder} if(@_ == 1);
+  
+  if (($seasonFolder =~ m/[[:alpha:]]/) || ($seasonFolder != 0) && ($seasonFolder != 1)) {
+    print STDERR "\n### Invalid arguments passed. Value not updated\n";
+    return undef;
+  } else {
+    if ($seasonFolder == 1) {
+      $self->{seasonFolder} = 1;
+    } elsif ($seasonFolder == 0) {
+      $self->{seasonFolder} = 0;
+    }
+    return $self->{seasonFolder};
   }
 }
 
@@ -528,6 +550,18 @@ on a media server.
   The default is false and the file is simply renamed.
 
   Return undef if the varible passed to the function is not valid. Do not change the current state of delete.
+
+=head2 seasonFolder
+
+  $obj->seasonFolder return the current true or false state (1 or 0)
+  $obj->seasonFolder(0) or seasonFolder(1) sets and returns the new value.
+  $obj->seasonFolder() returns undef if the input is invalid and the internal state is unchanged.
+
+  if(!defined $obj->seasonFolder("x")) {
+    print "You passed and invalid value\n";
+  }
+
+  The default is true.
 
 =head2 wereThereErrors
 
