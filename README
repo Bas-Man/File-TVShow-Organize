@@ -36,6 +36,13 @@ Example Usage:
   # Create a hash for matching file name to Folders
   $obj->createShowHash();
 
+  # Delete files after processing. The default is to rename the files by appending ".done"
+  $obj->delete(1);
+
+  # Do not create sub files under the the show's parent folder. All files should be dumped
+  # into the parent folder. The default is to create season folders.
+  $obj->seasonFolder(0);
+
   # Batch process a folder containing TVShow files
   $obj->processNewShows();
 

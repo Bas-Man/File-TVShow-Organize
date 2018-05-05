@@ -385,6 +385,13 @@ on a media server.
   # Create a hash for matching file name to Folders
   $obj->createShowHash();
 
+  # Delete files are processing.
+  $obj->delete(1);
+
+  # Don't create sub Season folders under the root show name folder.
+  # Instead just dump them all into the root folder
+  $obj->seasonFolder(0);
+  
   # Batch process a folder containing TVShow files
   $obj->processNewShows();
 
