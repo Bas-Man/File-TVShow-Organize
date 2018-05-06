@@ -610,10 +610,63 @@ on a media server.
   
   This state is checked by createSeasonFolder(), importShow()
 
+=head1 Examples
+
+=head2 Do not create season folders
+
+
+  my $obj = Video::File::TVShow::Import->new();
+
+  $obj->newShowsFolder("/tmp/");
+  $obj->showsFolder("/absolute/path/to/TV Shows");
+
+  if((!defined $obj->newShowFolder()) || (!defined $obj->showFolder())) {
+    print "Verify your paths. Something in wrong\n";
+    exit;
+  }
+
+  # Create a hash for matching file name to Folders
+  $obj->createShowHash();
+
+  # Don't create sub Season folders under the root show name folder.
+  # Instead just dump them all into the root folder
+  $obj->seasonFolder(0);
+  
+  # Batch process a folder containing TVShow files
+  $obj->processNewShows();
+
+  # Report any file names which could not be handled automatically.
+  $obj->wereThereErrors();
+
+=head2 Process two different source folders.
+
+  my $obj = Video::File::TVShow::Import->new();
+
+  $obj->newShowsFolder("/tmp/");
+  $obj->showsFolder("/absolute/path/to/TV Shows");
+
+  if((!defined $obj->newShowFolder()) || (!defined $obj->showFolder())) {
+    print "Verify your paths. Something in wrong\n";
+    exit;
+  }
+
+  # Create a hash for matching file name to Folders
+  $obj->createShowHash();
+
+  # Batch process first folder containing TVShow files
+  $obj->newShowsFolder("/tmp/");
+  $obj->processNewShows();
+
+  # Batch process second folder containing TVShow files.
+  $obj->newShowsFolder("/tmp2/");
+  $obj->processNewShows();
+
+  # Report any file names which could not be handled automatically.
+  $obj->wereThereErrors();
+
 =head1 INCOMPATIBILITIES
 
 Windows systems.
-
 
 =head1 SEE ALSO
 
@@ -635,4 +688,7 @@ it under the same terms as Perl itself, either Perl version 5.12.4 or,
 at your option, any later version of Perl 5 you may have available.
 
 
+=head1 DISCLAIMER OF WARRANTIES
+
+THIS PACKAGE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 =cut
