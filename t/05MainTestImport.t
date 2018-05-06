@@ -46,6 +46,10 @@ $obj->delete(1);
 $obj->newShowFolder(getcwd . '/t/test-data/delete_list/');
 $obj->processNewShows();
 
+$obj->seasonFolder(0);
+$obj->newShowFolder(getcwd . '/t/test-data/noseason_list/');
+$obj->processNewShows();
+
 
 subtest "Check if there were errors" => sub {
 $obj->wereThereErrors();
