@@ -414,11 +414,16 @@ on a media server.
       all files would simply be placed under Castle without sorting into SeasonX
       
       Source files are renamed or deleted upon successful relocation.
+      This depends on the state of delete(). The default is to rename the files and not to delete.
+      See delete() for more details.
 
       Possible uses might include moving the files from an original rip directory and moving them into the correct
       folder structure for media servers such as Plex or Kodi. Another use might be to sort shows that are already
       in a single folder and to move them to a Season by Season or Special folder struture for better folder 
       management.
+
+      File extension is unimportant with the exception of "something.done". This means that provided subtitle files
+      and mkv avi and other files will be processed.
 
       Works on Mac OS and *nix systems.
 
@@ -487,18 +492,18 @@ on a media server.
   directories that are found in showFolder.
 
   Examples:
-	Life on Mars (US) creates a 3 keys which point to the same folder
+	Life on Mars (US) creates 3 keys which point to the same folder
 					key: life on mars (us) => folder: Life on Mars (US)
 					key: life on mars us   => folder: Life on Mars (US)
 					key: life on mars      => folder: Life on Mars (US)
 
 	However if there already exists a folder: "Life on Mars" and a folder "Life on Mars (US)
-	the following hash key:folder pairs will be created note that the folder differ
+	the following hash key:folder pairs will be created. Note that the folderis differ
 					key: life on mars      => folder: Life on Mars
 					key: life on mars (us) => folder: Life on Mars (US)
 					key: life on mars us   => folder: Life on Mars (US)
 
-  As such file naming relating to country of origin is important if you are important to versions of the
+  As such file naming relating to country of origin is important if you are importing versions of the
   same show based on country.
 
 =head2 showPath
@@ -512,7 +517,7 @@ on a media server.
 
   my $file = Video::Filename::new("Life.on.Mars.(US).S01E01.avi", { spaces => '.' });
   # $file->{name} now contains "Life on Mars (US)" 
-  # $file->{season} now contains "1"
+  # $file->{season} now contains "01"
 
   my $dest = "/path/to/basefolder/" . $obj->showPath($file->{name});
   result => $dest now cotains "/path/to/basefolder/Life on Mars (US)/"
@@ -528,11 +533,11 @@ on a media server.
   have already been called as they will be used with calls as $self->showFolder and $self->newShowFolder
 
   This is the main process for batch processing of a folder of show files.
-  Hidden files, files named file.done as well as directories are excluded from being processed.
+  Hidden files, files named "something.done" as well as directories are excluded from being processed.
 
 =head2 importShow
 
-  $obj->importShow("/absolute/path/to/folder/", "/absolute/path/to/file");
+  $obj->importShow("/absolute/path/to/destintaion/folder/", "/absolute/path/to/file");
 
   folder is where to store the file.
 
@@ -544,7 +549,8 @@ on a media server.
   It uses a sytem() call to rsync which always checks that the copy was successful.
 
   This function then checks the state of $obj->delete to decide if the processed file should be renamed "file.done"
-  or should be removed using unlink();
+  or should be removed using unlink(); Note delete(1) should be called before processNewShows() if you wish
+  to delete the processed file. By default the file is only renamed.
 
 =head2 delete
 	
@@ -666,7 +672,10 @@ on a media server.
 
 =head1 INCOMPATIBILITIES
 
-Windows systems.
+This has not been tested on a windows system and I expect it will not actually work.
+
+I have not tested anycases where file names might be "showname.(US).(2003).S0XE0X.avi" as I have no such
+cases myself.
 
 =head1 SEE ALSO
 

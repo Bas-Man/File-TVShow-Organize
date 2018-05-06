@@ -51,6 +51,9 @@ Example Usage:
 
   #end of program
   
+
+  See perdoc for more examples of usage.
+  
 DEPENDENCIES
 
 This module requires these other modules and libraries:
