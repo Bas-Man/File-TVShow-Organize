@@ -31,12 +31,12 @@ my $sourceDir = getcwd . '/t/test-data/';
 
 my $ShowDirectory = getcwd . '/t/TV Shows/';
 
-my $filename = $sourceDir . ".testdir";
+my $filename = $sourceDir;
 
-ok (-e $filename, 'Show Source Directory path is valid') or BAIL_OUT("test-data is not valid.\n");
+ok (-d $filename, 'Show Source Directory path is valid') or BAIL_OUT("test-data is not valid.\n");
 
-$filename = $ShowDirectory . ".testdir";
+$filename = $ShowDirectory;
 
-ok (-e $filename, 'TV Show Directory path is valid') or BAIL_OUT("TV Show is not valid.\n");
+ok (-d $filename, 'TV Show Directory path is valid') or BAIL_OUT("TV Show is not valid.\n");
 
 done_testing();

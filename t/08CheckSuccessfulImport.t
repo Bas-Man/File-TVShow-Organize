@@ -57,4 +57,12 @@ ok(-e $file . "S.W.A.T.2018.S01E01.avi", "S.W.A.T.2018.S01E01.avi has not been u
 
 };
 
+subtest "Test seasonFolder option as false. Do not create season Folders " => sub {
+
+$outputPath = "t/TV Shows/Winter/";
+$file = getcwd . "/" . $outputPath;
+ok(-e $file . "Winter.S01E01.avi", "Winter.S01E01.avi is found in $outputPath");
+ok(-e $file . "Winter.S02E01.avi", "Winter.S02E01.avi is found in $outputPath");
+};
+
 done_testing();

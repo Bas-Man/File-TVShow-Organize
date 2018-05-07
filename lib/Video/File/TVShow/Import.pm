@@ -30,7 +30,7 @@ our @EXPORT = qw(
 	
 );
 
-our $VERSION = '0.01';
+our $VERSION = '0.20';
 
 # Preloaded methods go here.
 
@@ -42,6 +42,7 @@ sub new
         countries => "(UK|US)",
         delete => 0,
         verbose => 0,
+        seasonFolder => 1,
              };
 
   bless $self, $class;
@@ -76,6 +77,7 @@ sub showFolder {
   if (defined $path) {
     if ((-e $path) and (-d $path)) {
       $self->{_showFolder} = $path;
+      # Append / if missing from path
       if ($self->{_showFolder} !~ m/.*\/$/) {
         $self->{_showFolder} = $self->{_showFolder} . '/';
       }
@@ -92,6 +94,7 @@ sub newShowFolder {
   if (defined $path) {
     if ((-e $path) and (-d $path)) {
       $self->{_newShowFolder} = $path;
+      # Append / if missing from path
       if ($self->{_newShowFolder} !~ m/.*\/$/) {
         $self->{_newShowFolder} = $self->{_newShowFolder} . '/';
       }
@@ -119,7 +122,7 @@ sub createShowHash {
     chomp($file); # trim and end of line character
     # create the inital hash strings are converted to lower case so "Doctor Who (2005)" becomes
     # "doctor who (2005)" key="doctor who (2005), path="doctor who (2005)
-    $self->{_shows}{lc($file)}{path} = $file;
+    $self->{shows}{lc($file)}{path} = $file;
     # hanle if there is US or UK in the show name
     if ($file =~ m/\s\(?$self->{countries}\)?$/i) {
       $showNameHolder = $file;
@@ -127,31 +130,31 @@ sub createShowHash {
       $showNameHolder =~ s/(.*) \(?($self->{countries})\)?/$1/gi;
       #catinate them together again with () around country
       #This now another key to the same path
-      $self->{_shows}{lc($showNameHolder . " ($2)")}{path} = $file;
+      $self->{shows}{lc($showNameHolder . " ($2)")}{path} = $file;
       # create a key to the same path again with out country unless one has been already defined by another show
       # this handles something like "Prey" which is US version and "Prey UK" which is the UK version
-      $self->{_shows}{lc($showNameHolder)}{path} = $file unless (exists $self->{_shows}{lc($showNameHolder)});
+      $self->{shows}{lc($showNameHolder)}{path} = $file unless (exists $self->{shows}{lc($showNameHolder)});
     }
     # Handle shows with Year extensions in the same manner has UK|USA
     if ($file =~ m/\s\(?\d{4}\)?$/i) {
       $showNameHolder = $file;
       $showNameHolder =~ s/(.*) \(?(\d\d\d\d)\)?/$1/gi;
-      $self->{_shows}{lc($showNameHolder . " ($2)")}{path} = $file;
-      $self->{_shows}{lc($showNameHolder . " $2")}{path} = $file;
-      $self->{_shows}{lc($showNameHolder)}{path} = $file unless (exists $self->{_shows}{lc($showNameHolder)});
+      $self->{shows}{lc($showNameHolder . " ($2)")}{path} = $file;
+      $self->{shows}{lc($showNameHolder . " $2")}{path} = $file;
+      $self->{shows}{lc($showNameHolder)}{path} = $file unless (exists $self->{shows}{lc($showNameHolder)});
     }
   }
   closedir(DIR);
-  return $self->{_shows};
+  return $self->{shows};
 
 }
 
 
 sub showPath {
 
-  # Access the _shows hash and return the correct directory path for the show name as passed to the funtion
+  # Access the shows hash and return the correct directory path for the show name as passed to the funtion
   my ($self, $show) = @_;
-  return $self->{_shows}{lc($show)}{path}; 
+  return $self->{shows}{lc($show)}{path}; 
 }
 
 sub processNewShows {
@@ -190,8 +193,11 @@ sub processNewShows {
     }
     # Create the path string for storing the file in the right place
     $destination = $self->showFolder() . $self->showPath($showData->{name});
-    $destination = $self->createSeasonFolder($destination, $showData->{season});
-  
+    # if this is true. Update the $destination and create the season subfolder if required.
+    # if this is false. Do not append the season folder. files should just be stored in the root of the show folder. 
+    if($self->seasonFolder()) {
+      $destination = $self->createSeasonFolder($destination, $showData->{season});
+    };
     # Import the file. This will use rsync to copy the file into place and either rename or delete.
     # see importShow() for implementation details
     $self->importShow($destination,$file); 
@@ -252,6 +258,24 @@ sub verbose {
       $self->{verbose} = 0;
     }
     return $self->{verbose};
+  }
+}
+
+sub seasonFolder {
+   my ($self, $seasonFolder) = @_;
+
+  return $self->{seasonFolder} if(@_ == 1);
+  
+  if (($seasonFolder =~ m/[[:alpha:]]/) || ($seasonFolder != 0) && ($seasonFolder != 1)) {
+    print STDERR "\n### Invalid arguments passed. Value not updated\n";
+    return undef;
+  } else {
+    if ($seasonFolder == 1) {
+      $self->{seasonFolder} = 1;
+    } elsif ($seasonFolder == 0) {
+      $self->{seasonFolder} = 0;
+    }
+    return $self->{seasonFolder};
   }
 }
 
@@ -361,6 +385,13 @@ on a media server.
   # Create a hash for matching file name to Folders
   $obj->createShowHash();
 
+  # Delete files are processing.
+  $obj->delete(1);
+
+  # Don't create sub Season folders under the root show name folder.
+  # Instead just dump them all into the root folder
+  $obj->seasonFolder(0);
+  
   # Batch process a folder containing TVShow files
   $obj->processNewShows();
 
@@ -379,12 +410,20 @@ on a media server.
                                                Season2 -> Castle.S02E01.avi 
                                                Specials -> Castle.S00E01.avi
 
+      This season folder behaviour can be disabled by calling seasonFolder(0). In this case
+      all files would simply be placed under Castle without sorting into SeasonX
+      
       Source files are renamed or deleted upon successful relocation.
+      This depends on the state of delete(). The default is to rename the files and not to delete.
+      See delete() for more details.
 
-      possible uses might include moving the files from an original rip directory and moving them into the correct
+      Possible uses might include moving the files from an original rip directory and moving them into the correct
       folder structure for media servers such as Plex or Kodi. Another use might be to sort shows that are already
       in a single folder and to move them to a Season by Season or Special folder struture for better folder 
       management.
+
+      File extension is unimportant with the exception of "something.done". This means that provided subtitle files
+      and mkv avi and other files will be processed.
 
       Works on Mac OS and *nix systems.
 
@@ -453,18 +492,18 @@ on a media server.
   directories that are found in showFolder.
 
   Examples:
-	Life on Mars (US) creates a 3 keys which point to the same folder
+	Life on Mars (US) creates 3 keys which point to the same folder
 					key: life on mars (us) => folder: Life on Mars (US)
 					key: life on mars us   => folder: Life on Mars (US)
 					key: life on mars      => folder: Life on Mars (US)
 
 	However if there already exists a folder: "Life on Mars" and a folder "Life on Mars (US)
-	the following hash key:folder pairs will be created note that the folder differ
+	the following hash key:folder pairs will be created. Note that the folderis differ
 					key: life on mars      => folder: Life on Mars
 					key: life on mars (us) => folder: Life on Mars (US)
 					key: life on mars us   => folder: Life on Mars (US)
 
-  As such file naming relating to country of origin is important if you are important to versions of the
+  As such file naming relating to country of origin is important if you are importing versions of the
   same show based on country.
 
 =head2 showPath
@@ -478,7 +517,7 @@ on a media server.
 
   my $file = Video::Filename::new("Life.on.Mars.(US).S01E01.avi", { spaces => '.' });
   # $file->{name} now contains "Life on Mars (US)" 
-  # $file->{season} now contains "1"
+  # $file->{season} now contains "01"
 
   my $dest = "/path/to/basefolder/" . $obj->showPath($file->{name});
   result => $dest now cotains "/path/to/basefolder/Life on Mars (US)/"
@@ -494,11 +533,11 @@ on a media server.
   have already been called as they will be used with calls as $self->showFolder and $self->newShowFolder
 
   This is the main process for batch processing of a folder of show files.
-  Hidden files, files named file.done as well as directories are excluded from being processed.
+  Hidden files, files named "something.done" as well as directories are excluded from being processed.
 
 =head2 importShow
 
-  $obj->importShow("/absolute/path/to/folder/", "/absolute/path/to/file");
+  $obj->importShow("/absolute/path/to/destintaion/folder/", "/absolute/path/to/file");
 
   folder is where to store the file.
 
@@ -510,7 +549,8 @@ on a media server.
   It uses a sytem() call to rsync which always checks that the copy was successful.
 
   This function then checks the state of $obj->delete to decide if the processed file should be renamed "file.done"
-  or should be removed using unlink();
+  or should be removed using unlink(); Note delete(1) should be called before processNewShows() if you wish
+  to delete the processed file. By default the file is only renamed.
 
 =head2 delete
 	
@@ -526,6 +566,18 @@ on a media server.
   The default is false and the file is simply renamed.
 
   Return undef if the varible passed to the function is not valid. Do not change the current state of delete.
+
+=head2 seasonFolder
+
+  $obj->seasonFolder return the current true or false state (1 or 0)
+  $obj->seasonFolder(0) or seasonFolder(1) sets and returns the new value.
+  $obj->seasonFolder() returns undef if the input is invalid and the internal state is unchanged.
+
+  if(!defined $obj->seasonFolder("x")) {
+    print "You passed and invalid value\n";
+  }
+
+  The default is true.
 
 =head2 wereThereErrors
 
@@ -564,10 +616,66 @@ on a media server.
   
   This state is checked by createSeasonFolder(), importShow()
 
+=head1 Examples
+
+=head2 Do not create season folders
+
+
+  my $obj = Video::File::TVShow::Import->new();
+
+  $obj->newShowsFolder("/tmp/");
+  $obj->showsFolder("/absolute/path/to/TV Shows");
+
+  if((!defined $obj->newShowFolder()) || (!defined $obj->showFolder())) {
+    print "Verify your paths. Something in wrong\n";
+    exit;
+  }
+
+  # Create a hash for matching file name to Folders
+  $obj->createShowHash();
+
+  # Don't create sub Season folders under the root show name folder.
+  # Instead just dump them all into the root folder
+  $obj->seasonFolder(0);
+  
+  # Batch process a folder containing TVShow files
+  $obj->processNewShows();
+
+  # Report any file names which could not be handled automatically.
+  $obj->wereThereErrors();
+
+=head2 Process two different source folders.
+
+  my $obj = Video::File::TVShow::Import->new();
+
+  $obj->newShowsFolder("/tmp/");
+  $obj->showsFolder("/absolute/path/to/TV Shows");
+
+  if((!defined $obj->newShowFolder()) || (!defined $obj->showFolder())) {
+    print "Verify your paths. Something in wrong\n";
+    exit;
+  }
+
+  # Create a hash for matching file name to Folders
+  $obj->createShowHash();
+
+  # Batch process first folder containing TVShow files
+  $obj->newShowsFolder("/tmp/");
+  $obj->processNewShows();
+
+  # Batch process second folder containing TVShow files.
+  $obj->newShowsFolder("/tmp2/");
+  $obj->processNewShows();
+
+  # Report any file names which could not be handled automatically.
+  $obj->wereThereErrors();
+
 =head1 INCOMPATIBILITIES
 
-Windows systems.
+This has not been tested on a windows system and I expect it will not actually work.
 
+I have not tested anycases where file names might be "showname.(US).(2003).S0XE0X.avi" as I have no such
+cases myself.
 
 =head1 SEE ALSO
 
@@ -589,4 +697,7 @@ it under the same terms as Perl itself, either Perl version 5.12.4 or,
 at your option, any later version of Perl 5 you may have available.
 
 
+=head1 DISCLAIMER OF WARRANTIES
+
+THIS PACKAGE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 =cut

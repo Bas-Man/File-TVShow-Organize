@@ -1,4 +1,4 @@
-Video-File-TVShow-Import version 0.01
+Video-File-TVShow-Import version 0.20
 ============================
 
 This module makes it easier to import TV Show files into the correct Show folder and also
@@ -36,6 +36,13 @@ Example Usage:
   # Create a hash for matching file name to Folders
   $obj->createShowHash();
 
+  # Delete files after processing. The default is to rename the files by appending ".done"
+  $obj->delete(1);
+
+  # Do not create sub files under the the show's parent folder. All files should be dumped
+  # into the parent folder. The default is to create season folders.
+  $obj->seasonFolder(0);
+
   # Batch process a folder containing TVShow files
   $obj->processNewShows();
 
@@ -43,6 +50,9 @@ Example Usage:
   $obj->wereThereErrors();
 
   #end of program
+  
+
+  See perdoc for more examples of usage.
   
 DEPENDENCIES
 
@@ -54,9 +64,7 @@ File::Copy;
 
 COPYRIGHT AND LICENCE
 
-Put the correct copyright and licence information here.
-
-Copyright (C) 2015 by Adam Spann
+Copyright (C) 2018 by Adam Spann
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.12.4 or,

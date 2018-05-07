@@ -6,10 +6,9 @@
 use strict;
 use warnings;
 use Data::Dumper;
-
 use Test::More; #tests => 6;
 use Test::Carp;
-use Video::File::TVShow::Import;
+BEGIN { use_ok( 'Video::File::TVShow::Import' ) };
 use Cwd;
 
 #########################
@@ -17,22 +16,19 @@ use Cwd;
 # Insert your test code below, the Test::More module is use()ed here so read
 # its man page ( perldoc Test::More ) for help writing this test script.
 
-#our $exceptionList = "S.W.A.T.2017:S.W.A.T 2017|S.W.A.T.2018:S.W.A.T 2018";
 our $exceptionList = "S.W.A.T.2017:S.W.A.T 2017";
 
 my $obj = Video::File::TVShow::Import->new();
 
+# Setup folder paths.
 my $sourceDir = getcwd . '/t/test-data/done_list/';
-
 my $ShowDirectory = getcwd . '/t/TV Shows';
 
+#load paths into obj
 $obj->showFolder($ShowDirectory);
-
 $obj->newShowFolder($sourceDir);
 
 $obj->createShowHash();
-
-can_ok($obj, 'verbose');
 
 subtest "About to process done_list Folder." => sub {
 can_ok($obj, 'wereThereErrors');
@@ -44,9 +40,14 @@ can_ok($obj, 'importShow');
 
 };
 
+# Now test Delete folder processing run
 $obj->delete(1);
 
 $obj->newShowFolder(getcwd . '/t/test-data/delete_list/');
+$obj->processNewShows();
+
+$obj->seasonFolder(0);
+$obj->newShowFolder(getcwd . '/t/test-data/noseason_list/');
 $obj->processNewShows();
 
 

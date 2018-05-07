@@ -9,6 +9,7 @@ use Data::Dumper;
 
 use Test::More;
 use Test::Carp;
+use lib '../lib/';
 BEGIN { use_ok('Video::File::TVShow::Import') };
 BEGIN { use_ok('Video::Filename') };
 BEGIN { use_ok('File::Path')};
@@ -22,29 +23,6 @@ BEGIN { use_ok('Cwd')};
 
 my $obj = Video::File::TVShow::Import->new();
 isa_ok($obj, 'Video::File::TVShow::Import');
-
-subtest 'Test Default Countries value' => sub {
-
-ok($obj->countries() =~ m/\(UK\|US\)/, "countries is (UK|US)");
-ok($obj->countries("USA") =~ m/USA/, "countries is now equal to USA");
-
-};
-
-subtest "Test Exception List case" => sub {
-
-ok(!defined $obj->{_exceptionList}, "Global variable: exceptionList is not defined");
-our $exceptionList = "S.W.A.T.2017:S.W.A.T 2017|Test.2018:Test 2018";
-
-$obj = undef;
-$obj = Video::File::TVShow::Import->new();
-ok(keys $obj->{_exceptionList}, "Global variable execptionList is defined");
-ok($obj->{_exceptionList}{'S.W.A.T.2017'} =~ m/S.W.A.T 2017/, "S.W.A.T.2017 gives S.W.A.T 2017");
-ok($obj->{_exceptionList}{'Test.2018'} =~ m/Test 2018/, "Test.2018 gives Test 2018");
-
-};
-
-$obj = undef;
-$obj = Video::File::TVShow::Import->new();
 
 subtest "Test Destintaiton Directory handling" => sub {
 can_ok ($obj, 'showFolder');

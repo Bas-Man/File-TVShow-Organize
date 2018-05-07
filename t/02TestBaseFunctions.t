@@ -9,7 +9,7 @@ use Data::Dumper;
 
 use Test::More;
 use Test::Carp;
-use Video::File::TVShow::Import;
+BEGIN { use_ok('Video::File::TVShow::Import') };
 BEGIN { use_ok('Video::Filename') };
 BEGIN { use_ok('File::Path')};
 BEGIN { use_ok('File::Copy')};
@@ -98,6 +98,18 @@ is($obj->verbose(1), 1, "Delete is true (1). We should delete files as we proces
 is($obj->verbose(),1 , "Delete is still true (1). We should delete files as we process them");
 is($obj->verbose(0), 0, "Delete is false (0) again. We should delete files as we process them");
 is($obj->verbose("A"), undef, "I was passed an invalid imput returning undef");
+
+};
+
+subtest "Testing seasonFolder function." => sub {
+can_ok($obj, 'seasonFolder');
+
+is($obj->seasonFolder(),1, "The default is true. (1) We will create season folders under the parent folder.");
+is($obj->seasonFolder(0),0 ,"SeasonFolder has been set to False. (0) Show files will not be put into seasons sub folders.");
+is($obj->seasonFolder(), 0, "SeasonFolder is still set to False (0)");
+is($obj->seasonFolder(1),1, "SeasonFolder has been set to true (1)");
+is($obj->seasonFolder("A"), undef, "I was passed an invalid arugment. Returning undef")
+
 
 };
 

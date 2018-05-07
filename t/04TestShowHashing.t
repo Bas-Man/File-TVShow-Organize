@@ -7,12 +7,10 @@ use strict;
 use warnings;
 use Data::Dumper;
 
-use Test::More; #tests => 6;
+use Test::More;
 use Test::Carp;
-use Video::File::TVShow::Import;
 use Cwd;
-#BEGIN { use_ok('File::Path')};
-#BEGIN { use_ok('File::Copy')};
+BEGIN {use_ok( 'Video::File::TVShow::Import' ) };
 
 #########################
 
