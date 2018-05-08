@@ -19,6 +19,11 @@ To install this module type the following:
 
 Example Usage:
 
+#!/bin/perl
+
+  use strict;
+  use warnings;
+
   use Video::File::TVShow::Import;
 
   our $excpetionList = "S.W.A.T.2017:S.W.A.T 2017|Other:other";
@@ -52,7 +57,7 @@ Example Usage:
   #end of program
   
 
-  See perdoc for more examples of usage.
+  See perldoc for more examples of usage.
   
 DEPENDENCIES
 
