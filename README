@@ -44,11 +44,11 @@ Example Usage:
   # Delete files after processing. The default is to rename the files by appending ".done"
   $obj->delete(1);
 
-  # Do not create sub files under the the show's parent folder. All files should be dumped
+  # Do not create sub folders under the the show's parent folder. All files should be dumped
   # into the parent folder. The default is to create season folders.
   $obj->seasonFolder(0);
 
-  # Batch process a folder containing TVShow files
+  # Batch process a folder containing TV Show files
   $obj->processNewShows();
 
   # Report any file names which could not be handled automatically.
@@ -66,6 +66,8 @@ This module requires these other modules and libraries:
 Video::Filename;
 File::Path;
 File::Copy;
+
+These files are of course accessable through CPAN
 
 COPYRIGHT AND LICENCE
 
