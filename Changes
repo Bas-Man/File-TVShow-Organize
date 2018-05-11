@@ -4,4 +4,14 @@ Revision history for Perl extension Video::File::TVShow::Import.
 	- original version; created by h2xs 1.23 with options
 		-XAn Video::File::TVShow::Import
 
-0.20
+0.20 Sunday May 6th 2018
+	- Added features:
+		delete()
+		verbose()
+		seasonFolder()
+
+0.25 Friday May 11th 2018
+	- Documentaion update. No Changes to the code base implemented
+	Also need to remember to update this file when changes are actually made to the version releases :)
+
+
