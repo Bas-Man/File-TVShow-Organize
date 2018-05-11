@@ -30,7 +30,7 @@ our @EXPORT = qw(
 	
 );
 
-our $VERSION = '0.20';
+our $VERSION = '0.25';
 
 # Preloaded methods go here.
 
@@ -411,7 +411,7 @@ on a media server.
                                                Specials -> Castle.S00E01.avi
 
       This season folder behaviour can be disabled by calling seasonFolder(0). In this case
-      all files would simply be placed under Castle without sorting into SeasonX
+      all files are simply placed under Castle without sorting into season folders.
       
       Source files are renamed or deleted upon successful relocation.
       This depends on the state of delete(). The default is to rename the files and not to delete.
@@ -419,11 +419,12 @@ on a media server.
 
       Possible uses might include moving the files from an original rip directory and moving them into the correct
       folder structure for media servers such as Plex or Kodi. Another use might be to sort shows that are already
-      in a single folder and to move them to a Season by Season or Special folder struture for better folder 
+      in a single folder and to move them to a season by season or Special folder struture for better folder 
       management.
 
-      File extension is unimportant with the exception of "something.done". This means that provided subtitle files
-      and mkv avi and other files will be processed.
+      This module does not examine file encodings and only parses the initial file naming. "name.SXXEXX.*" anything after
+      SXXEXX is ignored with the exception that files ending in ".done" are also ignored by the module. These files will
+      have already been successfully processed in previous executions of code using this module.
 
       Works on Mac OS and *nix systems.
 
@@ -434,6 +435,8 @@ on a media server.
 =head1 Methods
 
 =head2 new
+
+  Arguments: None
 
   $obj = Video::File::TVShow::Import->new();
 
@@ -448,31 +451,39 @@ on a media server.
 
 =head2 countries
 
+  Arguments: String: Note the format below is used as part of a regex check in the module.
+             As such () should always be included at the start and end of the string.
+
   $obj->countries("(US|UK|AU)");
   $obj->countries();
 
   This subroutine sets the countries internal value and returns it.
 
-  The default value is (UK|US)
+  Default value: (UK|US)
 
   This allows the system to match against programs names such as Agent X US / Agent X (US) / Agent X 
   and reference the same single folder
 
 =head2 showFolder
 
+  Arugments: None or String
+
   $obj->showFolder("/path/to/folder"); Set the path return undef is the path is invalid
   $obj->showFolder();         		     Return the path to the folder
 
   Always confirm this does not return undef before using.
-  undef will be returned in the path is invalid. 
+  undef will be returned if the path is invalid. 
 
-  Also a valid "path/to/folder" will always return "path/to/folder/"
+  Also a valid "path/to/folder" will always return with the "/" having been appended. "path/to/folder/"
 
   This is where the TV Show Folder resides on the file system.
+
   If the path is invalid this would leave the internal value as being undef.
 
 
 =head2 newShowFolder
+
+  Arugments: None or String
 
   $obj->newShowFolder("/path/to/folder"); Set the path return undef is the path is invalid
   $obj->newShowFolder(); 		              Return the path to the folder
@@ -480,11 +491,13 @@ on a media server.
   Always confirm this does not return undef before using.
   undef will be returned if the path is invalid. 
 
-  Also a valid "path/to/folder" will always return "path/to/folder/"
+  Also a valid "path/to/folder" will always return with the "/" having been appened. "path/to/folder/"
 
   This is where new files to be add to the TV Show store reside on the file system.
 
 =head2 createShowHash
+
+  Arguents: None
 
   $obj->createShowHash;
 
@@ -508,6 +521,8 @@ on a media server.
 
 =head2 showPath
 
+  Arguments: String
+
   $obj->showPath("Life on Mars US") returns the name of the folder "Life on Mars (US)" 
   or undef if "Life on Mars US" does not exist as a key. 
 
@@ -527,19 +542,23 @@ on a media server.
 	
 =head2 processNewShows
 
+  Arguments: None
+
   $obj->processNewShows();
         
   This function requires that $obj->showFolder("/absolute/path") and $obj->newShowFolder("/absoute/path")
-  have already been called as they will be used with calls as $self->showFolder and $self->newShowFolder
+  have already been called as this their paths will be used in this function call.
 
   This is the main process for batch processing of a folder of show files.
-  Hidden files, files named "something.done" as well as directories are excluded from being processed.
+  Hidden files, files ending in ".done" as well as directories are excluded from being processed.
 
 =head2 importShow
 
-  $obj->importShow("/absolute/path/to/destintaion/folder/", "/absolute/path/to/file");
+  Arguments: String, String
+  The first arguement is the folder where the file is to be moved into
+  The second argument is the file which is to be moved.
 
-  folder is where to store the file.
+  $obj->importShow("/absolute/path/to/destintaion/folder/", "/absolute/path/to/file");
 
   This function does the heavy lifting of actually moving the show file into the determined folder.
   This function is called by processNewShows which does the work to
@@ -548,15 +567,17 @@ on a media server.
 
   It uses a sytem() call to rsync which always checks that the copy was successful.
 
-  This function then checks the state of $obj->delete to decide if the processed file should be renamed "file.done"
-  or should be removed using unlink(); Note delete(1) should be called before processNewShows() if you wish
+  This function then checks the state of $obj->delete to determine if the processed file should be renamed "file.done"
+  or should be removed using unlink(). Note delete(1) should be called before processNewShows() if you wish
   to delete the processed file. By default the file is only renamed.
 
 =head2 delete
 	
-  $obj->delete return the current true or false state (1 or 0)
-  $obj->delete(1) set delete to true
+  Arguments: None,0,1
+
+  $obj->delete return the current true or false state (0 or 1)
   $obj->delete(0) set delete to false
+  $obj->delete(1) set delete to true
 
   Input should be 0 or 1. 0 being do not delete. 1 being delete.
 
@@ -569,7 +590,9 @@ on a media server.
 
 =head2 seasonFolder
 
-  $obj->seasonFolder return the current true or false state (1 or 0)
+  Arguments: None,0,1
+
+  $obj->seasonFolder return the current true or false state (0 or 1)
   $obj->seasonFolder(0) or seasonFolder(1) sets and returns the new value.
   $obj->seasonFolder() returns undef if the input is invalid and the internal state is unchanged.
 
@@ -580,6 +603,8 @@ on a media server.
   The default is true.
 
 =head2 wereThereErrors
+
+  Arguments: None
 
   $obj->wereThereErrors;
 
@@ -593,9 +618,14 @@ on a media server.
 
 =head2 createSeasonFolder
 
+  Arguments: String, Number
+  
+  The first argument is the current folder that the file should be moved to
+  The second argument is the season number.
+
   $obj->createSeasonFolder("/absolute/path/to/show/folder/",$seasonNumber)
 
-  creates a folder within "/absolute/path/to/show/folder/" by calling make_path()
+  This creates a folder within "/absolute/path/to/show/folder/" by calling make_path()
   returns the newly created path "absolute/path/to/show/folder/SeasonX/" or 
   "/absolute/path/to/show/folder/Specials/"
 
@@ -607,6 +637,9 @@ on a media server.
   S00 creates Specials
 
 =head2 verbose
+
+  Arguments: None,0,1 
+
   $obj->verbose();
   $obj->verbose(0);
   $obj->verbose(1);
@@ -615,11 +648,19 @@ on a media server.
   Return 0 if verbose mode is off. Return 1 if verbose mode is on.
   
   This state is checked by createSeasonFolder(), importShow()
+  This allows to system to give some user feedback on what is being done if you want to watch the module
+  working.
 
 =head1 Examples
 
 =head2 Do not create season folders
 
+  #!/bin/perl
+
+  use strict;
+  use warnings;
+
+  use Video::File::TVShow::Import;
 
   my $obj = Video::File::TVShow::Import->new();
 
@@ -646,6 +687,12 @@ on a media server.
 
 =head2 Process two different source folders.
 
+  #!/bin/perl
+
+  use strict;
+  use warnings;
+
+  use Video::File::TVShow::Import;
   my $obj = Video::File::TVShow::Import->new();
 
   $obj->newShowsFolder("/tmp/");

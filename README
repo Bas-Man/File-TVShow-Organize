@@ -1,4 +1,4 @@
-Video-File-TVShow-Import version 0.20
+Video-File-TVShow-Import version 0.25
 ============================
 
 This module makes it easier to import TV Show files into the correct Show folder and also
@@ -18,6 +18,11 @@ To install this module type the following:
    make install
 
 Example Usage:
+
+#!/bin/perl
+
+  use strict;
+  use warnings;
 
   use Video::File::TVShow::Import;
 
@@ -39,11 +44,11 @@ Example Usage:
   # Delete files after processing. The default is to rename the files by appending ".done"
   $obj->delete(1);
 
-  # Do not create sub files under the the show's parent folder. All files should be dumped
+  # Do not create sub folders under the the show's parent folder. All files should be dumped
   # into the parent folder. The default is to create season folders.
   $obj->seasonFolder(0);
 
-  # Batch process a folder containing TVShow files
+  # Batch process a folder containing TV Show files
   $obj->processNewShows();
 
   # Report any file names which could not be handled automatically.
@@ -52,7 +57,7 @@ Example Usage:
   #end of program
   
 
-  See perdoc for more examples of usage.
+  See perldoc for more examples of usage.
   
 DEPENDENCIES
 
@@ -61,6 +66,8 @@ This module requires these other modules and libraries:
 Video::Filename;
 File::Path;
 File::Copy;
+
+These files are of course accessable through CPAN
 
 COPYRIGHT AND LICENCE
 
