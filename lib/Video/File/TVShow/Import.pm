@@ -149,6 +149,12 @@ sub createShowHash {
 
 }
 
+sub clearShowHash {
+  my ($self) = @_;
+
+  $self->{shows} = ();
+  return $self;
+}
 
 sub showPath {
 
@@ -518,6 +524,13 @@ on a media server.
 
   As such file naming relating to country of origin is important if you are importing versions of the
   same show based on country.
+
+=head2 clearShowHash
+
+  Arguments: None
+
+  This function clears the ShowHash data so that createShowHash can be run again before or after a folder change
+  which might occur if showFolder() were to be set to a new folder.
 
 =head2 showPath
 

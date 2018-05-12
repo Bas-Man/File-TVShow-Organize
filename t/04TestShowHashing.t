@@ -74,5 +74,17 @@ is ($obj->showPath("bogus"), undef, "If a show Folder does not exist return unde
 
 };
 
+subtest "Test that we can empty the showHash" => sub {
+    
+can_ok($obj, 'clearShowHash');
+$obj->clearShowHash();
+is($obj->{shows},undef, "Show Hash is empty.");
+};
+
+subtest "We can reload the showHash" => sub {
+$obj->createShowHash();
+ok(keys %{$obj->{shows}} > 0, "showHash contains objects");
+};
+
 done_testing();
 

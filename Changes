@@ -14,4 +14,9 @@ Revision history for Perl extension Video::File::TVShow::Import.
 	- Documentaion update. No Changes to the code base implemented
 	  - Also need to remember to update this file when changes are actually made to the version releases :)
 
+0.30 
+	- Added clearShowHash function. This makes the hash empty so that a new directory can be loaded within the same
+	program without having to create a new Object.
+	- Created an Examples folder with some sample programs.
+
 
