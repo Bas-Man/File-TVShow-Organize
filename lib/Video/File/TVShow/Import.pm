@@ -121,7 +121,7 @@ sub createShowHash {
     next if ($file =~ m/^\./); # skip hidden files and folders
     chomp($file); # trim and end of line character
     # create the inital hash strings are converted to lower case so "Doctor Who (2005)" becomes
-    # "doctor who (2005)" key="doctor who (2005), path="doctor who (2005)
+    # "doctor who (2005)" key="doctor who (2005), path="Doctor Who (2005)
     $self->{shows}{lc($file)}{path} = $file;
     # hanle if there is US or UK in the show name
     if ($file =~ m/\s\(?$self->{countries}\)?$/i) {
