@@ -129,10 +129,10 @@ sub createShowHash {
       # name minus country in $1 country in $2
       $showNameHolder =~ s/(.*) \(?($self->{countries})\)?/$1/gi;
       #catinate them together again with () around country
-      #This now another key to the same path
+      #This is now another key to the same path
       $self->{shows}{lc($showNameHolder . " ($2)")}{path} = $file;
       # create a key to the same path again with out country unless one has been already defined by another show
-      # this handles something like "Prey" which is US version and "Prey UK" which is the UK version
+      # this handles something like "Prey" which has a "Prey US" version and "Prey UK"
       $self->{shows}{lc($showNameHolder)}{path} = $file unless (exists $self->{shows}{lc($showNameHolder)});
     }
     # Handle shows with Year extensions in the same manner has UK|USA
@@ -145,6 +145,7 @@ sub createShowHash {
     }
   }
   closedir(DIR);
+  # Does this need to return anything or can it just return $self
   return $self->{shows};
 
 }
