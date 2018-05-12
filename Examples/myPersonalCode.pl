@@ -1,6 +1,7 @@
 #!/bin/perl
 
 # This is used during development to confirm code works in my local environment.
+# before I do a make install for the module.
 #use lib "/Users/aspann/dev/BAS-TVShow-Import/lib/";
 
 # Note I do not personally do any case testing as I have been using this code for some time and am very
