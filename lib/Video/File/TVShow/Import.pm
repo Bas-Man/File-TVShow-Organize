@@ -76,16 +76,16 @@ sub showFolder {
   my ($self, $path) = @_;
   if (defined $path) {
     if ((-e $path) and (-d $path)) {
-      $self->{_showFolder} = $path;
+      $self->{showFolder} = $path;
       # Append / if missing from path
-      if ($self->{_showFolder} !~ m/.*\/$/) {
-        $self->{_showFolder} = $self->{_showFolder} . '/';
+      if ($self->{showFolder} !~ m/.*\/$/) {
+        $self->{showFolder} = $self->{showFolder} . '/';
       }
     } else {
-      $self->{_showFolder} = undef;
+      $self->{showFolder} = undef;
     }
   }
-  return $self->{_showFolder};
+  return $self->{showFolder};
 }
 
 sub newShowFolder {
@@ -93,16 +93,16 @@ sub newShowFolder {
   my ($self, $path) = @_;
   if (defined $path) {
     if ((-e $path) and (-d $path)) {
-      $self->{_newShowFolder} = $path;
+      $self->{newShowFolder} = $path;
       # Append / if missing from path
-      if ($self->{_newShowFolder} !~ m/.*\/$/) {
-        $self->{_newShowFolder} = $self->{_newShowFolder} . '/';
+      if ($self->{newShowFolder} !~ m/.*\/$/) {
+        $self->{newShowFolder} = $self->{newShowFolder} . '/';
       }
     } else {
-      $self->{_newShowFolder} = undef;
+      $self->{newShowFolder} = undef;
     }
   }
-  return $self->{_newShowFolder};
+  return $self->{newShowFolder};
 }
 
 sub createShowHash {
@@ -110,7 +110,7 @@ sub createShowHash {
   my ($self) = @_;
   
   # exit loudly if the path has not been defined by the time this is called
-  croak unless defined($self->{_showFolder});
+  croak unless defined($self->{showFolder});
 
   # Get the root path of the TV Show folder
   my $directory = $self->showFolder();
