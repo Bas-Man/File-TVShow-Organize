@@ -246,7 +246,7 @@ sub delete {
     } elsif ($delete == 0) {
       $self->{delete} = 0;
     }
-    # This return seems like its on a branch of code that never gets called.
+    # This return seems like its on a branch of code that is of litle use. Unless the return is checked on being set. 
     return $self->{delete};
   }
 }
@@ -265,7 +265,7 @@ sub verbose {
     } elsif ($verbose == 0) {
       $self->{verbose} = 0;
     }
-    # This return seems like its on a branch of code that never gets called.
+    # This return seems like its on a branch of code that is of litle use. Unless the return is checked on being set. 
     return $self->{verbose};
   }
 }
@@ -284,7 +284,7 @@ sub seasonFolder {
     } elsif ($seasonFolder == 0) {
       $self->{seasonFolder} = 0;
     }
-    # This return seems like its on a branch of code that never gets called.
+    # This return seems like its on a branch of code that is of litle use. Unless the return is checked on being set. 
     return $self->{seasonFolder};
   }
 }
