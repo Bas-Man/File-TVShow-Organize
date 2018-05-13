@@ -168,7 +168,7 @@ sub processNewShows {
 
   my ($self) = @_;
   my $destination;
-  
+  # I will do process things as a queue I think.
   opendir(DIR, $self->newShowFolder()) or die $!;
   while (my $file = readdir(DIR)) {
     $destination = undef;
