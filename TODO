@@ -2,3 +2,6 @@ These items should be completed before the next major push to GitHub or local or
 
 Update Testing to make it more organised again. Its gotten a bit out of control.
 Add support for recursive folder processing by processNewFolder
+ - This is going to be more challenging as both processNewFolder and importShow both
+   directly access newShowFolder directly. This means that both need to have varibles
+   passed in order for recursion to be used.
