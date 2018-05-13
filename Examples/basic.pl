@@ -9,8 +9,8 @@
 
   my $obj = Video::File::TVShow::Import->new();
 
-  $obj->newShowsFolder("/tmp/");
-  $obj->showsFolder("/absolute/path/to/TV Shows");
+  $obj->newShowFolder("/tmp/");
+  $obj->showFolder("/absolute/path/to/TV Shows");
 
   if((!defined $obj->newShowFolder()) || (!defined $obj->showFolder())) {
     print "Verify your paths. Something in wrong\n";

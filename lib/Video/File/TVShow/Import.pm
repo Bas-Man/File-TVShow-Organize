@@ -167,6 +167,7 @@ sub showPath {
 sub processNewShows {
 
   my ($self) = @_;
+  my $folder = $self->newShowFolder;
   my $destination;
   
   opendir(DIR, $self->newShowFolder()) or die $!;
@@ -384,8 +385,8 @@ on a media server.
 
   my $obj = Video::File::TVShow::Import->new();
 
-  $obj->newShowsFolder("/tmp/");
-  $obj->showsFolder("/absolute/path/to/TV Shows");
+  $obj->newShowFolder("/tmp/");
+  $obj->showFolder("/absolute/path/to/TV Shows");
 
   if((!defined $obj->newShowFolder()) || (!defined $obj->showFolder())) {
     print "Verify your paths. Something in wrong\n";
@@ -681,8 +682,8 @@ on a media server.
 
   my $obj = Video::File::TVShow::Import->new();
 
-  $obj->newShowsFolder("/tmp/");
-  $obj->showsFolder("/absolute/path/to/TV Shows");
+  $obj->newShowFolder("/tmp/");
+  $obj->showFolder("/absolute/path/to/TV Shows");
 
   if((!defined $obj->newShowFolder()) || (!defined $obj->showFolder())) {
     print "Verify your paths. Something in wrong\n";
@@ -712,8 +713,8 @@ on a media server.
   use Video::File::TVShow::Import;
   my $obj = Video::File::TVShow::Import->new();
 
-  $obj->newShowsFolder("/tmp/");
-  $obj->showsFolder("/absolute/path/to/TV Shows");
+  $obj->newShowFolder("/tmp/");
+  $obj->showFolder("/absolute/path/to/TV Shows");
 
   if((!defined $obj->newShowFolder()) || (!defined $obj->showFolder())) {
     print "Verify your paths. Something in wrong\n";
@@ -724,11 +725,11 @@ on a media server.
   $obj->createShowHash();
 
   # Batch process first folder containing TVShow files
-  $obj->newShowsFolder("/tmp/");
+  $obj->newShowFolder("/tmp/");
   $obj->processNewShows();
 
   # Batch process second folder containing TVShow files.
-  $obj->newShowsFolder("/tmp2/");
+  $obj->newShowFolder("/tmp2/");
   $obj->processNewShows();
 
   # Report any file names which could not be handled automatically.
