@@ -167,7 +167,6 @@ sub showPath {
 sub processNewShows {
 
   my ($self) = @_;
-  my $folder = $self->newShowFolder;
   my $destination;
   
   opendir(DIR, $self->newShowFolder()) or die $!;
