@@ -341,7 +341,7 @@ sub importShow {
     }
   } else {
     #report failed processing? Error on rsync command return code
-    print "## Something went very wrong. Rsync failed for some reason.\n"
+    print "## Something went very wrong. Rsync failed for some reason.\n";
     print "## rsync err $?\n";
   }
   return $self;
