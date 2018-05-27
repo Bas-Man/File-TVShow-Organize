@@ -594,13 +594,13 @@ on a media server.
   $obj->processNewShows();
         
   This function requires that $obj->showFolder("/absolute/path") and $obj->newShowFolder("/absoute/path")
-  have already been called as this their paths will be used in this function call.
+  have already been called as their paths will be used in this function call.
 
   This is the main process for batch processing of a folder of show files.
   Hidden files, files ending in ".done" as well as directories are excluded from being processed.
 
   This function will process a single folder and no deeper if recursion is not enabled.
-  If recursion is enabled it will process and sub folders that it finds from the initial folder.
+  If recursion is enabled it will process any sub folders that it finds from the initial folder.
 
 =head2 importShow
 
