@@ -207,7 +207,7 @@ sub processNewShows {
     };
     # Import the file. This will use rsync to copy the file into place and either rename or delete.
     # see importShow() for implementation details
-    $self->importShow($destination,$file); 
+    $self->importShow($destination,$self->newShowFolder(),$file); 
   }
   return $self;
 }
@@ -313,15 +313,15 @@ sub createSeasonFolder {
 
 sub importShow {
 
-  my ($self, $destination, $file) = @_;
-  my $source;
+  my ($self, $destination, $source, $file) = @_;
 
   # If the destination folder is not defined or no file is passed exit with errors
   carp "Destination not passed." unless defined($destination);
+  carp "Source not passed." unless defined($source);
   carp "File not passed." unless defined($file);
 
   # rewrite paths so they are rsync friendly. This means escape spaces and other special characters.
-  ($destination, $source) = _rsyncPrep($destination,$self->newShowFolder());
+  ($destination, $source) = _rsyncPrep($destination,$source);
 
   # create the command string to be used in system() call
   # Set --progress if verbose is true
@@ -572,18 +572,19 @@ on a media server.
 
 =head2 importShow
 
-  Arguments: String, String
+  Arguments: String, String, String
   The first arguement is the folder where the file is to be moved into
-  The second argument is the file which is to be moved.
+  The Second argument is the source folder where the new show file currently exists.
+  The third argument is the file which is to be moved.
 
-  $obj->importShow("/absolute/path/to/destintaion/folder/", "/absolute/path/to/file");
+  $obj->importShow("/absolute/path/to/destintaion/folder/", "absolute/path/to/source/folder/", "file");
 
   This function does the heavy lifting of actually moving the show file into the determined folder.
   This function is called by processNewShows which does the work to
   determine the paths to folder and file. 
   This function could be called on its own after you have verified "folder" and "file"
 
-  It uses a sytem() call to rsync which always checks that the copy was successful.
+  It uses a system() call to rsync which always checks that the copy was successful.
 
   This function then checks the state of $obj->delete to determine if the processed file should be renamed "file.done"
   or should be removed using unlink(). Note delete(1) should be called before processNewShows() if you wish
