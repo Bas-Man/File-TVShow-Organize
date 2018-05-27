@@ -166,10 +166,12 @@ sub showPath {
 
 sub processNewShows {
 
-  my ($self) = @_;
+  my ($self, $curr_dir) = @_;
+  $curr_dir = $self->newShowFolder() unless defined($curr_dir);
+
   my $destination;
   
-  opendir(DIR, $self->newShowFolder()) or die $!;
+  opendir(DIR, $curr_dir) or die $!;
   while (my $file = readdir(DIR)) {
     $destination = undef;
     ## Skip hiddenfiles
@@ -178,7 +180,11 @@ sub processNewShows {
     chomp($file);
     ## Skip files that have been processed before. They have had .done appended to to them.
     next if ($file =~ m/\.done$/);
-    next if -d $self->newShowFolder() . $file; ## Skip non-Files
+    if (1) {
+      next if -d $self->newShowFolder() . $file; ## Skip non-Files
+    } else {
+      $self->processNewShows($curr_dir . $file . "/") if -d $curr_dir . $file;
+    };
     next if ($file !~ m/s\d\de\d\d/i); # skip if SXXEXX is not present in file name
     my $showData;
     # Extract show name, Season and Episode
@@ -207,9 +213,11 @@ sub processNewShows {
     };
     # Import the file. This will use rsync to copy the file into place and either rename or delete.
     # see importShow() for implementation details
-    $self->importShow($destination,$self->newShowFolder(),$file); 
+    $self->importShow($destination, $curr_dir, $file); 
   }
-  return $self;
+  close(DIR);
+  return;
+  #return $self;
 }
 
 sub wereThereErrors {
@@ -315,7 +323,7 @@ sub importShow {
 
   my ($self, $destination, $source, $file) = @_;
 
-  # If the destination folder is not defined or no file is passed exit with errors
+  # If the destination folder or source filder are not defined or no file is passed exit with errors
   carp "Destination not passed." unless defined($destination);
   carp "Source not passed." unless defined($source);
   carp "File not passed." unless defined($file);

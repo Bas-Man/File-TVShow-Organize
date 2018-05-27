@@ -42,7 +42,6 @@ $file = getcwd . "/" . $outputPath;
 ok(-e $file . "S.W.A.T.2017.S01E01.avi.done", "S.W.A.T.2017.S01E01.avi.done was successfully imported and renamed.");
 ok(-e $file . "the.flash.2014.S02E09.hdtv-lol-eng.srt.done", "the.flash.2014.S02E09.hdtv-lol-eng.srt.done was successfully imported and renamed.");
 ok(-e $file . "Doctor.Who.2005.Special.The.Women.of.Doctor.Who.HDTV.x264-2HD.[VTV].mp4", "Doctor.Who.2005.Special.The.Women.of.Doctor.Who.HDTV.x264-2HD.[VTV].mp4 was not renamed. Was ignored as required.");
-
 };
 
 subtest "Test that processed files have been deleted." => sub {
