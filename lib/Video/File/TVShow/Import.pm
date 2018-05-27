@@ -42,6 +42,7 @@ sub new
         countries => "(UK|US)",
         delete => 0,
         verbose => 0,
+        recursion => 0,
         seasonFolder => 1,
              };
 
@@ -180,7 +181,7 @@ sub processNewShows {
     chomp($file);
     ## Skip files that have been processed before. They have had .done appended to to them.
     next if ($file =~ m/\.done$/);
-    if (1) {
+    if (!$self->recursion) {
       next if -d $self->newShowFolder() . $file; ## Skip non-Files
     } else {
       $self->processNewShows($curr_dir . $file . "/") if -d $curr_dir . $file;
@@ -256,6 +257,26 @@ sub delete {
     }
     # This return seems like its on a branch of code that is of litle use. Unless the return is checked on being set. 
     return $self->{delete};
+  }
+}
+
+sub recursion {
+
+  my ($self, $recursion) = @_;
+
+  return $self->{recursion} if(@_ == 1);
+  
+  if (($recursion =~ m/[[:alpha:]]/) || ($recursion != 0) && ($recursion != 1)) {
+    print STDERR "Invalid arguments passed. Value not updated\n";
+    return undef;
+  } else {
+    if ($recursion == 1) {
+      $self->{recursion} = 1;
+    } elsif ($recursion == 0) {
+      $self->{recursion} = 0;
+    }
+    # This return seems like its on a branch of code that is of litle use. Unless the return is checked on being set. 
+    return $self->{recursion};
   }
 }
 
@@ -578,6 +599,9 @@ on a media server.
   This is the main process for batch processing of a folder of show files.
   Hidden files, files ending in ".done" as well as directories are excluded from being processed.
 
+  This function will process a single folder and no deeper if recursion is not enabled.
+  If recursion is enabled it will process and sub folders that it finds from the initial folder.
+
 =head2 importShow
 
   Arguments: String, String, String
@@ -602,7 +626,7 @@ on a media server.
 	
   Arguments: None,0,1
 
-  $obj->delete return the current true or false state (0 or 1)
+  $obj->delete return the current true or false state (1 or 0)
   $obj->delete(0) set delete to false
   $obj->delete(1) set delete to true
 
@@ -615,11 +639,21 @@ on a media server.
 
   Return undef if the varible passed to the function is not valid. Do not change the current state of delete.
 
+=head2 recursion
+
+  Arguments None,0,1
+
+  $obj->recursion returns the current true or false state (1 or 0)
+  $obj->recursion(0) set recursion to false
+  $obj->recursion(1) set recursion to true
+
+  This controls the behaviour of processNewShows();
+
 =head2 seasonFolder
 
   Arguments: None,0,1
 
-  $obj->seasonFolder return the current true or false state (0 or 1)
+  $obj->seasonFolder return the current true or false state (1 or 0)
   $obj->seasonFolder(0) or seasonFolder(1) sets and returns the new value.
   $obj->seasonFolder() returns undef if the input is invalid and the internal state is unchanged.
 
