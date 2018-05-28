@@ -40,7 +40,8 @@ $obj->processNewShows();
 
 subtest "Testing recursive processing with delete set as false" => sub {
 $file = getcwd . "/t/test-data/done_list/test/";
-ok(-e $file . "true.blood.S01E01.avi.done", "true.blood.S01E01.avi was processed. recursion enabled.")
+ok(-e $file . "true.blood.S01E01.avi.done", "true.blood.S01E01.avi was processed. recursion enabled.");
+ok(-e $ShowDirectory . "/True Blood/Season1/true.blood.S01E01.avi", "true.blood.S01E01.avi successfully imported.");
 
 };
 
@@ -52,7 +53,9 @@ $obj->processNewShows();
 
 subtest "Testing recursive processing with delete set as true" => sub {
 $file = getcwd . "/test-data/delete_list/test/";
-ok(!-e $file . "true.blood.S02E01.avi", "true.blood.S02E01.avi was successfully deleted. Recursion enabled.")
+ok(!-e $file . "true.blood.S02E01.avi", "true.blood.S02E01.avi was successfully deleted. Recursion enabled.");
+ok(-e $ShowDirectory . "/True Blood/Season2/true.blood.S02E01.avi", "true.blood.S02E01.avi successfully imported.");
+
 };
 
 done_testing();
