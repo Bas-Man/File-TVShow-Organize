@@ -20,4 +20,4 @@ Revision history for Perl extension Video::File::TVShow::Import.
 	- Created an Examples folder with some sample programs.
 	- implemented recursive processing in processNewShows(); This can be enabled by calling $obj->recursion(1)
 	  The default behaviour is to not do recursion.
-
+	  renamed 08TestSuccessfulImport.t to 06TestSuccessfulImport.t 
