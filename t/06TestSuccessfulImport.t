@@ -42,7 +42,12 @@ $file = getcwd . "/" . $outputPath;
 ok(-e $file . "S.W.A.T.2017.S01E01.avi.done", "S.W.A.T.2017.S01E01.avi.done was successfully imported and renamed.");
 ok(-e $file . "the.flash.2014.S02E09.hdtv-lol-eng.srt.done", "the.flash.2014.S02E09.hdtv-lol-eng.srt.done was successfully imported and renamed.");
 ok(-e $file . "Doctor.Who.2005.Special.The.Women.of.Doctor.Who.HDTV.x264-2HD.[VTV].mp4", "Doctor.Who.2005.Special.The.Women.of.Doctor.Who.HDTV.x264-2HD.[VTV].mp4 was not renamed. Was ignored as required.");
+};
 
+subtest "Recursion is disabled" => sub {
+$outputPath = $outputPath . "test/";
+$file = getcwd . "/" . $outputPath;
+ok(-e $file . "true.blood.S01E01.avi", "true.blood.S01E01.avi was not processed as its in a sub folder. Recurusion not enabled.")
 };
 
 subtest "Test that processed files have been deleted." => sub {
@@ -55,6 +60,12 @@ ok(!-e $file . "Supergirl.S01E04.720p.HDTV.X264-DIMENSION[eztv].mkv", "Supergirl
 ok(!-e $file . "supergirl.S01E07.hdtv-lol[ettv].mp4", "supergirl.S01E07.hdtv-lol[ettv].mp4 has been unlinked.");
 ok(-e $file . "S.W.A.T.2018.S01E01.avi", "S.W.A.T.2018.S01E01.avi has not been unlinked. It was not processed");
 
+};
+
+subtest "Test files not deleted as recursion is disabled" => sub {
+$outputPath = $outputPath . "test/";
+$file = getcwd . "/" . $outputPath;
+ok(-e $file . "true.blood.S02E01.avi", "true.blood.S02E01.avi was not processed as recursion is disabled.");
 };
 
 subtest "Test seasonFolder option as false. Do not create season Folders " => sub {

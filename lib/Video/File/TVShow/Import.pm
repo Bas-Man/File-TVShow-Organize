@@ -42,6 +42,7 @@ sub new
         countries => "(UK|US)",
         delete => 0,
         verbose => 0,
+        recursion => 0,
         seasonFolder => 1,
              };
 
@@ -166,10 +167,12 @@ sub showPath {
 
 sub processNewShows {
 
-  my ($self) = @_;
+  my ($self, $curr_dir) = @_;
+  $curr_dir = $self->newShowFolder() unless defined($curr_dir);
+
   my $destination;
   
-  opendir(DIR, $self->newShowFolder()) or die $!;
+  opendir(DIR, $curr_dir) or die $!;
   while (my $file = readdir(DIR)) {
     $destination = undef;
     ## Skip hiddenfiles
@@ -178,7 +181,11 @@ sub processNewShows {
     chomp($file);
     ## Skip files that have been processed before. They have had .done appended to to them.
     next if ($file =~ m/\.done$/);
-    next if -d $self->newShowFolder() . $file; ## Skip non-Files
+    if (!$self->recursion) {
+      next if -d $self->newShowFolder() . $file; ## Skip non-Files
+    } else {
+      $self->processNewShows($curr_dir . $file . "/") if -d $curr_dir . $file;
+    };
     next if ($file !~ m/s\d\de\d\d/i); # skip if SXXEXX is not present in file name
     my $showData;
     # Extract show name, Season and Episode
@@ -207,9 +214,11 @@ sub processNewShows {
     };
     # Import the file. This will use rsync to copy the file into place and either rename or delete.
     # see importShow() for implementation details
-    $self->importShow($destination,$file); 
+    $self->importShow($destination, $curr_dir, $file); 
   }
-  return $self;
+  close(DIR);
+  return;
+  #return $self;
 }
 
 sub wereThereErrors {
@@ -248,6 +257,26 @@ sub delete {
     }
     # This return seems like its on a branch of code that is of litle use. Unless the return is checked on being set. 
     return $self->{delete};
+  }
+}
+
+sub recursion {
+
+  my ($self, $recursion) = @_;
+
+  return $self->{recursion} if(@_ == 1);
+  
+  if (($recursion =~ m/[[:alpha:]]/) || ($recursion != 0) && ($recursion != 1)) {
+    print STDERR "Invalid arguments passed. Value not updated\n";
+    return undef;
+  } else {
+    if ($recursion == 1) {
+      $self->{recursion} = 1;
+    } elsif ($recursion == 0) {
+      $self->{recursion} = 0;
+    }
+    # This return seems like its on a branch of code that is of litle use. Unless the return is checked on being set. 
+    return $self->{recursion};
   }
 }
 
@@ -313,15 +342,15 @@ sub createSeasonFolder {
 
 sub importShow {
 
-  my ($self, $destination, $file) = @_;
-  my $source;
+  my ($self, $destination, $source, $file) = @_;
 
-  # If the destination folder is not defined or no file is passed exit with errors
+  # If the destination folder or source filder are not defined or no file is passed exit with errors
   carp "Destination not passed." unless defined($destination);
+  carp "Source not passed." unless defined($source);
   carp "File not passed." unless defined($file);
 
   # rewrite paths so they are rsync friendly. This means escape spaces and other special characters.
-  ($destination, $source) = _rsyncPrep($destination,$self->newShowFolder());
+  ($destination, $source) = _rsyncPrep($destination,$source);
 
   # create the command string to be used in system() call
   # Set --progress if verbose is true
@@ -565,25 +594,29 @@ on a media server.
   $obj->processNewShows();
         
   This function requires that $obj->showFolder("/absolute/path") and $obj->newShowFolder("/absoute/path")
-  have already been called as this their paths will be used in this function call.
+  have already been called as their paths will be used in this function call.
 
   This is the main process for batch processing of a folder of show files.
   Hidden files, files ending in ".done" as well as directories are excluded from being processed.
 
+  This function will process a single folder and no deeper if recursion is not enabled.
+  If recursion is enabled it will process any sub folders that it finds from the initial folder.
+
 =head2 importShow
 
-  Arguments: String, String
+  Arguments: String, String, String
   The first arguement is the folder where the file is to be moved into
-  The second argument is the file which is to be moved.
+  The Second argument is the source folder where the new show file currently exists.
+  The third argument is the file which is to be moved.
 
-  $obj->importShow("/absolute/path/to/destintaion/folder/", "/absolute/path/to/file");
+  $obj->importShow("/absolute/path/to/destintaion/folder/", "absolute/path/to/source/folder/", "file");
 
   This function does the heavy lifting of actually moving the show file into the determined folder.
   This function is called by processNewShows which does the work to
   determine the paths to folder and file. 
   This function could be called on its own after you have verified "folder" and "file"
 
-  It uses a sytem() call to rsync which always checks that the copy was successful.
+  It uses a system() call to rsync which always checks that the copy was successful.
 
   This function then checks the state of $obj->delete to determine if the processed file should be renamed "file.done"
   or should be removed using unlink(). Note delete(1) should be called before processNewShows() if you wish
@@ -593,7 +626,7 @@ on a media server.
 	
   Arguments: None,0,1
 
-  $obj->delete return the current true or false state (0 or 1)
+  $obj->delete return the current true or false state (1 or 0)
   $obj->delete(0) set delete to false
   $obj->delete(1) set delete to true
 
@@ -602,15 +635,26 @@ on a media server.
   Set if we should delete source file after successfully importing it to the tv store or 
   if we should rename it to $file.done
 
+
   The default is false and the file is simply renamed.
 
   Return undef if the varible passed to the function is not valid. Do not change the current state of delete.
+
+=head2 recursion
+
+  Arguments None,0,1
+
+  $obj->recursion returns the current true or false state (1 or 0)
+  $obj->recursion(0) set recursion to false
+  $obj->recursion(1) set recursion to true
+
+  This controls the behaviour of processNewShows();
 
 =head2 seasonFolder
 
   Arguments: None,0,1
 
-  $obj->seasonFolder return the current true or false state (0 or 1)
+  $obj->seasonFolder return the current true or false state (1 or 0)
   $obj->seasonFolder(0) or seasonFolder(1) sets and returns the new value.
   $obj->seasonFolder() returns undef if the input is invalid and the internal state is unchanged.
 

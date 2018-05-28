@@ -57,11 +57,20 @@ is($obj->delete("A"), undef, "I was passed an invalid imput returning undef");
 };
 
 subtest "Testing verbose function." => sub {
-is($obj->verbose(), 0, "Delete is false (0). We should renamed files as we process them");
-is($obj->verbose(1), 1, "Delete is true (1). We should delete files as we process them");
-is($obj->verbose(),1 , "Delete is still true (1). We should delete files as we process them");
-is($obj->verbose(0), 0, "Delete is false (0) again. We should delete files as we process them");
+is($obj->verbose(), 0, "verbose is false (0). provide minimum output");
+is($obj->verbose(1), 1, "verbose is true (1). We should should provide more details on actions");
+is($obj->verbose(),1 , "verbose is still true (1).");
+is($obj->verbose(0), 0, "verbose is false (0) again.");
 is($obj->verbose("A"), undef, "I was passed an invalid imput returning undef");
+
+};
+
+subtest "Testing recursion function." => sub {
+is($obj->recursion(), 0, "verbose is false (0). Do not process recursively.");
+is($obj->recursion(1), 1, "verbose is true (1). Process recursively");
+is($obj->recursion(),1 , "verbose is still true (1).");
+is($obj->recursion(0), 0, "verbose is false (0) again.");
+is($obj->recursion("A"), undef, "I was passed an invalid imput returning undef");
 
 };
 
