@@ -635,6 +635,7 @@ on a media server.
   Set if we should delete source file after successfully importing it to the tv store or 
   if we should rename it to $file.done
 
+
   The default is false and the file is simply renamed.
 
   Return undef if the varible passed to the function is not valid. Do not change the current state of delete.
