@@ -14,10 +14,11 @@ Revision history for Perl extension Video::File::TVShow::Import.
 	- Documentaion update. No Changes to the code base implemented
 	  - Also need to remember to update this file when changes are actually made to the version releases :)
 
-0.30 
+0.30 Tuesday May 29th 2018
 	- Added clearShowHash function. This makes the hash empty so that a new directory can be loaded within the same
 	program without having to create a new Object.
 	- Created an Examples folder with some sample programs.
-	- implemented recursive processing in processNewShows(); This can be enabled by calling $obj->recursion(1)
+	- Implemented recursive processing in processNewShows(); This can be enabled by calling $obj->recursion(1)
 	  The default behaviour is to not do recursion.
-	  renamed 08TestSuccessfulImport.t to 06TestSuccessfulImport.t 
+	- Renamed 08TestSuccessfulImport.t to 06TestSuccessfulImport.t
+	- Added 07TestRecursiveImport.t  
