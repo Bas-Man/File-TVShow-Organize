@@ -1,4 +1,4 @@
-Video-File-TVShow-Import version 0.25
+Video-File-TVShow-Import version 0.30
 ============================
 
 This module makes it easier to import TV Show files into the correct Show folder and also
@@ -30,7 +30,7 @@ Example Usage:
 
   my $obj = Video::File::TVShow::Import->new();
 
-  $obj->newShowsFolder("/tmp/");
+  $obj->newShowFolder("/tmp/");
   $obj->showsFolder("/absolute/path/to/TV Shows");
 
   if((!defined $obj->newShowFolder()) || (!defined $obj->showFolder())) {
