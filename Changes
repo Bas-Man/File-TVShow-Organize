@@ -22,3 +22,6 @@ Revision history for Perl extension Video::File::TVShow::Import.
 	  The default behaviour is to not do recursion.
 	- Renamed 08TestSuccessfulImport.t to 06TestSuccessfulImport.t
 	- Added 07TestRecursiveImport.t  
+
+0.31
+	-
