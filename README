@@ -66,6 +66,7 @@ This module requires these other modules and libraries:
 Video::Filename;
 File::Path;
 File::Copy;
+Carp;
 
 These files are of course accessable through CPAN
 
