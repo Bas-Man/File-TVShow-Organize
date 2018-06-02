@@ -24,4 +24,4 @@ Revision history for Perl extension Video::File::TVShow::Import.
 	- Added 07TestRecursiveImport.t  
 
 0.31
-	-
+	- Added the Carp Module to the list of required modules. Its been in use for a while.
