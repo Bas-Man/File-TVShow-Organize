@@ -7,7 +7,8 @@ WriteMakefile(
     VERSION_FROM      => 'lib/Video/File/TVShow/Import.pm', # finds $VERSION
     PREREQ_PM         => { 'Video::Filename' => 0,
                            'File::Path' => 0, 
-                           'File::Copy' => 0 }, # e.g., Module::Name => 1.1
+                           'File::Copy' => 0,
+                           'Carp' => 0 }, # e.g., Module::Name => 1.1
     ($] >= 5.005 ?     ## Add these new keywords supported since 5.005
       (ABSTRACT_FROM  => 'lib/Video/File/TVShow/Import.pm', # retrieve abstract from module
        AUTHOR         => 'Adam Spann <adam_spann@hotmail.com>') : ()),
