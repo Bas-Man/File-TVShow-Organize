@@ -5,7 +5,7 @@
 
   use Video::File::TVShow::Import;
 
-  our $excpetionList = "S.W.A.T.2017:S.W.A.T 2017";
+  our $exceptionList = "S.W.A.T.2017:S.W.A.T 2017";
 
   my $obj = Video::File::TVShow::Import->new();
 
@@ -34,4 +34,3 @@
   $obj->wereThereErrors();
 
   #end of program
-  
