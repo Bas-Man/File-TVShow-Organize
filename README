@@ -2,10 +2,10 @@ Video-File-TVShow-Import version 0.31
 ============================
 
 This module makes it easier to import TV Show files into the correct Show folder and also
-place them in to the correct season or specials folder. This may be of use if you have 
+place them in to the correct season or specials folder. This may be of use if you have
 a large media server which you are trying to keep organised.
 
-It might also be used to move files into season folders if you have merely dumped these files into a single folder in the 
+It might also be used to move files into season folders if you have merely dumped these files into a single folder in the
 begining.
 
 INSTALLATION
@@ -26,7 +26,7 @@ Example Usage:
 
   use Video::File::TVShow::Import;
 
-  our $excpetionList = "S.W.A.T.2017:S.W.A.T 2017|Other:other";
+  our $exceptionList = "S.W.A.T.2017:S.W.A.T 2017|Other:other";
 
   my $obj = Video::File::TVShow::Import->new();
 
@@ -55,10 +55,10 @@ Example Usage:
   $obj->wereThereErrors();
 
   #end of program
-  
+
 
   See perldoc for more examples of usage.
-  
+
 DEPENDENCIES
 
 This module requires these other modules and libraries:
@@ -77,5 +77,3 @@ Copyright (C) 2018 by Adam Spann
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.12.4 or,
 at your option, any later version of Perl 5 you may have available.
-
-
