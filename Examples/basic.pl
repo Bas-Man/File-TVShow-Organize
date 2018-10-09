@@ -13,7 +13,7 @@
   $obj->showFolder("/absolute/path/to/TV Shows");
 
   if((!defined $obj->newShowFolder()) || (!defined $obj->showFolder())) {
-    print "Verify your paths. Something in wrong\n";
+    print "Verify your paths. Something is wrong\n";
     exit;
   }
 
