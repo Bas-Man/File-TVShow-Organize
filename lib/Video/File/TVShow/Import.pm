@@ -38,7 +38,8 @@ sub new
 {
   my $class = shift;
   my $self = {
-        #default data and states. Other data is created and stored during program execution
+        #default data and states. Other data is created and stored during
+        #program execution
         countries => "(UK|US)",
         delete => 0,
         verbose => 0,
@@ -49,13 +50,15 @@ sub new
   bless $self, $class;
 
   ## Additional constructor code goes here.
-  ## $::$exceptionList is a gobal variable which may or may not exist in the calling perl script that loads this module.
+  ## $::$exceptionList is a gobal variable which may or may not exist in the
+  ## calling perl script that loads this module.
   if (!defined $::exceptionList) {
   ## Do nothing
   } else {
     # create an array of pairs seperated by | character
     my @list1 = split /\|/, $::exceptionList;
-    # now split each item in the array with by the : character use the first value as the key and the second as value
+    # now split each item in the array with by the : character use the first
+    # value as the key and the second as value
     foreach my $item(@list1) {
       my ($key, $value) = split(/:/, $item);
       $self->{_exceptionList}{$key} = $value;
@@ -66,7 +69,8 @@ sub new
 
 sub countries {
 
-  # Set and get countries in case you want to change or add to the defaults use | as your separator
+  # Set and get countries in case you want to change or add to the defaults
+  # use | as your separator
   my ($self, $countries) = @_;
   $self->{countries} = $countries if defined $countries;
   return $self->{countries};
@@ -121,7 +125,8 @@ sub createShowHash {
   while (my $file = readdir(DIR)) {
     next if ($file =~ m/^\./); # skip hidden files and folders
     chomp($file); # trim and end of line character
-    # create the inital hash strings are converted to lower case so "Doctor Who (2005)" becomes
+    # create the inital hash strings are converted to lower case so
+    # "Doctor Who (2005)" becomes
     # "doctor who (2005)" key="doctor who (2005), path="Doctor Who (2005)
     $self->{shows}{lc($file)}{path} = $file;
     # hanle if there is US or UK in the show name
@@ -132,8 +137,10 @@ sub createShowHash {
       #catinate them together again with () around country
       #This is now another key to the same path
       $self->{shows}{lc($showNameHolder . " ($2)")}{path} = $file;
-      # create a key to the same path again with out country unless one has been already defined by another show
-      # this handles something like "Prey" which has a "Prey US" version and "Prey UK"
+      # create a key to the same path again with out country unless one has
+      # been already defined by another show
+      # this handles something like "Prey" which has a "Prey US" version
+      # and "Prey UK"
       $self->{shows}{lc($showNameHolder)}{path} = $file unless (exists $self->{shows}{lc($showNameHolder)});
     }
     # Handle shows with Year extensions in the same manner has UK|USA
@@ -142,7 +149,8 @@ sub createShowHash {
       $showNameHolder =~ s/(.*) \(?(\d\d\d\d)\)?/$1/gi;
       $self->{shows}{lc($showNameHolder . " ($2)")}{path} = $file;
       $self->{shows}{lc($showNameHolder . " $2")}{path} = $file;
-      $self->{shows}{lc($showNameHolder)}{path} = $file unless (exists $self->{shows}{lc($showNameHolder)});
+      $self->{shows}{lc($showNameHolder)}{path} = $file unless
+        (exists $self->{shows}{lc($showNameHolder)});
     }
   }
   closedir(DIR);
@@ -160,7 +168,8 @@ sub clearShowHash {
 
 sub showPath {
 
-  # Access the shows hash and return the correct directory path for the show name as passed to the funtion
+  # Access the shows hash and return the correct directory path for the show
+  # name as passed to the funtion
   my ($self, $show) = @_;
   return $self->{shows}{lc($show)}{path};
 }
@@ -179,7 +188,8 @@ sub processNewShows {
     next if ($file =~ m/^\./);
     ## Trim the file name incase of end of line marker
     chomp($file);
-    ## Skip files that have been processed before. They have had .done appended to to them.
+    ## Skip files that have been processed before. They have had .done appended
+    # to to them.
     next if ($file =~ m/\.done$/);
     if (!$self->recursion) {
       next if -d $self->newShowFolder() . $file; ## Skip non-Files
@@ -226,8 +236,8 @@ sub wereThereErrors {
   my ($self) = @_;
 
   # Check if there has been any files that Video::Filename could not handle
-  # Check that the hash UnHandledFileNames has actually been created before checking that is is not empty
-  # or you will get an error.
+  # Check that the hash UnHandledFileNames has actually been created before
+  # checking that is is not empty or you will get an error.
   if ((defined $self->{UnhandledFileNames}) && (keys $self->{UnhandledFileNames})) {
     print "\nThere were unhandled files in the directory\n";
     print "consider adding them to the exceptionList\n###\n";
@@ -255,7 +265,8 @@ sub delete {
     } elsif ($delete == 0) {
       $self->{delete} = 0;
     }
-    # This return seems like its on a branch of code that is of litle use. Unless the return is checked on being set.
+    # This return seems like its on a branch of code that is of litle use.
+    # Unless the return is checked on being set.
     return $self->{delete};
   }
 }
@@ -275,7 +286,8 @@ sub recursion {
     } elsif ($recursion == 0) {
       $self->{recursion} = 0;
     }
-    # This return seems like its on a branch of code that is of litle use. Unless the return is checked on being set.
+    # This return seems like its on a branch of code that is of litle use.
+    # Unless the return is checked on being set.
     return $self->{recursion};
   }
 }
@@ -294,7 +306,8 @@ sub verbose {
     } elsif ($verbose == 0) {
       $self->{verbose} = 0;
     }
-    # This return seems like its on a branch of code that is of litle use. Unless the return is checked on being set.
+    # This return seems like its on a branch of code that is of litle use.
+    # Unless the return is checked on being set.
     return $self->{verbose};
   }
 }
@@ -313,7 +326,8 @@ sub seasonFolder {
     } elsif ($seasonFolder == 0) {
       $self->{seasonFolder} = 0;
     }
-    # This return seems like its on a branch of code that is of litle use. Unless the return is checked on being set.
+    # This return seems like its on a branch of code that is of litle use.
+    # Unless the return is checked on being set.
     return $self->{seasonFolder};
   }
 }
@@ -344,12 +358,14 @@ sub importShow {
 
   my ($self, $destination, $source, $file) = @_;
 
-  # If the destination folder or source filder are not defined or no file is passed exit with errors
+  # If the destination folder or source filder are not defined or no file is
+  # passed exit with errors
   carp "Destination not passed." unless defined($destination);
   carp "Source not passed." unless defined($source);
   carp "File not passed." unless defined($file);
 
-  # rewrite paths so they are rsync friendly. This means escape spaces and other special characters.
+  # rewrite paths so they are rsync friendly. This means escape spaces and
+  # other special characters.
   ($destination, $source) = _rsyncPrep($destination,$source);
 
   # create the command string to be used in system() call
@@ -403,8 +419,8 @@ __END__
 
 =head1 NAME
 
-Video::File::TVShow::Import - Perl module to move TVShow Files into their matching Show Folder
-on a media server.
+Video::File::TVShow::Import - Perl module to move TVShow Files into their
+matching Show Folder on a media server.
 
 =head1 SYNOPSIS
 
@@ -443,28 +459,33 @@ on a media server.
 
 =head1 DESCRIPTION
 
-      This module moves TV show files from the folder where they currently exist into the correct folder based on
-      show name and season.
+      This module moves TV show files from the folder where they currently
+      exist into the correct folder based on show name and season.
 
       Folder structure: /base/folder/Castle -> Season1 -> Castle.S01E01.avi
                                                Season2 -> Castle.S02E01.avi
                                                Specials -> Castle.S00E01.avi
 
-      This season folder behaviour can be disabled by calling seasonFolder(0). In this case
-      all files are simply placed under Castle without sorting into season folders.
+      This season folder behaviour can be disabled by calling seasonFolder(0).
+      In this case all files are simply placed under Castle without sorting into
+      season folders.
 
       Source files are renamed or deleted upon successful relocation.
-      This depends on the state of delete(). The default is to rename the files and not to delete.
+      This depends on the state of delete(). The default is to rename the files
+      and not to delete.
       See delete() for more details.
 
-      Possible uses might include moving the files from an original rip directory and moving them into the correct
-      folder structure for media servers such as Plex or Kodi. Another use might be to sort shows that are already
-      in a single folder and to move them to a season by season or Special folder struture for better folder
-      management.
+      Possible uses might include moving the files from an original rip
+      directory and moving them into the correct folder structure for media
+      servers such as Plex or Kodi. Another use might be to sort shows that are
+      already in a single folder and to move them to a season by season or
+      Special folder struture for better folder management.
 
-      This module does not examine file encodings and only parses the initial file naming. "name.SXXEXX.*" anything after
-      SXXEXX is ignored with the exception that files ending in ".done" are also ignored by the module. These files will
-      have already been successfully processed in previous executions of code using this module.
+      This module does not examine file encodings and only parses the initial
+      file naming. "name.SXXEXX.*" anything after SXXEXX is ignored with the
+      exception that files ending in ".done" are also ignored by the module.
+      These files will have already been successfully processed in previous
+      executions of code using this module.
 
       Works on Mac OS and *nix systems.
 
@@ -482,17 +503,20 @@ on a media server.
 
   This subroutine creates a new object of type Video::File::TVShow::Import
 
-  If the global varible $exceptionList is defined we load this data into a hash for later use to handle naming
-  complications.
+  If the global varible $exceptionList is defined we load this data into a hash
+  for later use to handle naming complications.
 
-  E.G file: S.W.A.T.2017.S01E01.avi is not handled correctly by Video::Filename so we need to know to handle this
-  differently. $exceptionList can be left undefined if you do not need to use it. Its format is
+  E.G file: S.W.A.T.2017.S01E01.avi is not handled correctly by Video::Filename
+  so we need to know to handle this differently. $exceptionList can be left
+  undefined if you do not need to use it. Its format is
   "MatchCase:DesiredValue|MatchCase:DesiredValue"
 
 =head2 countries
 
-  Arguments: String: Note the format below is used as part of a regex check in the module.
-             As such () should always be included at the start and end of the string.
+  Arguments: String: Note the format below is used as part of a regex
+              check in the module.
+             As such () should always be included at the start and end of the
+              string.
 
   $obj->countries("(US|UK|AU)");
   $obj->countries();
@@ -501,8 +525,8 @@ on a media server.
 
   Default value: (UK|US)
 
-  This allows the system to match against programs names such as Agent X US / Agent X (US) / Agent X
-  and reference the same single folder
+  This allows the system to match against programs names such as
+  Agent X US / Agent X (US) / Agent X and reference the same single folder
 
 =head2 showFolder
 
@@ -514,7 +538,8 @@ on a media server.
   Always confirm this does not return undef before using.
   undef will be returned if the path is invalid.
 
-  Also a valid "path/to/folder" will always return with the "/" having been appended. "path/to/folder/"
+  Also a valid "path/to/folder" will always return with the "/" having been
+  appended. "path/to/folder/"
 
   This is where the TV Show Folder resides on the file system.
 
@@ -531,9 +556,11 @@ on a media server.
   Always confirm this does not return undef before using.
   undef will be returned if the path is invalid.
 
-  Also a valid "path/to/folder" will always return with the "/" having been appened. "path/to/folder/"
+  Also a valid "path/to/folder" will always return with the "/" having been
+  appened. "path/to/folder/"
 
-  This is where new files to be add to the TV Show store reside on the file system.
+  This is where new files to be add to the TV Show store reside on the
+  file system.
 
 =head2 createShowHash
 
@@ -541,8 +568,8 @@ on a media server.
 
   $obj->createShowHash;
 
-  This function creates a hash of show names with the correct path to store data based on the
-  directories that are found in showFolder.
+  This function creates a hash of show names with the correct path to store
+  data based on the directories that are found in showFolder.
 
   Examples:
 	Life on Mars (US) creates 3 keys which point to the same folder
@@ -556,28 +583,31 @@ on a media server.
 					key: life on mars (us) => folder: Life on Mars (US)
 					key: life on mars us   => folder: Life on Mars (US)
 
-  As such file naming relating to country of origin is important if you are importing versions of the
-  same show based on country.
+  As such file naming relating to country of origin is important if you are
+  importing versions of the same show based on country.
 
 =head2 clearShowHash
 
   Arguments: None
 
-  This function clears the ShowHash data so that createShowHash can be run again before or after a folder change
-  which might occur if showFolder() were to be set to a new folder.
+  This function clears the ShowHash data so that createShowHash can be run
+  again before or after a folder change which might occur if showFolder() were
+  to be set to a new folder.
 
 =head2 showPath
 
   Arguments: String
 
-  $obj->showPath("Life on Mars US") returns the name of the folder "Life on Mars (US)"
-  or undef if "Life on Mars US" does not exist as a key.
+  $obj->showPath("Life on Mars US") returns the name of the folder
+  "Life on Mars (US)" or undef if "Life on Mars US" does not exist as a key.
 
-  No key will be found if there was no folder found when $obj->createShowHash was called.
+  No key will be found if there was no folder found when $obj->createShowHash
+  was called.
 
   Example:
 
-  my $file = Video::Filename::new("Life.on.Mars.(US).S01E01.avi", { spaces => '.' });
+  my $file = Video::Filename::new("Life.on.Mars.(US).S01E01.avi",
+  { spaces => '.' });
   # $file->{name} now contains "Life on Mars (US)"
   # $file->{season} now contains "01"
 
@@ -593,34 +623,45 @@ on a media server.
 
   $obj->processNewShows();
 
-  This function requires that $obj->showFolder("/absolute/path") and $obj->newShowFolder("/absoute/path")
-  have already been called as their paths will be used in this function call.
+  This function requires that $obj->showFolder("/absolute/path") and
+  $obj->newShowFolder("/absoute/path") have already been called as their paths
+  will be used in this function call.
 
   This is the main process for batch processing of a folder of show files.
-  Hidden files, files ending in ".done" as well as directories are excluded from being processed.
+  Hidden files, files ending in ".done" as well as directories are excluded
+  from being processed.
 
-  This function will process a single folder and no deeper if recursion is not enabled.
-  If recursion is enabled it will process any sub folders that it finds from the initial folder.
+  This function will process a single folder and no deeper if recursion is not
+  enabled.
+  If recursion is enabled it will process any sub folders that it finds from
+  the initial folder.
 
 =head2 importShow
 
   Arguments: String, String, String
   The first arguement is the folder where the file is to be moved into
-  The Second argument is the source folder where the new show file currently exists.
+  The Second argument is the source folder where the new show file currently
+  exists.
   The third argument is the file which is to be moved.
 
-  $obj->importShow("/absolute/path/to/destintaion/folder/", "absolute/path/to/source/folder/", "file");
+  $obj->importShow("/absolute/path/to/destintaion/folder/",
+  "absolute/path/to/source/folder/", "file");
 
-  This function does the heavy lifting of actually moving the show file into the determined folder.
+  This function does the heavy lifting of actually moving the show file into
+  the determined folder.
   This function is called by processNewShows which does the work to
   determine the paths to folder and file.
-  This function could be called on its own after you have verified "folder" and "file"
 
-  It uses a system() call to rsync which always checks that the copy was successful.
+  This function could be called on its own after you have verified "folder"
+  and "file"
 
-  This function then checks the state of $obj->delete to determine if the processed file should be renamed "file.done"
-  or should be removed using unlink(). Note delete(1) should be called before processNewShows() if you wish
-  to delete the processed file. By default the file is only renamed.
+  It uses a system() call to rsync which always checks that the copy was
+  successful.
+
+  This function then checks the state of $obj->delete to determine if the
+  processed file should be renamed "file.done" or should be removed using
+  unlink(). Note delete(1) should be called before processNewShows() if you
+  wish to delete the processed file. By default the file is only renamed.
 
 =head2 delete
 
@@ -632,13 +673,14 @@ on a media server.
 
   Input should be 0 or 1. 0 being do not delete. 1 being delete.
 
-  Set if we should delete source file after successfully importing it to the tv store or
-  if we should rename it to $file.done
+  Set if we should delete source file after successfully importing it to the tv
+  store or if we should rename it to $file.done
 
 
   The default is false and the file is simply renamed.
 
-  Return undef if the varible passed to the function is not valid. Do not change the current state of delete.
+  Return undef if the varible passed to the function is not valid. Do not change
+  the current state of delete.
 
 =head2 recursion
 
@@ -656,7 +698,8 @@ on a media server.
 
   $obj->seasonFolder return the current true or false state (1 or 0)
   $obj->seasonFolder(0) or seasonFolder(1) sets and returns the new value.
-  $obj->seasonFolder() returns undef if the input is invalid and the internal state is unchanged.
+  $obj->seasonFolder() returns undef if the input is invalid and the internal
+  state is unchanged.
 
   if(!defined $obj->seasonFolder("x")) {
     print "You passed and invalid value\n";
@@ -670,10 +713,11 @@ on a media server.
 
   $obj->wereThereErrors;
 
-  This should be called at the end of the program to report if any file names could not be handled correctly
-  resulting in files not being processed. These missed files can then be manually moved or their show name can
-  be added to the exceptionList variable. Remember to match the NAME preceeding SXX and to give the corrected
-  name
+  This should be called at the end of the program to report if any file names
+  could not be handled correctly resulting in files not being processed. These
+  missed files can then be manually moved or their show name can be added to
+  the exceptionList variable. Remember to match the NAME preceeding SXX and to
+  give the corrected name
 
   EG S.W.A.T.2017.SXX should get an entry such as:
   exceptionList = "S.W.A.T.2017:S.W.A.T 2017";
@@ -687,12 +731,13 @@ on a media server.
 
   $obj->createSeasonFolder("/absolute/path/to/show/folder/",$seasonNumber)
 
-  This creates a folder within "/absolute/path/to/show/folder/" by calling make_path()
-  returns the newly created path "absolute/path/to/show/folder/SeasonX/" or
+  This creates a folder within "/absolute/path/to/show/folder/" by calling
+  make_path() returns the newly created path
+  "absolute/path/to/show/folder/SeasonX/" or
   "/absolute/path/to/show/folder/Specials/"
 
-  note: "/absolute/path/to/show/folder/" is not verified to be valid and is assumed to have been
-  checked before being passed
+  note: "/absolute/path/to/show/folder/" is not verified to be valid and is
+  assumed to have been checked before being passed
 
   Based on SXX
   S01 creates Season1
@@ -706,12 +751,13 @@ on a media server.
   $obj->verbose(0);
   $obj->verbose(1);
 
-  Return undef if passed an invalid imput and write to STDERR. Current value of verbose is not changed.
-  Return 0 if verbose mode is off. Return 1 if verbose mode is on.
+  Return undef if passed an invalid imput and write to STDERR. Current value
+  of verbose is not changed. Return 0 if verbose mode is off. Return 1 if
+  verbose mode is on.
 
   This state is checked by createSeasonFolder(), importShow()
-  This allows to system to give some user feedback on what is being done if you want to watch the module
-  working.
+  This allows to system to give some user feedback on what is being done if you
+  want to watch the module working.
 
 =head1 Examples
 
@@ -781,10 +827,11 @@ on a media server.
 
 =head1 INCOMPATIBILITIES
 
-This has not been tested on a windows system and I expect it will not actually work.
+This has not been tested on a windows system and I expect it will not actually
+work.
 
-I have not tested anycases where file names might be "showname.(US).(2003).S0XE0X.avi" as I have no such
-cases myself.
+I have not tested anycases where file names might be
+"showname.(US).(2003).S0XE0X.avi" as I have no such cases myself.
 
 =head1 SEE ALSO
 
@@ -809,5 +856,7 @@ at your option, any later version of Perl 5 you may have available.
 
 =head1 DISCLAIMER OF WARRANTIES
 
-THIS PACKAGE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+THIS PACKAGE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES,
+INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND
+FITNESS FOR A PARTICULAR PURPOSE.
 =cut
