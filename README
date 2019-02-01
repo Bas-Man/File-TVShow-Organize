@@ -68,7 +68,7 @@ File::Path;
 File::Copy;
 Carp;
 
-These files are of course accessable through CPAN
+These files are of course accessible through CPAN
 
 COPYRIGHT AND LICENCE
 
