@@ -5,9 +5,9 @@
 
   use Video::File::TVShow::Import;
 
-  our $exceptionList = "S.W.A.T.2017:S.W.A.T 2017";
-
-  my $obj = Video::File::TVShow::Import->new();
+  my $obj = Video::File::TVShow::Import->new({
+            Exceptions => 'S.W.A.T.2017:S.W.A.T 2017'
+            });
 
   $obj->newShowFolder("/tmp/");
   $obj->showFolder("/absolute/path/to/TV Shows");
