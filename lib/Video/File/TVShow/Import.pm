@@ -36,7 +36,7 @@ our $VERSION = '0.31';
 
 sub new
 {
-  my $class = shift;
+  my ($class, $args) = @_;
   my $self = {
         #default data and states. Other data is created and stored during
         #program execution
@@ -45,6 +45,7 @@ sub new
         verbose => 0,
         recursion => 0,
         seasonFolder => 1,
+        exceptionListSource => $args->{Exceptions} || undef,
              };
 
   bless $self, $class;
@@ -52,11 +53,11 @@ sub new
   ## Additional constructor code goes here.
   ## $::$exceptionList is a gobal variable which may or may not exist in the
   ## calling perl script that loads this module.
-  if (!defined $::exceptionList) {
+  if (!defined $self->{exceptionListSource}) {
   ## Do nothing
   } else {
     # create an array of pairs seperated by | character
-    my @list1 = split /\|/, $::exceptionList;
+    my @list1 = split /\|/, $self->{exceptionListSource};
     # now split each item in the array with by the : character use the first
     # value as the key and the second as value
     foreach my $item(@list1) {
