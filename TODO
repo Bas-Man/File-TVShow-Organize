@@ -3,5 +3,3 @@ These items should be completed before the next major push to GitHub or local or
 Update Testing to make it more organised again. Its gotten a bit out of control.
 
 Look at using Path::Tiny for path and file handling.
-
-Remove Export references, They are not needed per prepan.org feedback
