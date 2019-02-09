@@ -51,8 +51,6 @@ sub new
   bless $self, $class;
 
   ## Additional constructor code goes here.
-  ## $::$exceptionList is a gobal variable which may or may not exist in the
-  ## calling perl script that loads this module.
   if (!defined $self->{exceptionListSource}) {
   ## Do nothing
   } else {
@@ -201,7 +199,7 @@ sub processNewShows {
     my $showData;
     # Extract show name, Season and Episode
     $showData = Video::Filename::new($file);
-    # Apply special handling if the show is in the exceptionList
+    # Apply special handling if the show is in the _exceptionList
     if (exists $self->{_exceptionList}{$showData->{name}}) { ##Handle special cases like "S.W.A.T"
       # Replace the original name value with the one found in _exceptionList
       $showData->{name} = $self->{_exceptionList}{$showData->{name}};
@@ -498,19 +496,23 @@ matching Show Folder on a media server.
 
 =head2 new
 
-  Arguments: None
+  Arguments: None or { Exeptions => 'MatchCase:DesiredValue'}
 
   $obj = Video::File::TVShow::Import->new();
 
+  $obj = Video::File::TVShow::Import->new({ Exceptions =>
+    'MatchCase:DesiredValue' })
+
   This subroutine creates a new object of type Video::File::TVShow::Import
 
-  If the global varible $exceptionList is defined we load this data into a hash
+  If Exceptions is passed to the method we load this data into a hash
   for later use to handle naming complications.
 
   E.G file: S.W.A.T.2017.S01E01.avi is not handled correctly by Video::Filename
-  so we need to know to handle this differently. $exceptionList can be left
-  undefined if you do not need to use it. Its format is
-  "MatchCase:DesiredValue|MatchCase:DesiredValue"
+  so we need to know to handle this differently. Exceptions is an optional
+  parameter and can be left out when calling new().
+  Currently Exceptions is a scalar string.
+  Its format is "MatchCase:DesiredValue|MatchCase:DesiredValue"
 
 =head2 countries
 
@@ -533,8 +535,11 @@ matching Show Folder on a media server.
 
   Arugments: None or String
 
-  $obj->showFolder("/path/to/folder"); Set the path return undef is the path is invalid
-  $obj->showFolder();         		     Return the path to the folder
+  Set the path return undef is the path is invalid
+  $obj->showFolder("/path/to/folder");
+
+  Return the path to the folder
+  $obj->showFolder();
 
   Always confirm this does not return undef before using.
   undef will be returned if the path is invalid.
@@ -551,8 +556,11 @@ matching Show Folder on a media server.
 
   Arugments: None or String
 
-  $obj->newShowFolder("/path/to/folder"); Set the path return undef is the path is invalid
-  $obj->newShowFolder(); 		              Return the path to the folder
+  Set the path return undef is the path is invalid
+  $obj->newShowFolder("/path/to/folder");
+
+  Return the path to the folder
+  $obj->newShowFolder();
 
   Always confirm this does not return undef before using.
   undef will be returned if the path is invalid.
