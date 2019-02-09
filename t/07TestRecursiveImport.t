@@ -20,8 +20,6 @@ my $file;
 my $outputPath;
 my $inputPath = "t/test-data/";
 
-#our $exceptionList = "S.W.A.T.2017:S.W.A.T 2017";
-
 my $obj = Video::File::TVShow::Import->new({ Exceptions => 'S.W.A.T.2017:S.W.A.T 2017' });
 
 # Setup folder paths.

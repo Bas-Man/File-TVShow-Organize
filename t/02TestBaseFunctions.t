@@ -33,7 +33,6 @@ ok($obj->countries("USA") =~ m/USA/, "countries is now equal to USA");
 subtest "Test Exception List case" => sub {
 
 ok(!defined $obj->{_exceptionList}, "Global variable: exceptionList is not defined");
-#our $exceptionList = "S.W.A.T.2017:S.W.A.T 2017|Test.2018:Test 2018";
 
 $obj = undef;
 $obj = Video::File::TVShow::Import->new( { Exceptions => 'S.W.A.T.2017:S.W.A.T 2017|Test.2018:Test 2018' } );
