@@ -21,13 +21,13 @@ our @ISA = qw(Exporter);
 # If you do not need this, moving things directly into @EXPORT or @EXPORT_OK
 # will save memory.
 our %EXPORT_TAGS = ( 'all' => [ qw(
-	
+
 ) ] );
 
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
 our @EXPORT = qw(
-	
+
 );
 
 our $VERSION = '0.30';
@@ -90,7 +90,7 @@ sub showFolder {
 }
 
 sub newShowFolder {
-  # Set and get path to find new files to be imported from live 
+  # Set and get path to find new files to be imported from live
   my ($self, $path) = @_;
   if (defined $path) {
     if ((-e $path) and (-d $path)) {
@@ -109,7 +109,7 @@ sub newShowFolder {
 sub createShowHash {
 
   my ($self) = @_;
-  
+
   # exit loudly if the path has not been defined by the time this is called
   croak unless defined($self->{showFolder});
 
@@ -162,7 +162,7 @@ sub showPath {
 
   # Access the shows hash and return the correct directory path for the show name as passed to the funtion
   my ($self, $show) = @_;
-  return $self->{shows}{lc($show)}{path}; 
+  return $self->{shows}{lc($show)}{path};
 }
 
 sub processNewShows {
@@ -171,7 +171,7 @@ sub processNewShows {
   $curr_dir = $self->newShowFolder() unless defined($curr_dir);
 
   my $destination;
-  
+
   opendir(DIR, $curr_dir) or die $!;
   while (my $file = readdir(DIR)) {
     $destination = undef;
@@ -198,7 +198,7 @@ sub processNewShows {
       # Handle normally using '.' as the space marker name "Somthing.this" becomes "Something this"
       $showData = Video::Filename::new($file, { spaces => '.'});
     }
-    
+
     # If we don't have a showPath skip. Probably an unhandled show name
     # store it in the UnhandledFileNames hash for reporting later.
     if (!defined $self->showPath($showData->{name})) {
@@ -208,13 +208,13 @@ sub processNewShows {
     # Create the path string for storing the file in the right place
     $destination = $self->showFolder() . $self->showPath($showData->{name});
     # if this is true. Update the $destination and create the season subfolder if required.
-    # if this is false. Do not append the season folder. files should just be stored in the root of the show folder. 
+    # if this is false. Do not append the season folder. files should just be stored in the root of the show folder.
     if($self->seasonFolder()) {
       $destination = $self->createSeasonFolder($destination, $showData->{season});
     };
     # Import the file. This will use rsync to copy the file into place and either rename or delete.
     # see importShow() for implementation details
-    $self->importShow($destination, $curr_dir, $file); 
+    $self->importShow($destination, $curr_dir, $file);
   }
   close(DIR);
   return;
@@ -224,7 +224,7 @@ sub processNewShows {
 sub wereThereErrors {
 
   my ($self) = @_;
-  
+
   # Check if there has been any files that Video::Filename could not handle
   # Check that the hash UnHandledFileNames has actually been created before checking that is is not empty
   # or you will get an error.
@@ -236,7 +236,7 @@ sub wereThereErrors {
     }
     print "###\n";
   }
-  
+
   return $self;
 }
 
@@ -245,7 +245,7 @@ sub delete {
   my ($self, $delete) = @_;
 
   return $self->{delete} if(@_ == 1);
-  
+
   if (($delete =~ m/[[:alpha:]]/) || ($delete != 0) && ($delete != 1)) {
     print STDERR "Invalid arguments passed. Value not updated\n";
     return undef;
@@ -255,7 +255,7 @@ sub delete {
     } elsif ($delete == 0) {
       $self->{delete} = 0;
     }
-    # This return seems like its on a branch of code that is of litle use. Unless the return is checked on being set. 
+    # This return seems like its on a branch of code that is of litle use. Unless the return is checked on being set.
     return $self->{delete};
   }
 }
@@ -265,7 +265,7 @@ sub recursion {
   my ($self, $recursion) = @_;
 
   return $self->{recursion} if(@_ == 1);
-  
+
   if (($recursion =~ m/[[:alpha:]]/) || ($recursion != 0) && ($recursion != 1)) {
     print STDERR "Invalid arguments passed. Value not updated\n";
     return undef;
@@ -275,7 +275,7 @@ sub recursion {
     } elsif ($recursion == 0) {
       $self->{recursion} = 0;
     }
-    # This return seems like its on a branch of code that is of litle use. Unless the return is checked on being set. 
+    # This return seems like its on a branch of code that is of litle use. Unless the return is checked on being set.
     return $self->{recursion};
   }
 }
@@ -284,7 +284,7 @@ sub verbose {
    my ($self, $verbose) = @_;
 
   return $self->{verbose} if(@_ == 1);
-  
+
   if (($verbose =~ m/[[:alpha:]]/) || ($verbose != 0) && ($verbose != 1)) {
     print STDERR "\n### Invalid arguments passed. Value not updated\n";
     return undef;
@@ -294,7 +294,7 @@ sub verbose {
     } elsif ($verbose == 0) {
       $self->{verbose} = 0;
     }
-    # This return seems like its on a branch of code that is of litle use. Unless the return is checked on being set. 
+    # This return seems like its on a branch of code that is of litle use. Unless the return is checked on being set.
     return $self->{verbose};
   }
 }
@@ -303,7 +303,7 @@ sub seasonFolder {
    my ($self, $seasonFolder) = @_;
 
   return $self->{seasonFolder} if(@_ == 1);
-  
+
   if (($seasonFolder =~ m/[[:alpha:]]/) || ($seasonFolder != 0) && ($seasonFolder != 1)) {
     print STDERR "\n### Invalid arguments passed. Value not updated\n";
     return undef;
@@ -313,7 +313,7 @@ sub seasonFolder {
     } elsif ($seasonFolder == 0) {
       $self->{seasonFolder} = 0;
     }
-    # This return seems like its on a branch of code that is of litle use. Unless the return is checked on being set. 
+    # This return seems like its on a branch of code that is of litle use. Unless the return is checked on being set.
     return $self->{seasonFolder};
   }
 }
@@ -323,7 +323,7 @@ sub createSeasonFolder {
   my ($self, $_path, $season) = @_;
 
   my $path = $_path .  '/';
- 
+
   if (length($season) == 0) {
     $path = $path . 'Specials'
   } else {
@@ -359,9 +359,9 @@ sub importShow {
   $command = $command . $source . $file . " " . $destination;
 
   system($command);
-  
-  if($? == 0) { 
-    # If delete is true unlink file.  
+
+  if($? == 0) {
+    # If delete is true unlink file.
     if($self->delete) {
       unlink($source . $file);
     } else {
@@ -380,7 +380,7 @@ sub importShow {
 # This interal sub-routine prepares paths for use with external rsynch command
 # Need to escape special characters
 sub _rsyncPrep {
-  
+
   my ($dest, $source) = @_;
 
   # escape spaces and () characters to work with the rsync command.
@@ -399,12 +399,11 @@ sub _rsyncPrep {
 
 
 __END__
-# Below is stub documentation for your module. You'd better edit it!
 
 =head1 NAME
 
 Video::File::TVShow::Import - Perl module to move TVShow Files into their matching Show Folder
-on a media server. 
+on a media server.
 
 =head1 SYNOPSIS
 
@@ -431,7 +430,7 @@ on a media server.
   # Don't create sub Season folders under the root show name folder.
   # Instead just dump them all into the root folder
   $obj->seasonFolder(0);
-  
+
   # Batch process a folder containing TVShow files
   $obj->processNewShows();
 
@@ -447,19 +446,19 @@ on a media server.
       show name and season.
 
       Folder structure: /base/folder/Castle -> Season1 -> Castle.S01E01.avi
-                                               Season2 -> Castle.S02E01.avi 
+                                               Season2 -> Castle.S02E01.avi
                                                Specials -> Castle.S00E01.avi
 
       This season folder behaviour can be disabled by calling seasonFolder(0). In this case
       all files are simply placed under Castle without sorting into season folders.
-      
+
       Source files are renamed or deleted upon successful relocation.
       This depends on the state of delete(). The default is to rename the files and not to delete.
       See delete() for more details.
 
       Possible uses might include moving the files from an original rip directory and moving them into the correct
       folder structure for media servers such as Plex or Kodi. Another use might be to sort shows that are already
-      in a single folder and to move them to a season by season or Special folder struture for better folder 
+      in a single folder and to move them to a season by season or Special folder struture for better folder
       management.
 
       This module does not examine file encodings and only parses the initial file naming. "name.SXXEXX.*" anything after
@@ -501,7 +500,7 @@ on a media server.
 
   Default value: (UK|US)
 
-  This allows the system to match against programs names such as Agent X US / Agent X (US) / Agent X 
+  This allows the system to match against programs names such as Agent X US / Agent X (US) / Agent X
   and reference the same single folder
 
 =head2 showFolder
@@ -512,7 +511,7 @@ on a media server.
   $obj->showFolder();         		     Return the path to the folder
 
   Always confirm this does not return undef before using.
-  undef will be returned if the path is invalid. 
+  undef will be returned if the path is invalid.
 
   Also a valid "path/to/folder" will always return with the "/" having been appended. "path/to/folder/"
 
@@ -529,7 +528,7 @@ on a media server.
   $obj->newShowFolder(); 		              Return the path to the folder
 
   Always confirm this does not return undef before using.
-  undef will be returned if the path is invalid. 
+  undef will be returned if the path is invalid.
 
   Also a valid "path/to/folder" will always return with the "/" having been appened. "path/to/folder/"
 
@@ -570,15 +569,15 @@ on a media server.
 
   Arguments: String
 
-  $obj->showPath("Life on Mars US") returns the name of the folder "Life on Mars (US)" 
-  or undef if "Life on Mars US" does not exist as a key. 
+  $obj->showPath("Life on Mars US") returns the name of the folder "Life on Mars (US)"
+  or undef if "Life on Mars US" does not exist as a key.
 
   No key will be found if there was no folder found when $obj->createShowHash was called.
-	
+
   Example:
 
   my $file = Video::Filename::new("Life.on.Mars.(US).S01E01.avi", { spaces => '.' });
-  # $file->{name} now contains "Life on Mars (US)" 
+  # $file->{name} now contains "Life on Mars (US)"
   # $file->{season} now contains "01"
 
   my $dest = "/path/to/basefolder/" . $obj->showPath($file->{name});
@@ -586,13 +585,13 @@ on a media server.
 
   $dest = $obj->createSeasonFolder($dest,$file->{season});
   result => $dest now contains "/path/to/basefolder/Life on Mars (US)/Season1/"
-	
+
 =head2 processNewShows
 
   Arguments: None
 
   $obj->processNewShows();
-        
+
   This function requires that $obj->showFolder("/absolute/path") and $obj->newShowFolder("/absoute/path")
   have already been called as their paths will be used in this function call.
 
@@ -613,7 +612,7 @@ on a media server.
 
   This function does the heavy lifting of actually moving the show file into the determined folder.
   This function is called by processNewShows which does the work to
-  determine the paths to folder and file. 
+  determine the paths to folder and file.
   This function could be called on its own after you have verified "folder" and "file"
 
   It uses a system() call to rsync which always checks that the copy was successful.
@@ -623,7 +622,7 @@ on a media server.
   to delete the processed file. By default the file is only renamed.
 
 =head2 delete
-	
+
   Arguments: None,0,1
 
   $obj->delete return the current true or false state (1 or 0)
@@ -632,7 +631,7 @@ on a media server.
 
   Input should be 0 or 1. 0 being do not delete. 1 being delete.
 
-  Set if we should delete source file after successfully importing it to the tv store or 
+  Set if we should delete source file after successfully importing it to the tv store or
   if we should rename it to $file.done
 
 
@@ -673,7 +672,7 @@ on a media server.
   This should be called at the end of the program to report if any file names could not be handled correctly
   resulting in files not being processed. These missed files can then be manually moved or their show name can
   be added to the exceptionList variable. Remember to match the NAME preceeding SXX and to give the corrected
-  name 
+  name
 
   EG S.W.A.T.2017.SXX should get an entry such as:
   exceptionList = "S.W.A.T.2017:S.W.A.T 2017";
@@ -681,14 +680,14 @@ on a media server.
 =head2 createSeasonFolder
 
   Arguments: String, Number
-  
+
   The first argument is the current folder that the file should be moved to
   The second argument is the season number.
 
   $obj->createSeasonFolder("/absolute/path/to/show/folder/",$seasonNumber)
 
   This creates a folder within "/absolute/path/to/show/folder/" by calling make_path()
-  returns the newly created path "absolute/path/to/show/folder/SeasonX/" or 
+  returns the newly created path "absolute/path/to/show/folder/SeasonX/" or
   "/absolute/path/to/show/folder/Specials/"
 
   note: "/absolute/path/to/show/folder/" is not verified to be valid and is assumed to have been
@@ -700,7 +699,7 @@ on a media server.
 
 =head2 verbose
 
-  Arguments: None,0,1 
+  Arguments: None,0,1
 
   $obj->verbose();
   $obj->verbose(0);
@@ -708,7 +707,7 @@ on a media server.
 
   Return undef if passed an invalid imput and write to STDERR. Current value of verbose is not changed.
   Return 0 if verbose mode is off. Return 1 if verbose mode is on.
-  
+
   This state is checked by createSeasonFolder(), importShow()
   This allows to system to give some user feedback on what is being done if you want to watch the module
   working.
@@ -740,7 +739,7 @@ on a media server.
   # Don't create sub Season folders under the root show name folder.
   # Instead just dump them all into the root folder
   $obj->seasonFolder(0);
-  
+
   # Batch process a folder containing TVShow files
   $obj->processNewShows();
 
