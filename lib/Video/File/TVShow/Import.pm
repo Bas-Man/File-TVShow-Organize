@@ -50,10 +50,10 @@ sub new
 
   ## Additional constructor code goes here.
   ## $::exception is a gobal variable which may or may not exist in the calling perl script that loads this module.
-  if (!defined $::exceptionList) {
-  ## Do nothing
-  } else {
-    # create an array of pairs seperated by | character
+  # consider only using an object "exceptions" attribute rather than a
+  # global, as not to pollute the global space for little gain.
+  if (defined $::exceptionList) {
+    # create an array of pairs separated by | character
     my @list1 = split /\|/, $::exceptionList;
     # now split each item in the array with by the : character use the first value as the key and the second as value
     foreach my $item(@list1) {
