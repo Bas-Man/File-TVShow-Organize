@@ -787,10 +787,15 @@ cases myself.
 
 =head1 SEE ALSO
 
+=over
 
-  File::Path
-  File::Copy
-  Video::Filename
+=item   L<File::Path>
+
+=item   L<File::Copy>
+
+=item   L<Video::Filename>
+
+=back
 
 =head1 AUTHOR
 
