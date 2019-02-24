@@ -442,30 +442,30 @@ on a media server.
 
 =head1 DESCRIPTION
 
-      This module moves TV show files from the folder where they currently exist into the correct folder based on
-      show name and season.
+This module moves TV show files from the folder where they currently exist into the correct folder based on
+show name and season.
 
-      Folder structure: /base/folder/Castle -> Season1 -> Castle.S01E01.avi
-                                               Season2 -> Castle.S02E01.avi
-                                               Specials -> Castle.S00E01.avi
+    Folder structure: /base/folder/Castle -> Season1 -> Castle.S01E01.avi
+                                             Season2 -> Castle.S02E01.avi
+                                             Specials -> Castle.S00E01.avi
 
-      This season folder behaviour can be disabled by calling seasonFolder(0). In this case
-      all files are simply placed under Castle without sorting into season folders.
+This season folder behaviour can be disabled by calling seasonFolder(0). In this case
+all files are simply placed under Castle without sorting into season folders.
 
-      Source files are renamed or deleted upon successful relocation.
-      This depends on the state of delete(). The default is to rename the files and not to delete.
-      See delete() for more details.
+Source files are renamed or deleted upon successful relocation.
+This depends on the state of delete(). The default is to rename the files and not to delete.
+See delete() for more details.
 
-      Possible uses might include moving the files from an original rip directory and moving them into the correct
-      folder structure for media servers such as Plex or Kodi. Another use might be to sort shows that are already
-      in a single folder and to move them to a season by season or Special folder struture for better folder
-      management.
+Possible uses might include moving the files from an original rip directory and moving them into the correct
+folder structure for media servers such as Plex or Kodi. Another use might be to sort shows that are already
+in a single folder and to move them to a season by season or Special folder struture for better folder
+management.
 
-      This module does not examine file encodings and only parses the initial file naming. "name.SXXEXX.*" anything after
-      SXXEXX is ignored with the exception that files ending in ".done" are also ignored by the module. These files will
-      have already been successfully processed in previous executions of code using this module.
+This module does not examine file encodings and only parses the initial file naming. "name.SXXEXX.*" anything after
+SXXEXX is ignored with the exception that files ending in ".done" are also ignored by the module. These files will
+have already been successfully processed in previous executions of code using this module.
 
-      Works on Mac OS and *nix systems.
+Works on Mac OS and *nix systems.
 
 =head2 EXPORT
 
