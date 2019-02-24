@@ -412,7 +412,7 @@ on a media server.
 
   use Video::File::TVShow::Import;
 
-  our $excpetionList = "S.W.A.T.2017:S.W.A.T 2017|Other:other";
+  our $exceptionList = "S.W.A.T.2017:S.W.A.T 2017|Other:other";
 
   my $obj = Video::File::TVShow::Import->new();
 
@@ -508,7 +508,7 @@ Works on Mac OS and *nix systems.
 
 =head2 showFolder
 
-  Arugments: None or String
+  Arguments: None or String
 
   $obj->showFolder("/path/to/folder"); Set the path return undef is the path is invalid
   $obj->showFolder();         		     Return the path to the folder
@@ -525,7 +525,7 @@ Works on Mac OS and *nix systems.
 
 =head2 newShowFolder
 
-  Arugments: None or String
+  Arguments: None or String
 
   $obj->newShowFolder("/path/to/folder"); Set the path return undef is the path is invalid
   $obj->newShowFolder(); 		              Return the path to the folder
@@ -539,7 +539,7 @@ Works on Mac OS and *nix systems.
 
 =head2 createShowHash
 
-  Arguents: None
+  Arguments: None
 
   $obj->createShowHash;
 
