@@ -13,7 +13,6 @@ require Exporter;
 
 our @ISA = qw(Exporter);
 
-=======
 our $VERSION = '0.31';
 
 # Preloaded methods go here.
