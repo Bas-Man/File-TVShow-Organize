@@ -1,12 +1,13 @@
-Video-File-TVShow-Import version 0.30
+Video-File-TVShow-Import version 0.31
 ============================
 
-This module makes it easier to import TV Show files into the correct Show folder and also
-place them in to the correct season or specials folder. This may be of use if you have 
-a large media server which you are trying to keep organised.
+This module makes it easier to import TV Show files into the correct Show
+folder and also place them in to the correct season or specials folder.
+This may be of use if you have a large media server which you are trying to
+keep organised.
 
-It might also be used to move files into season folders if you have merely dumped these files into a single folder in the 
-begining.
+It might also be used to move files into season folders if you have merely
+dumped these files into a single folder in the beginning.
 
 INSTALLATION
 
@@ -26,12 +27,12 @@ Example Usage:
 
   use Video::File::TVShow::Import;
 
-  our $excpetionList = "S.W.A.T.2017:S.W.A.T 2017|Other:other";
-
-  my $obj = Video::File::TVShow::Import->new();
+  my $obj = Video::File::TVShow::Import->new( {
+              Exceptions => 'S.W.A.T.2017:S.W.A.T 2017|Other:other' }
+  );
 
   $obj->newShowFolder("/tmp/");
-  $obj->showsFolder("/absolute/path/to/TV Shows");
+  $obj->showFolder("/absolute/path/to/TV Shows");
 
   if((!defined $obj->newShowFolder()) || (!defined $obj->showFolder())) {
     print "Verify your paths. Something in wrong\n";
@@ -41,11 +42,13 @@ Example Usage:
   # Create a hash for matching file name to Folders
   $obj->createShowHash();
 
-  # Delete files after processing. The default is to rename the files by appending ".done"
+  # Delete files after processing.
+  The default is to rename the files by appending ".done"
   $obj->delete(1);
 
-  # Do not create sub folders under the the show's parent folder. All files should be dumped
-  # into the parent folder. The default is to create season folders.
+  # Do not create sub folders under the the show's parent folder.
+  All files should be dumped # into the parent folder. The default is to create
+  season folders.
   $obj->seasonFolder(0);
 
   # Batch process a folder containing TV Show files
@@ -55,10 +58,10 @@ Example Usage:
   $obj->wereThereErrors();
 
   #end of program
-  
+
 
   See perldoc for more examples of usage.
-  
+
 DEPENDENCIES
 
 This module requires these other modules and libraries:
@@ -66,8 +69,9 @@ This module requires these other modules and libraries:
 Video::Filename;
 File::Path;
 File::Copy;
+Carp;
 
-These files are of course accessable through CPAN
+These files are of course accessible through CPAN
 
 COPYRIGHT AND LICENCE
 
@@ -76,5 +80,3 @@ Copyright (C) 2018 by Adam Spann
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.12.4 or,
 at your option, any later version of Perl 5 you may have available.
-
-

@@ -20,9 +20,7 @@ my $file;
 my $outputPath;
 my $inputPath = "t/test-data/";
 
-our $exceptionList = "S.W.A.T.2017:S.W.A.T 2017";
-
-my $obj = Video::File::TVShow::Import->new();
+my $obj = Video::File::TVShow::Import->new({ Exceptions => 'S.W.A.T.2017:S.W.A.T 2017' });
 
 # Setup folder paths.
 my $sourceDir = getcwd . '/t/test-data/done_list/';
@@ -59,4 +57,3 @@ ok(-e $ShowDirectory . "/True Blood/Season2/true.blood.S02E01.avi", "true.blood.
 };
 
 done_testing();
-

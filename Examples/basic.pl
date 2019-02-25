@@ -5,15 +5,15 @@
 
   use Video::File::TVShow::Import;
 
-  our $excpetionList = "S.W.A.T.2017:S.W.A.T 2017";
-
-  my $obj = Video::File::TVShow::Import->new();
+  my $obj = Video::File::TVShow::Import->new({
+            Exceptions => 'S.W.A.T.2017:S.W.A.T 2017'
+            });
 
   $obj->newShowFolder("/tmp/");
   $obj->showFolder("/absolute/path/to/TV Shows");
 
   if((!defined $obj->newShowFolder()) || (!defined $obj->showFolder())) {
-    print "Verify your paths. Something in wrong\n";
+    print "Verify your paths. Something is wrong\n";
     exit;
   }
 
@@ -34,4 +34,3 @@
   $obj->wereThereErrors();
 
   #end of program
-  
