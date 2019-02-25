@@ -575,7 +575,7 @@ Works on Mac OS and *nix systems.
 					key: life on mars us   => folder: Life on Mars (US)
 					key: life on mars      => folder: Life on Mars (US)
 
-	However if there already exists a folder: "Life on Mars" and a folder "Life on Mars (US)
+	However if there already exists a folder: "Life on Mars" and a folder "Life on Mars (US)"
 	the following hash key:folder pairs will be created. Note that the folderis differ
 					key: life on mars      => folder: Life on Mars
 					key: life on mars (us) => folder: Life on Mars (US)
