@@ -13,6 +13,7 @@ require Exporter;
 
 our @ISA = qw(Exporter);
 
+=======
 our $VERSION = '0.31';
 
 # Preloaded methods go here.
@@ -34,6 +35,7 @@ sub new
   bless $self, $class;
 
   ## Additional constructor code goes here.
+
   if (!defined $self->{exceptionListSource}) {
   ## Do nothing
   } else {
@@ -58,6 +60,9 @@ sub countries {
   return $self->{countries};
 }
 
+# it's your call, but in Perl-land the usual convention is to use
+# snakecase instead of camel case for functions and methods.
+# E.g., here I'd expect to have 'show_folder'
 sub showFolder {
   # Set and get path for where new shows are to be stored in the file system
   my ($self, $path) = @_;
@@ -247,8 +252,10 @@ sub delete {
     } elsif ($delete == 0) {
       $self->{delete} = 0;
     }
+
     # This return seems like its on a branch of code that is of litle use.
     # Unless the return is checked on being set.
+
     return $self->{delete};
   }
 }
@@ -268,6 +275,7 @@ sub recursion {
     } elsif ($recursion == 0) {
       $self->{recursion} = 0;
     }
+
     # This return seems like its on a branch of code that is of litle use.
     # Unless the return is checked on being set.
     return $self->{recursion};
@@ -290,6 +298,7 @@ sub verbose {
     }
     # This return seems like its on a branch of code that is of litle use.
     # Unless the return is checked on being set.
+
     return $self->{verbose};
   }
 }
@@ -397,9 +406,9 @@ sub _rsyncPrep {
 
 
 __END__
-# Below is stub documentation for your module. You'd better edit it!
 
 =head1 NAME
+
 
 Video::File::TVShow::Import - Perl module to move TVShow Files into their
 matching Show Folder on a media server.
@@ -408,7 +417,7 @@ matching Show Folder on a media server.
 
   use Video::File::TVShow::Import;
 
-  our $excpetionList = "S.W.A.T.2017:S.W.A.T 2017|Other:other";
+  our $exceptionList = "S.W.A.T.2017:S.W.A.T 2017|Other:other";
 
   my $obj = Video::File::TVShow::Import->new();
 
@@ -441,35 +450,32 @@ matching Show Folder on a media server.
 
 =head1 DESCRIPTION
 
-      This module moves TV show files from the folder where they currently
-      exist into the correct folder based on show name and season.
 
-      Folder structure: /base/folder/Castle -> Season1 -> Castle.S01E01.avi
-                                               Season2 -> Castle.S02E01.avi
-                                               Specials -> Castle.S00E01.avi
+This module moves TV show files from the folder where they currently exist into the correct folder based on
+show name and season.
 
-      This season folder behaviour can be disabled by calling seasonFolder(0).
-      In this case all files are simply placed under Castle without sorting into
-      season folders.
+    Folder structure: /base/folder/Castle -> Season1 -> Castle.S01E01.avi
+                                             Season2 -> Castle.S02E01.avi
+                                             Specials -> Castle.S00E01.avi
 
-      Source files are renamed or deleted upon successful relocation.
-      This depends on the state of delete(). The default is to rename the files
-      and not to delete.
-      See delete() for more details.
+This season folder behaviour can be disabled by calling seasonFolder(0). In this case
+all files are simply placed under Castle without sorting into season folders.
 
-      Possible uses might include moving the files from an original rip
-      directory and moving them into the correct folder structure for media
-      servers such as Plex or Kodi. Another use might be to sort shows that are
-      already in a single folder and to move them to a season by season or
-      Special folder struture for better folder management.
+Source files are renamed or deleted upon successful relocation.
+This depends on the state of delete(). The default is to rename the files and not to delete.
+See delete() for more details.
 
-      This module does not examine file encodings and only parses the initial
-      file naming. "name.SXXEXX.*" anything after SXXEXX is ignored with the
-      exception that files ending in ".done" are also ignored by the module.
-      These files will have already been successfully processed in previous
-      executions of code using this module.
+Possible uses might include moving the files from an original rip directory and moving them into the correct
+folder structure for media servers such as Plex or Kodi. Another use might be to sort shows that are already
+in a single folder and to move them to a season by season or Special folder struture for better folder
+management.
 
-      Works on Mac OS and *nix systems.
+This module does not examine file encodings and only parses the initial file naming. "name.SXXEXX.*" anything after
+SXXEXX is ignored with the exception that files ending in ".done" are also ignored by the module. These files will
+have already been successfully processed in previous executions of code using this module.
+
+
+Works on Mac OS and *nix systems.
 
 =head2 EXPORT
 
@@ -511,12 +517,13 @@ matching Show Folder on a media server.
 
   Default value: (UK|US)
 
+
   This allows the system to match against programs names such as
   Agent X US / Agent X (US) / Agent X and reference the same single folder
 
 =head2 showFolder
 
-  Arugments: None or String
+  Arguments: None or String
 
   Set the path return undef is the path is invalid
   $obj->showFolder("/path/to/folder");
@@ -537,7 +544,7 @@ matching Show Folder on a media server.
 
 =head2 newShowFolder
 
-  Arugments: None or String
+  Arguments: None or String
 
   Set the path return undef is the path is invalid
   $obj->newShowFolder("/path/to/folder");
@@ -556,7 +563,7 @@ matching Show Folder on a media server.
 
 =head2 createShowHash
 
-  Arguents: None
+  Arguments: None
 
   $obj->createShowHash;
 
@@ -590,16 +597,15 @@ matching Show Folder on a media server.
 
   Arguments: String
 
-  $obj->showPath("Life on Mars US") returns the name of the folder
-  "Life on Mars (US)" or undef if "Life on Mars US" does not exist as a key.
+  $obj->showPath("Life on Mars US") returns the name of the folder "Life on Mars (US)"
+  or undef if "Life on Mars US" does not exist as a key.
 
-  No key will be found if there was no folder found when $obj->createShowHash
-  was called.
+  No key will be found if there was no folder found when $obj->createShowHash was called.
 
   Example:
 
-  my $file = Video::Filename::new("Life.on.Mars.(US).S01E01.avi",
-  { spaces => '.' });
+  my $file = Video::Filename::new("Life.on.Mars.(US).S01E01.avi", { spaces => '.' });
+
   # $file->{name} now contains "Life on Mars (US)"
   # $file->{season} now contains "01"
 
@@ -614,6 +620,7 @@ matching Show Folder on a media server.
   Arguments: None
 
   $obj->processNewShows();
+
 
   This function requires that $obj->showFolder("/absolute/path") and
   $obj->newShowFolder("/absoute/path") have already been called as their paths
@@ -704,6 +711,7 @@ matching Show Folder on a media server.
   Arguments: None
 
   $obj->wereThereErrors;
+
 
   This should be called at the end of the program to report if any file names
   could not be handled correctly resulting in files not being processed. These
@@ -827,11 +835,15 @@ I have not tested anycases where file names might be
 
 =head1 SEE ALSO
 
+=over
 
-  File::Path
-  File::Copy
-  Video::Filename
-  Carp
+=item   L<File::Path>
+
+=item   L<File::Copy>
+
+=item   L<Video::Filename>
+
+=back
 
 =head1 AUTHOR
 
