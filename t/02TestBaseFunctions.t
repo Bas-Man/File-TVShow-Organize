@@ -73,14 +73,14 @@ is($obj->recursion("A"), undef, "I was passed an invalid imput returning undef")
 
 };
 
-subtest "Testing seasonFolder function." => sub {
-can_ok($obj, 'seasonFolder');
+subtest "Testing season_folder function." => sub {
+can_ok($obj, 'season_folder');
 
-is($obj->seasonFolder(),1, "The default is true. (1) We will create season folders under the parent folder.");
-is($obj->seasonFolder(0),0 ,"SeasonFolder has been set to False. (0) Show files will not be put into seasons sub folders.");
-is($obj->seasonFolder(), 0, "SeasonFolder is still set to False (0)");
-is($obj->seasonFolder(1),1, "SeasonFolder has been set to true (1)");
-is($obj->seasonFolder("A"), undef, "I was passed an invalid arugment. Returning undef")
+is($obj->season_folder(),1, "The default is true. (1) We will create season folders under the parent folder.");
+is($obj->season_folder(0),0 ,"season_folder has been set to False. (0) Show files will not be put into seasons sub folders.");
+is($obj->season_folder(), 0, "season_folder is still set to False (0)");
+is($obj->season_folder(1),1, "season_folder has been set to true (1)");
+is($obj->season_folder("A"), undef, "I was passed an invalid arugment. Returning undef")
 
 
 };

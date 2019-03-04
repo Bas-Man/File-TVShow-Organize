@@ -25,39 +25,39 @@ my $obj = Video::File::TVShow::Import->new();
 isa_ok($obj, 'Video::File::TVShow::Import');
 
 subtest "Test Destintaiton Directory handling" => sub {
-can_ok ($obj, 'showFolder');
+can_ok ($obj, 'show_folder');
 
-subtest "Call showFolder with it never being set" => sub {
-is ($obj->showFolder, undef, "showFolder was never set and returns undef as required");
+subtest "Call show_folder with it never being set" => sub {
+is ($obj->show_folder, undef, "show_folder was never set and returns undef as required");
 };
 
 subtest "Pass an invalid path" => sub {
-is($obj->showFolder(getcwd . '/TV Shows'), undef, "Passed an invalid path");
+is($obj->show_folder(getcwd . '/TV Shows'), undef, "Passed an invalid path");
 };
 
 subtest "Pass a valid path" => sub {
-ok($obj->showFolder(getcwd . '/t/TV Shows') =~ m/.*\/TV Shows\/$/,  "Passed a valid Path without ending \/ character \/ was appended by funtion");
+ok($obj->show_folder(getcwd . '/t/TV Shows') =~ m/.*\/TV Shows\/$/,  "Passed a valid Path without ending \/ character \/ was appended by funtion");
 };
 
-subtest "Pass an invalid path again to showfolder()" => sub {
-is($obj->showFolder(getcwd . 't/TV Shows'), undef, "t/TV Shows is not a valid path missing leading /");
+subtest "Pass an invalid path again to show_folder()" => sub {
+is($obj->show_folder(getcwd . 't/TV Shows'), undef, "t/TV Shows is not a valid path missing leading /");
 };
 
 };
 
-subtest "Test newShowFolder method" => sub {
-can_ok ($obj, 'newShowFolder');
-is ($obj->newShowFolder, undef, "New TV Show download folder is undefined as expected");
+subtest "Test new_show_folder method" => sub {
+can_ok ($obj, 'new_show_folder');
+is ($obj->new_show_folder, undef, "New TV Show download folder is undefined as expected");
 
-subtest "Pass invalid path to newShowFolder()" => sub {
-is($obj->newShowFolder(getcwd . 'test-data'), undef, "Passed an invalid path");
+subtest "Pass invalid path to new_show_folder()" => sub {
+is($obj->new_show_folder(getcwd . 'test-data'), undef, "Passed an invalid path");
 };
 
-ok($obj->newShowFolder(getcwd . '/t/test-data') =~ m/.*\/$/, "newShowFolder was passed a valid path not ending with \/. but returned path ending in \/");
+ok($obj->new_show_folder(getcwd . '/t/test-data') =~ m/.*\/$/, "new_show_folder was passed a valid path not ending with \/. but returned path ending in \/");
 
 
-subtest "Pass an invalid path again to newShowFolder" => sub {
-is($obj->newShowFolder(getcwd . 't/test-data'), undef, "t/test-data is not a valid path missing leading /");
+subtest "Pass an invalid path again to new_show_folder" => sub {
+is($obj->new_show_folder(getcwd . 't/test-data'), undef, "t/test-data is not a valid path missing leading /");
 };
 
 };
