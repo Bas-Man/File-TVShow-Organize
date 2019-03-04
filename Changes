@@ -30,4 +30,5 @@ Revision history for Perl extension Video::File::TVShow::Import.
 	- Added the Carp Module to the list of required modules. Its been in use for
 		a while.
 	- Removed exceptionList as a global variable. We now pass a named variable
-		to new() 
+		to new()
+	- Migrated to snake_case in order to fit normal perl coding style.
