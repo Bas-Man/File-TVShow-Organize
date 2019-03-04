@@ -11,7 +11,7 @@ Revision history for Perl extension Video::File::TVShow::Import.
 		seasonFolder()
 
 0.25 Friday May 11th 2018
-	- Documentaion update. No Changes to the code base implemented
+	- Documentation update. No Changes to the code base implemented
 	  - Also need to remember to update this file when changes are actually
 			made to the version releases :)
 
