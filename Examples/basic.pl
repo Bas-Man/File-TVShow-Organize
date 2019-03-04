@@ -9,28 +9,28 @@
             Exceptions => 'S.W.A.T.2017:S.W.A.T 2017'
             });
 
-  $obj->newShowFolder("/tmp/");
-  $obj->showFolder("/absolute/path/to/TV Shows");
+  $obj->new_show_folder("/tmp/");
+  $obj->show_folder("/absolute/path/to/TV Shows");
 
-  if((!defined $obj->newShowFolder()) || (!defined $obj->showFolder())) {
+  if((!defined $obj->new_show_folder()) || (!defined $obj->show_folder())) {
     print "Verify your paths. Something is wrong\n";
     exit;
   }
 
   # Create a hash for matching file name to Folders
-  $obj->createShowHash();
+  $obj->create_show_hash();
 
   # Delete files after processing. The default is to rename the files by appending ".done"
   $obj->delete(1);
 
   # Do not create sub folders under the the show's parent folder. All files should be dumped
   # into the parent folder. The default is to create season folders.
-  $obj->seasonFolder(0);
+  $obj->season_folder(0);
 
   # Batch process a folder containing TV Show files
-  $obj->processNewShows();
+  $obj->process_new_shows();
 
   # Report any file names which could not be handled automatically.
-  $obj->wereThereErrors();
+  $obj->were_there_errors();
 
   #end of program

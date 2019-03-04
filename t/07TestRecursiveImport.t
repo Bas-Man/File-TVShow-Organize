@@ -27,14 +27,14 @@ my $sourceDir = getcwd . '/t/test-data/done_list/';
 my $ShowDirectory = getcwd . '/t/TV Shows';
 
 #load paths into obj
-$obj->showFolder($ShowDirectory);
-$obj->newShowFolder($sourceDir);
+$obj->show_folder($ShowDirectory);
+$obj->new_show_folder($sourceDir);
 
 
 $obj->recursion(1);
-$obj->createShowHash();
+$obj->create_show_hash();
 
-$obj->processNewShows();
+$obj->process_new_shows();
 
 subtest "Testing recursive processing with delete set as false" => sub {
 $file = getcwd . "/t/test-data/done_list/test/";
@@ -46,8 +46,8 @@ ok(-e $ShowDirectory . "/True Blood/Season1/true.blood.S01E01.avi", "true.blood.
 # Now test Delete folder processing run
 $obj->delete(1);
 
-$obj->newShowFolder(getcwd . '/t/test-data/delete_list/');
-$obj->processNewShows();
+$obj->new_show_folder(getcwd . '/t/test-data/delete_list/');
+$obj->process_new_shows();
 
 subtest "Testing recursive processing with delete set as true" => sub {
 $file = getcwd . "/test-data/delete_list/test/";
