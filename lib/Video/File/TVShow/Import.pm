@@ -59,9 +59,6 @@ sub countries {
   return $self->{countries};
 }
 
-# it's your call, but in Perl-land the usual convention is to use
-# snakecase instead of camel case for functions and methods.
-# E.g., here I'd expect to have 'show_folder'
 sub show_folder {
   # Set and get path for where new shows are to be stored in the file system
   my ($self, $path) = @_;
