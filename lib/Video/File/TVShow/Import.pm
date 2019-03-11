@@ -1,4 +1,4 @@
-package Video::File::TVShow::Import;
+package Video::File::TVShow::Organize;
 
 use 5.012004;
 use strict;
@@ -77,7 +77,7 @@ sub show_folder {
 }
 
 sub new_show_folder {
-  # Set and get path to find new files to be imported from live
+  # Set and get path to find new files to be moved from live
   my ($self, $path) = @_;
   if (defined $path) {
     if ((-e $path) and (-d $path)) {
@@ -206,8 +206,8 @@ sub process_new_shows {
       $destination = $self->create_season_folder($destination, $showData->{season});
     };
     # Import the file. This will use rsync to copy the file into place and either rename or delete.
-    # see import_show() for implementation details
-    $self->import_show($destination, $curr_dir, $file);
+    # see move_show() for implementation details
+    $self->move_show($destination, $curr_dir, $file);
   }
   close(DIR);
   return;
@@ -341,7 +341,7 @@ sub create_season_folder {
 }
 
 
-sub import_show {
+sub move_show {
 
   my ($self, $destination, $source, $file) = @_;
 
@@ -406,16 +406,16 @@ __END__
 =head1 NAME
 
 
-Video::File::TVShow::Import - Perl module to move TVShow Files into their
+Video::File::TVShow::Organize - Perl module to move TVShow Files into their
 matching Show Folder on a media server.
 
 =head1 SYNOPSIS
 
-  use Video::File::TVShow::Import;
+  use Video::File::TVShow::Organize;
 
   our $exceptionList = "S.W.A.T.2017:S.W.A.T 2017|Other:other";
 
-  my $obj = Video::File::TVShow::Import->new();
+  my $obj = Video::File::TVShow::Organize->new();
 
   $obj->new_show_folder("/tmp/");
   $obj->show_folder("/absolute/path/to/TV Shows");
@@ -479,12 +479,12 @@ Works on Mac OS and *nix systems.
 
   Arguments: None or { Exeptions => 'MatchCase:DesiredValue'}
 
-  $obj = Video::File::TVShow::Import->new();
+  $obj = Video::File::TVShow::Organize->new();
 
-  $obj = Video::File::TVShow::Import->new({ Exceptions =>
+  $obj = Video::File::TVShow::Organize->new({ Exceptions =>
     'MatchCase:DesiredValue' })
 
-  This subroutine creates a new object of type Video::File::TVShow::Import
+  This subroutine creates a new object of type Video::File::TVShow::Organize
 
   If Exceptions is passed to the method we load this data into a hash
   for later use to handle naming complications.
@@ -575,7 +575,7 @@ Works on Mac OS and *nix systems.
 					key: life on mars us   => folder: Life on Mars (US)
 
   As such file naming relating to country of origin is important if you are
-  importing versions of the same show based on country.
+  moving versions of the same show based on country.
 
 =head2 clear_show_hash
 
@@ -627,7 +627,7 @@ Works on Mac OS and *nix systems.
   If recursion is enabled it will process any sub folders that it finds from
   the initial folder.
 
-=head2 import_show
+=head2 move_show
 
   Arguments: String, String, String
   The first arguement is the folder where the file is to be moved into
@@ -635,7 +635,7 @@ Works on Mac OS and *nix systems.
   exists.
   The third argument is the file which is to be moved.
 
-  $obj->import_show("/absolute/path/to/destintaion/folder/",
+  $obj->move_show("/absolute/path/to/destintaion/folder/",
   "absolute/path/to/source/folder/", "file");
 
   This function does the heavy lifting of actually moving the show file into
@@ -664,7 +664,7 @@ Works on Mac OS and *nix systems.
 
   Input should be 0 or 1. 0 being do not delete. 1 being delete.
 
-  Set if we should delete source file after successfully importing it to the tv
+  Set if we should delete source file after successfully moving it to the tv
   store or if we should rename it to $file.done
 
 
@@ -747,7 +747,7 @@ Works on Mac OS and *nix systems.
   of verbose is not changed. Return 0 if verbose mode is off. Return 1 if
   verbose mode is on.
 
-  This state is checked by create_season_folder(), import_show()
+  This state is checked by create_season_folder(), move_show()
   This allows to system to give some user feedback on what is being done if you
   want to watch the module working.
 
@@ -760,9 +760,9 @@ Works on Mac OS and *nix systems.
   use strict;
   use warnings;
 
-  use Video::File::TVShow::Import;
+  use Video::File::TVShow::Organize;
 
-  my $obj = Video::File::TVShow::Import->new();
+  my $obj = Video::File::TVShow::Organize->new();
 
   $obj->new_show_folder("/tmp/");
   $obj->show_folder("/absolute/path/to/TV Shows");
@@ -792,8 +792,8 @@ Works on Mac OS and *nix systems.
   use strict;
   use warnings;
 
-  use Video::File::TVShow::Import;
-  my $obj = Video::File::TVShow::Import->new();
+  use Video::File::TVShow::Organize;
+  my $obj = Video::File::TVShow::Organize->new();
 
   $obj->new_show_folder("/tmp/");
   $obj->show_folder("/absolute/path/to/TV Shows");
