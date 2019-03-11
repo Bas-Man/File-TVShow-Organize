@@ -1,7 +1,7 @@
-Video-File-TVShow-Import version 0.31
+Video-File-TVShow-Organize version 0.31
 ============================
 
-This module makes it easier to import TV Show files into the correct Show
+This module makes it easier to move TV Show files into the correct Show
 folder and also place them in to the correct season or specials folder.
 This may be of use if you have a large media server which you are trying to
 keep organised.
@@ -25,9 +25,9 @@ Example Usage:
   use strict;
   use warnings;
 
-  use Video::File::TVShow::Import;
+  use Video::File::TVShow::Organize;
 
-  my $obj = Video::File::TVShow::Import->new( {
+  my $obj = Video::File::TVShow::Organize->new( {
               Exceptions => 'S.W.A.T.2017:S.W.A.T 2017|Other:other' }
   );
 
