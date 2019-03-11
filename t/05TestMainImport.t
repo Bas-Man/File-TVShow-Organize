@@ -8,7 +8,7 @@ use warnings;
 use Data::Dumper;
 use Test::More; #tests => 6;
 use Test::Carp;
-BEGIN { use_ok( 'Video::File::TVShow::Organize' ) };
+BEGIN { use_ok( 'File::TVShow::Organize' ) };
 use Cwd;
 
 #########################
@@ -16,7 +16,7 @@ use Cwd;
 # Insert your test code below, the Test::More module is use()ed here so read
 # its man page ( perldoc Test::More ) for help writing this test script.
 
-my $obj = Video::File::TVShow::Organize->new( { Exceptions => 'S.W.A.T.2017:S.W.A.T 2017' } );
+my $obj = File::TVShow::Organize->new( { Exceptions => 'S.W.A.T.2017:S.W.A.T 2017' } );
 
 # Setup folder paths.
 my $sourceDir = getcwd . '/t/test-data/done_list/';

@@ -10,14 +10,14 @@ use Data::Dumper;
 use Test::More;
 use Test::Carp;
 use Cwd;
-BEGIN {use_ok( 'Video::File::TVShow::Organize' ) };
+BEGIN {use_ok( 'File::TVShow::Organize' ) };
 
 #########################
 
 # Insert your test code below, the Test::More module is use()ed here so read
 # its man page ( perldoc Test::More ) for help writing this test script.
 
-my $obj = Video::File::TVShow::Organize->new();
+my $obj = File::TVShow::Organize->new();
 
 my $ShowDirectory = getcwd . '/t/TV Shows';
 

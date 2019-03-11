@@ -1,4 +1,4 @@
-package Video::File::TVShow::Organize;
+package File::TVShow::Organize;
 
 use 5.012004;
 use strict;
@@ -406,16 +406,16 @@ __END__
 =head1 NAME
 
 
-Video::File::TVShow::Organize - Perl module to move TVShow Files into their
+File::TVShow::Organize - Perl module to move TVShow Files into their
 matching Show Folder on a media server.
 
 =head1 SYNOPSIS
 
-  use Video::File::TVShow::Organize;
+  use File::TVShow::Organize;
 
   our $exceptionList = "S.W.A.T.2017:S.W.A.T 2017|Other:other";
 
-  my $obj = Video::File::TVShow::Organize->new();
+  my $obj = File::TVShow::Organize->new();
 
   $obj->new_show_folder("/tmp/");
   $obj->show_folder("/absolute/path/to/TV Shows");
@@ -479,12 +479,12 @@ Works on Mac OS and *nix systems.
 
   Arguments: None or { Exeptions => 'MatchCase:DesiredValue'}
 
-  $obj = Video::File::TVShow::Organize->new();
+  $obj = File::TVShow::Organize->new();
 
-  $obj = Video::File::TVShow::Organize->new({ Exceptions =>
+  $obj = File::TVShow::Organize->new({ Exceptions =>
     'MatchCase:DesiredValue' })
 
-  This subroutine creates a new object of type Video::File::TVShow::Organize
+  This subroutine creates a new object of type File::TVShow::Organize
 
   If Exceptions is passed to the method we load this data into a hash
   for later use to handle naming complications.
@@ -760,9 +760,9 @@ Works on Mac OS and *nix systems.
   use strict;
   use warnings;
 
-  use Video::File::TVShow::Organize;
+  use File::TVShow::Organize;
 
-  my $obj = Video::File::TVShow::Organize->new();
+  my $obj = File::TVShow::Organize->new();
 
   $obj->new_show_folder("/tmp/");
   $obj->show_folder("/absolute/path/to/TV Shows");
@@ -792,8 +792,8 @@ Works on Mac OS and *nix systems.
   use strict;
   use warnings;
 
-  use Video::File::TVShow::Organize;
-  my $obj = Video::File::TVShow::Organize->new();
+  use File::TVShow::Organize;
+  my $obj = File::TVShow::Organize->new();
 
   $obj->new_show_folder("/tmp/");
   $obj->show_folder("/absolute/path/to/TV Shows");

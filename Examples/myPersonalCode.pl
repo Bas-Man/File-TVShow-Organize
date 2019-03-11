@@ -10,9 +10,9 @@
 use strict;
 use warnings;
 
-use Video::File::TVShow::Organize;
+use File::TVShow::Organize;
 
-my $obj = Video::File::TVShow::Organize->new({
+my $obj = File::TVShow::Organize->new({
             Exceptions => 'S.W.A.T.2017:S.W.A.T 2017'
             });
 
