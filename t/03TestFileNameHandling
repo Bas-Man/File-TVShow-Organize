@@ -10,7 +10,7 @@ use Data::Dumper;
 use Test::More tests => 0;
 use Test::Carp;
 use lib '../lib/';
-use Video::File::TVShow::Import;
+use File:::Organize;
 use Cwd;
 
 #########################
@@ -20,10 +20,9 @@ use Cwd;
 
 our $exceptionList = "S.W.A.T.2017:S.W.A.T 2017";
 
-my $obj = Video::File::TVShow::Import->new();
+my $obj = File::TVShow::Organize->new();
 
-#ok($obj->_handleExceptionsDatedFileNames("S.W.A.T.2017") =~ m/S.W.A.T 2017/, "Returned S.W.A.T 2017"); 
+#ok($obj->_handleExceptionsDatedFileNames("S.W.A.T.2017") =~ m/S.W.A.T 2017/, "Returned S.W.A.T 2017");
 
 #testing
 done_testing();
-

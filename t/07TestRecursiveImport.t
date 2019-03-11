@@ -1,5 +1,5 @@
 # Before `make install' is performed this script should be runnable with
-# `make test'. After `make install' it should work as `perl 05MainTestImport.t'
+# `make test'. After `make install' it should work as `perl 05MainTestOrganize.t'
 
 #########################
 
@@ -8,7 +8,7 @@ use warnings;
 use Data::Dumper;
 use Test::More; #tests => 6;
 use Test::Carp;
-BEGIN { use_ok( 'Video::File::TVShow::Import' ) };
+BEGIN { use_ok( 'File::TVShow::Organize' ) };
 use Cwd;
 
 #########################
@@ -20,21 +20,21 @@ my $file;
 my $outputPath;
 my $inputPath = "t/test-data/";
 
-my $obj = Video::File::TVShow::Import->new({ Exceptions => 'S.W.A.T.2017:S.W.A.T 2017' });
+my $obj = File::TVShow::Organize->new({ Exceptions => 'S.W.A.T.2017:S.W.A.T 2017' });
 
 # Setup folder paths.
 my $sourceDir = getcwd . '/t/test-data/done_list/';
 my $ShowDirectory = getcwd . '/t/TV Shows';
 
 #load paths into obj
-$obj->showFolder($ShowDirectory);
-$obj->newShowFolder($sourceDir);
+$obj->show_folder($ShowDirectory);
+$obj->new_show_folder($sourceDir);
 
 
 $obj->recursion(1);
-$obj->createShowHash();
+$obj->create_show_hash();
 
-$obj->processNewShows();
+$obj->process_new_shows();
 
 subtest "Testing recursive processing with delete set as false" => sub {
 $file = getcwd . "/t/test-data/done_list/test/";
@@ -46,8 +46,8 @@ ok(-e $ShowDirectory . "/True Blood/Season1/true.blood.S01E01.avi", "true.blood.
 # Now test Delete folder processing run
 $obj->delete(1);
 
-$obj->newShowFolder(getcwd . '/t/test-data/delete_list/');
-$obj->processNewShows();
+$obj->new_show_folder(getcwd . '/t/test-data/delete_list/');
+$obj->process_new_shows();
 
 subtest "Testing recursive processing with delete set as true" => sub {
 $file = getcwd . "/test-data/delete_list/test/";

@@ -1,4 +1,4 @@
-package Video::File::TVShow::Import;
+package File::TVShow::Organize;
 
 use 5.012004;
 use strict;
@@ -59,10 +59,7 @@ sub countries {
   return $self->{countries};
 }
 
-# it's your call, but in Perl-land the usual convention is to use
-# snakecase instead of camel case for functions and methods.
-# E.g., here I'd expect to have 'show_folder'
-sub showFolder {
+sub show_folder {
   # Set and get path for where new shows are to be stored in the file system
   my ($self, $path) = @_;
   if (defined $path) {
@@ -79,8 +76,8 @@ sub showFolder {
   return $self->{showFolder};
 }
 
-sub newShowFolder {
-  # Set and get path to find new files to be imported from live
+sub new_show_folder {
+  # Set and get path to find new files to be moved from live
   my ($self, $path) = @_;
   if (defined $path) {
     if ((-e $path) and (-d $path)) {
@@ -96,7 +93,7 @@ sub newShowFolder {
   return $self->{newShowFolder};
 }
 
-sub createShowHash {
+sub create_show_hash {
 
   my ($self) = @_;
 
@@ -104,7 +101,7 @@ sub createShowHash {
   croak unless defined($self->{showFolder});
 
   # Get the root path of the TV Show folder
-  my $directory = $self->showFolder();
+  my $directory = $self->show_folder();
   my $showNameHolder;
 
   opendir(DIR, $directory) or die $!;
@@ -145,14 +142,14 @@ sub createShowHash {
 
 }
 
-sub clearShowHash {
+sub clear_show_hash {
   my ($self) = @_;
 
   $self->{shows} = ();
   return $self;
 }
 
-sub showPath {
+sub show_path {
 
   # Access the shows hash and return the correct directory path for the show
   # name as passed to the funtion
@@ -160,10 +157,10 @@ sub showPath {
   return $self->{shows}{lc($show)}{path};
 }
 
-sub processNewShows {
+sub process_new_shows {
 
   my ($self, $curr_dir) = @_;
-  $curr_dir = $self->newShowFolder() unless defined($curr_dir);
+  $curr_dir = $self->new_show_folder() unless defined($curr_dir);
 
   my $destination;
 
@@ -178,9 +175,9 @@ sub processNewShows {
     # to to them.
     next if ($file =~ m/\.done$/);
     if (!$self->recursion) {
-      next if -d $self->newShowFolder() . $file; ## Skip non-Files
+      next if -d $self->new_show_folder() . $file; ## Skip non-Files
     } else {
-      $self->processNewShows($curr_dir . $file . "/") if -d $curr_dir . $file;
+      $self->process_new_shows($curr_dir . $file . "/") if -d $curr_dir . $file;
     };
     next if ($file !~ m/s\d\de\d\d/i); # skip if SXXEXX is not present in file name
     my $showData;
@@ -195,29 +192,29 @@ sub processNewShows {
       $showData = Video::Filename::new($file, { spaces => '.'});
     }
 
-    # If we don't have a showPath skip. Probably an unhandled show name
+    # If we don't have a show_path skip. Probably an unhandled show name
     # store it in the UnhandledFileNames hash for reporting later.
-    if (!defined $self->showPath($showData->{name})) {
+    if (!defined $self->show_path($showData->{name})) {
       $self->{UnhandledFileNames}{$file} = $showData->{name};
       next;
     }
     # Create the path string for storing the file in the right place
-    $destination = $self->showFolder() . $self->showPath($showData->{name});
+    $destination = $self->show_folder() . $self->show_path($showData->{name});
     # if this is true. Update the $destination and create the season subfolder if required.
     # if this is false. Do not append the season folder. files should just be stored in the root of the show folder.
-    if($self->seasonFolder()) {
-      $destination = $self->createSeasonFolder($destination, $showData->{season});
+    if($self->season_folder()) {
+      $destination = $self->create_season_folder($destination, $showData->{season});
     };
     # Import the file. This will use rsync to copy the file into place and either rename or delete.
-    # see importShow() for implementation details
-    $self->importShow($destination, $curr_dir, $file);
+    # see move_show() for implementation details
+    $self->move_show($destination, $curr_dir, $file);
   }
   close(DIR);
   return;
   #return $self;
 }
 
-sub wereThereErrors {
+sub were_there_errors {
 
   my ($self) = @_;
 
@@ -302,7 +299,7 @@ sub verbose {
   }
 }
 
-sub seasonFolder {
+sub season_folder {
    my ($self, $seasonFolder) = @_;
 
   return $self->{seasonFolder} if(@_ == 1);
@@ -322,7 +319,7 @@ sub seasonFolder {
   }
 }
 
-sub createSeasonFolder {
+sub create_season_folder {
 
   my ($self, $_path, $season) = @_;
 
@@ -344,7 +341,7 @@ sub createSeasonFolder {
 }
 
 
-sub importShow {
+sub move_show {
 
   my ($self, $destination, $source, $file) = @_;
 
@@ -356,7 +353,7 @@ sub importShow {
 
   # rewrite paths so they are rsync friendly. This means escape spaces and
   # other special characters.
-  ($destination, $source) = _rsyncPrep($destination,$source);
+  ($destination, $source) = _rsync_prep ($destination,$source);
 
   # create the command string to be used in system() call
   # Set --progress if verbose is true
@@ -385,7 +382,7 @@ sub importShow {
 
 # This interal sub-routine prepares paths for use with external rsynch command
 # Need to escape special characters
-sub _rsyncPrep {
+sub _rsync_prep  {
 
   my ($dest, $source) = @_;
 
@@ -409,40 +406,40 @@ __END__
 =head1 NAME
 
 
-Video::File::TVShow::Import - Perl module to move TVShow Files into their
+File::TVShow::Organize - Perl module to move TVShow Files into their
 matching Show Folder on a media server.
 
 =head1 SYNOPSIS
 
-  use Video::File::TVShow::Import;
+  use File::TVShow::Organize;
 
   our $exceptionList = "S.W.A.T.2017:S.W.A.T 2017|Other:other";
 
-  my $obj = Video::File::TVShow::Import->new();
+  my $obj = File::TVShow::Organize->new();
 
-  $obj->newShowFolder("/tmp/");
-  $obj->showFolder("/absolute/path/to/TV Shows");
+  $obj->new_show_folder("/tmp/");
+  $obj->show_folder("/absolute/path/to/TV Shows");
 
-  if((!defined $obj->newShowFolder()) || (!defined $obj->showFolder())) {
+  if((!defined $obj->new_show_folder()) || (!defined $obj->show_folder())) {
     print "Verify your paths. Something in wrong\n";
     exit;
   }
 
   # Create a hash for matching file name to Folders
-  $obj->createShowHash();
+  $obj->create_show_hash();
 
   # Delete files are processing.
   $obj->delete(1);
 
   # Don't create sub Season folders under the root show name folder.
   # Instead just dump them all into the root folder
-  $obj->seasonFolder(0);
+  $obj->season_folder(0);
 
   # Batch process a folder containing TVShow files
-  $obj->processNewShows();
+  $obj->process_new_shows();
 
   # Report any file names which could not be handled automatically.
-  $obj->wereThereErrors();
+  $obj->were_there_errors();
 
   #end of program
 
@@ -457,7 +454,7 @@ show name and season.
                                              Season2 -> Castle.S02E01.avi
                                              Specials -> Castle.S00E01.avi
 
-This season folder behaviour can be disabled by calling seasonFolder(0). In this case
+This season folder behaviour can be disabled by calling season_folder(0). In this case
 all files are simply placed under Castle without sorting into season folders.
 
 Source files are renamed or deleted upon successful relocation.
@@ -476,22 +473,18 @@ have already been successfully processed in previous executions of code using th
 
 Works on Mac OS and *nix systems.
 
-=head2 EXPORT
-
-  None by default.
-
 =head1 Methods
 
 =head2 new
 
   Arguments: None or { Exeptions => 'MatchCase:DesiredValue'}
 
-  $obj = Video::File::TVShow::Import->new();
+  $obj = File::TVShow::Organize->new();
 
-  $obj = Video::File::TVShow::Import->new({ Exceptions =>
+  $obj = File::TVShow::Organize->new({ Exceptions =>
     'MatchCase:DesiredValue' })
 
-  This subroutine creates a new object of type Video::File::TVShow::Import
+  This subroutine creates a new object of type File::TVShow::Organize
 
   If Exceptions is passed to the method we load this data into a hash
   for later use to handle naming complications.
@@ -520,15 +513,15 @@ Works on Mac OS and *nix systems.
   This allows the system to match against programs names such as
   Agent X US / Agent X (US) / Agent X and reference the same single folder
 
-=head2 showFolder
+=head2 show_folder
 
   Arguments: None or String
 
   Set the path return undef is the path is invalid
-  $obj->showFolder("/path/to/folder");
+  $obj->show_folder("/path/to/folder");
 
   Return the path to the folder
-  $obj->showFolder();
+  $obj->show_folder();
 
   Always confirm this does not return undef before using.
   undef will be returned if the path is invalid.
@@ -541,15 +534,15 @@ Works on Mac OS and *nix systems.
   If the path is invalid this would leave the internal value as being undef.
 
 
-=head2 newShowFolder
+=head2 new_show_folder
 
   Arguments: None or String
 
   Set the path return undef is the path is invalid
-  $obj->newShowFolder("/path/to/folder");
+  $obj->new_show_folder("/path/to/folder");
 
   Return the path to the folder
-  $obj->newShowFolder();
+  $obj->new_show_folder();
 
   Always confirm this does not return undef before using.
   undef will be returned if the path is invalid.
@@ -560,11 +553,11 @@ Works on Mac OS and *nix systems.
   This is where new files to be add to the TV Show store reside on the
   file system.
 
-=head2 createShowHash
+=head2 create_show_hash
 
   Arguments: None
 
-  $obj->createShowHash;
+  $obj->create_show_hash;
 
   This function creates a hash of show names with the correct path to store
   data based on the directories that are found in showFolder.
@@ -575,31 +568,31 @@ Works on Mac OS and *nix systems.
 					key: life on mars us   => folder: Life on Mars (US)
 					key: life on mars      => folder: Life on Mars (US)
 
-	However if there already exists a folder: "Life on Mars" and a folder "Life on Mars (US)
+	However if there already exists a folder: "Life on Mars" and a folder "Life on Mars (US)"
 	the following hash key:folder pairs will be created. Note that the folderis differ
 					key: life on mars      => folder: Life on Mars
 					key: life on mars (us) => folder: Life on Mars (US)
 					key: life on mars us   => folder: Life on Mars (US)
 
   As such file naming relating to country of origin is important if you are
-  importing versions of the same show based on country.
+  moving versions of the same show based on country.
 
-=head2 clearShowHash
+=head2 clear_show_hash
 
   Arguments: None
 
-  This function clears the ShowHash data so that createShowHash can be run
-  again before or after a folder change which might occur if showFolder() were
+  This function clears the ShowHash data so that create_show_hash can be run
+  again before or after a folder change which might occur if show_folder() were
   to be set to a new folder.
 
-=head2 showPath
+=head2 show_path
 
   Arguments: String
 
-  $obj->showPath("Life on Mars US") returns the name of the folder "Life on Mars (US)"
+  $obj->show_path("Life on Mars US") returns the name of the folder "Life on Mars (US)"
   or undef if "Life on Mars US" does not exist as a key.
 
-  No key will be found if there was no folder found when $obj->createShowHash was called.
+  No key will be found if there was no folder found when $obj->create_show_hash was called.
 
   Example:
 
@@ -608,21 +601,21 @@ Works on Mac OS and *nix systems.
   # $file->{name} now contains "Life on Mars (US)"
   # $file->{season} now contains "01"
 
-  my $dest = "/path/to/basefolder/" . $obj->showPath($file->{name});
+  my $dest = "/path/to/basefolder/" . $obj->show_path($file->{name});
   result => $dest now cotains "/path/to/basefolder/Life on Mars (US)/"
 
-  $dest = $obj->createSeasonFolder($dest,$file->{season});
+  $dest = $obj->create_season_folder($dest,$file->{season});
   result => $dest now contains "/path/to/basefolder/Life on Mars (US)/Season1/"
 
-=head2 processNewShows
+=head2 process_new_shows
 
   Arguments: None
 
-  $obj->processNewShows();
+  $obj->process_new_shows();
 
 
-  This function requires that $obj->showFolder("/absolute/path") and
-  $obj->newShowFolder("/absoute/path") have already been called as their paths
+  This function requires that $obj->show_folder("/absolute/path") and
+  $obj->new_show_folder("/absoute/path") have already been called as their paths
   will be used in this function call.
 
   This is the main process for batch processing of a folder of show files.
@@ -634,7 +627,7 @@ Works on Mac OS and *nix systems.
   If recursion is enabled it will process any sub folders that it finds from
   the initial folder.
 
-=head2 importShow
+=head2 move_show
 
   Arguments: String, String, String
   The first arguement is the folder where the file is to be moved into
@@ -642,12 +635,12 @@ Works on Mac OS and *nix systems.
   exists.
   The third argument is the file which is to be moved.
 
-  $obj->importShow("/absolute/path/to/destintaion/folder/",
+  $obj->move_show("/absolute/path/to/destintaion/folder/",
   "absolute/path/to/source/folder/", "file");
 
   This function does the heavy lifting of actually moving the show file into
   the determined folder.
-  This function is called by processNewShows which does the work to
+  This function is called by process_new_shows which does the work to
   determine the paths to folder and file.
 
   This function could be called on its own after you have verified "folder"
@@ -658,7 +651,7 @@ Works on Mac OS and *nix systems.
 
   This function then checks the state of $obj->delete to determine if the
   processed file should be renamed "file.done" or should be removed using
-  unlink(). Note delete(1) should be called before processNewShows() if you
+  unlink(). Note delete(1) should be called before process_new_shows() if you
   wish to delete the processed file. By default the file is only renamed.
 
 =head2 delete
@@ -671,7 +664,7 @@ Works on Mac OS and *nix systems.
 
   Input should be 0 or 1. 0 being do not delete. 1 being delete.
 
-  Set if we should delete source file after successfully importing it to the tv
+  Set if we should delete source file after successfully moving it to the tv
   store or if we should rename it to $file.done
 
 
@@ -688,28 +681,28 @@ Works on Mac OS and *nix systems.
   $obj->recursion(0) set recursion to false
   $obj->recursion(1) set recursion to true
 
-  This controls the behaviour of processNewShows();
+  This controls the behaviour of process_new_shows();
 
-=head2 seasonFolder
+=head2 season_folder
 
   Arguments: None,0,1
 
-  $obj->seasonFolder return the current true or false state (1 or 0)
-  $obj->seasonFolder(0) or seasonFolder(1) sets and returns the new value.
-  $obj->seasonFolder() returns undef if the input is invalid and the internal
+  $obj->season_folder return the current true or false state (1 or 0)
+  $obj->season_folder(0) or season_folder(1) sets and returns the new value.
+  $obj->season_folder() returns undef if the input is invalid and the internal
   state is unchanged.
 
-  if(!defined $obj->seasonFolder("x")) {
+  if(!defined $obj->season_folder("x")) {
     print "You passed and invalid value\n";
   }
 
   The default is true.
 
-=head2 wereThereErrors
+=head2 were_there_errors
 
   Arguments: None
 
-  $obj->wereThereErrors;
+  $obj->were_there_errors;
 
 
   This should be called at the end of the program to report if any file names
@@ -721,14 +714,14 @@ Works on Mac OS and *nix systems.
   EG S.W.A.T.2017.SXX should get an entry such as:
   exceptionList = "S.W.A.T.2017:S.W.A.T 2017";
 
-=head2 createSeasonFolder
+=head2 create_season_folder
 
   Arguments: String, Number
 
   The first argument is the current folder that the file should be moved to
   The second argument is the season number.
 
-  $obj->createSeasonFolder("/absolute/path/to/show/folder/",$seasonNumber)
+  $obj->create_season_folder("/absolute/path/to/show/folder/",$seasonNumber)
 
   This creates a folder within "/absolute/path/to/show/folder/" by calling
   make_path() returns the newly created path
@@ -754,7 +747,7 @@ Works on Mac OS and *nix systems.
   of verbose is not changed. Return 0 if verbose mode is off. Return 1 if
   verbose mode is on.
 
-  This state is checked by createSeasonFolder(), importShow()
+  This state is checked by create_season_folder(), move_show()
   This allows to system to give some user feedback on what is being done if you
   want to watch the module working.
 
@@ -767,30 +760,30 @@ Works on Mac OS and *nix systems.
   use strict;
   use warnings;
 
-  use Video::File::TVShow::Import;
+  use File::TVShow::Organize;
 
-  my $obj = Video::File::TVShow::Import->new();
+  my $obj = File::TVShow::Organize->new();
 
-  $obj->newShowFolder("/tmp/");
-  $obj->showFolder("/absolute/path/to/TV Shows");
+  $obj->new_show_folder("/tmp/");
+  $obj->show_folder("/absolute/path/to/TV Shows");
 
-  if((!defined $obj->newShowFolder()) || (!defined $obj->showFolder())) {
+  if((!defined $obj->new_show_folder()) || (!defined $obj->show_folder())) {
     print "Verify your paths. Something in wrong\n";
     exit;
   }
 
   # Create a hash for matching file name to Folders
-  $obj->createShowHash();
+  $obj->create_show_hash();
 
   # Don't create sub Season folders under the root show name folder.
   # Instead just dump them all into the root folder
-  $obj->seasonFolder(0);
+  $obj->season_folder(0);
 
   # Batch process a folder containing TVShow files
-  $obj->processNewShows();
+  $obj->process_new_shows();
 
   # Report any file names which could not be handled automatically.
-  $obj->wereThereErrors();
+  $obj->were_there_errors();
 
 =head2 Process two different source folders.
 
@@ -799,30 +792,30 @@ Works on Mac OS and *nix systems.
   use strict;
   use warnings;
 
-  use Video::File::TVShow::Import;
-  my $obj = Video::File::TVShow::Import->new();
+  use File::TVShow::Organize;
+  my $obj = File::TVShow::Organize->new();
 
-  $obj->newShowFolder("/tmp/");
-  $obj->showFolder("/absolute/path/to/TV Shows");
+  $obj->new_show_folder("/tmp/");
+  $obj->show_folder("/absolute/path/to/TV Shows");
 
-  if((!defined $obj->newShowFolder()) || (!defined $obj->showFolder())) {
+  if((!defined $obj->new_show_folder()) || (!defined $obj->show_folder())) {
     print "Verify your paths. Something in wrong\n";
     exit;
   }
 
   # Create a hash for matching file name to Folders
-  $obj->createShowHash();
+  $obj->create_show_hash();
 
   # Batch process first folder containing TVShow files
-  $obj->newShowFolder("/tmp/");
-  $obj->processNewShows();
+  $obj->new_show_folder("/tmp/");
+  $obj->process_new_shows();
 
   # Batch process second folder containing TVShow files.
-  $obj->newShowFolder("/tmp2/");
-  $obj->processNewShows();
+  $obj->new_show_folder("/tmp2/");
+  $obj->process_new_shows();
 
   # Report any file names which could not be handled automatically.
-  $obj->wereThereErrors();
+  $obj->were_there_errors();
 
 =head1 INCOMPATIBILITIES
 
