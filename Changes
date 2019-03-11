@@ -34,3 +34,4 @@ Revision history for Perl extension Video::File::TVShow::Import.
 	- Migrated to snake_case in order to fit normal perl coding style.
  	- Changed Import to Organize
 	- Changed import_* to move_* for methods.
+	- Dropped Video:: from the module naming. It now more simply File::TVShow::*
