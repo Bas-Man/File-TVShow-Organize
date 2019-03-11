@@ -1,5 +1,5 @@
 # Before `make install' is performed this script should be runnable with
-# `make test'. After `make install' it should work as `perl 05MainTestImport.t'
+# `make test'. After `make install' it should work as `perl 05MainTestOrganize.t'
 
 #########################
 
@@ -8,7 +8,7 @@ use warnings;
 use Data::Dumper;
 use Test::More; #tests => 6;
 use Test::Carp;
-BEGIN { use_ok( 'Video::File::TVShow::Import' ) };
+BEGIN { use_ok( 'File::TVShow::Organize' ) };
 use Cwd;
 
 #########################
@@ -16,7 +16,7 @@ use Cwd;
 # Insert your test code below, the Test::More module is use()ed here so read
 # its man page ( perldoc Test::More ) for help writing this test script.
 
-my $obj = Video::File::TVShow::Import->new( { Exceptions => 'S.W.A.T.2017:S.W.A.T 2017' } );
+my $obj = File::TVShow::Organize->new( { Exceptions => 'S.W.A.T.2017:S.W.A.T 2017' } );
 
 # Setup folder paths.
 my $sourceDir = getcwd . '/t/test-data/done_list/';
@@ -34,7 +34,7 @@ is($obj->{UnhandledFileNames}, undef, "No UnhandedFiles have been found");
 
 can_ok($obj, 'process_new_shows');
 $obj->process_new_shows();
-can_ok($obj, 'import_show');
+can_ok($obj, 'move_show');
 
 };
 

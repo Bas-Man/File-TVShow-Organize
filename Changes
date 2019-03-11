@@ -32,3 +32,5 @@ Revision history for Perl extension Video::File::TVShow::Import.
 	- Removed exceptionList as a global variable. We now pass a named variable
 		to new()
 	- Migrated to snake_case in order to fit normal perl coding style.
+ 	- Changed Import to Organize
+	- Changed import_* to move_* for methods.

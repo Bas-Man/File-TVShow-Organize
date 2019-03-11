@@ -10,7 +10,7 @@ use Data::Dumper;
 use Test::More;
 use Test::Carp;
 use lib '../lib/';
-BEGIN { use_ok('Video::File::TVShow::Import') };
+BEGIN { use_ok('File::TVShow::Organize') };
 BEGIN { use_ok('Video::Filename') };
 BEGIN { use_ok('File::Path')};
 BEGIN { use_ok('File::Copy')};
@@ -21,8 +21,8 @@ BEGIN { use_ok('Cwd')};
 # Insert your test code below, the Test::More module is use()ed here so read
 # its man page ( perldoc Test::More ) for help writing this test script.
 
-my $obj = Video::File::TVShow::Import->new();
-isa_ok($obj, 'Video::File::TVShow::Import');
+my $obj = File::TVShow::Organize->new();
+isa_ok($obj, 'File::TVShow::Organize');
 
 subtest "Test Destintaiton Directory handling" => sub {
 can_ok ($obj, 'show_folder');

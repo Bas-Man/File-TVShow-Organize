@@ -1,5 +1,5 @@
 # Before `make install' is performed this script should be runnable with
-# `make test'. After `make install' it should work as `perl 05MainTestImport.t'
+# `make test'. After `make install' it should work as `perl 05MainTestOrganize.t'
 
 #########################
 
@@ -8,7 +8,7 @@ use warnings;
 use Data::Dumper;
 use Test::More; #tests => 6;
 use Test::Carp;
-BEGIN { use_ok( 'Video::File::TVShow::Import' ) };
+BEGIN { use_ok( 'File::TVShow::Organize' ) };
 use Cwd;
 
 #########################
@@ -20,7 +20,7 @@ my $file;
 my $outputPath;
 my $inputPath = "t/test-data/";
 
-my $obj = Video::File::TVShow::Import->new({ Exceptions => 'S.W.A.T.2017:S.W.A.T 2017' });
+my $obj = File::TVShow::Organize->new({ Exceptions => 'S.W.A.T.2017:S.W.A.T 2017' });
 
 # Setup folder paths.
 my $sourceDir = getcwd . '/t/test-data/done_list/';

@@ -2,7 +2,7 @@
 
 # This is used during development to confirm code works in my local environment.
 # before I do a make install for the module.
-#use lib "/Users/aspann/dev/BAS-TVShow-Import/lib/";
+#use lib "/Users/aspann/dev/BAS-TVShow-Organize/lib/";
 
 # Note I do not personally do any case testing as I have been using this code
 # for some time and am very familiar with its operation.
@@ -10,9 +10,9 @@
 use strict;
 use warnings;
 
-use Video::File::TVShow::Import;
+use File::TVShow::Organize;
 
-my $obj = Video::File::TVShow::Import->new({
+my $obj = File::TVShow::Organize->new({
             Exceptions => 'S.W.A.T.2017:S.W.A.T 2017'
             });
 

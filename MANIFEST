@@ -13,4 +13,4 @@ t/07TestRecursiveImport.t
 t/10Clean.t
 t/test-data.tar.gz
 t/tv-shows.tar.gz
-lib/Video/File/TVShow/Import.pm
+lib/File/TVShow/Organize.pm
