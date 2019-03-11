@@ -9,7 +9,7 @@ use Data::Dumper;
 
 use Test::More;
 use Test::Carp;
-BEGIN { use_ok('Video::File::TVShow::Import') };
+BEGIN { use_ok('Video::File::TVShow::Organize') };
 BEGIN { use_ok('Video::Filename') };
 BEGIN { use_ok('File::Path')};
 BEGIN { use_ok('File::Copy')};
@@ -20,8 +20,8 @@ BEGIN { use_ok('Cwd')};
 # Insert your test code below, the Test::More module is use()ed here so read
 # its man page ( perldoc Test::More ) for help writing this test script.
 
-my $obj = Video::File::TVShow::Import->new();
-isa_ok($obj, 'Video::File::TVShow::Import');
+my $obj = Video::File::TVShow::Organize->new();
+isa_ok($obj, 'Video::File::TVShow::Organize');
 
 subtest 'Test Default Countries value' => sub {
 
@@ -35,7 +35,7 @@ subtest "Test Exception List case" => sub {
 ok(!defined $obj->{_exceptionList}, "Global variable: exceptionList is not defined");
 
 $obj = undef;
-$obj = Video::File::TVShow::Import->new( { Exceptions => 'S.W.A.T.2017:S.W.A.T 2017|Test.2018:Test 2018' } );
+$obj = Video::File::TVShow::Organize->new( { Exceptions => 'S.W.A.T.2017:S.W.A.T 2017|Test.2018:Test 2018' } );
 ok(keys $obj->{_exceptionList}, "Global variable execptionList is defined");
 ok($obj->{_exceptionList}{'S.W.A.T.2017'} =~ m/S.W.A.T 2017/, "S.W.A.T.2017 gives S.W.A.T 2017");
 ok($obj->{_exceptionList}{'Test.2018'} =~ m/Test 2018/, "Test.2018 gives Test 2018");
@@ -43,7 +43,7 @@ ok($obj->{_exceptionList}{'Test.2018'} =~ m/Test 2018/, "Test.2018 gives Test 20
 };
 
 $obj = undef;
-$obj = Video::File::TVShow::Import->new();
+$obj = Video::File::TVShow::Organize->new();
 
 subtest 'Testing if we should delete or rename processed files' => sub {
 can_ok ($obj, 'delete');

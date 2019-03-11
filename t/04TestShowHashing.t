@@ -1,5 +1,5 @@
 # Before `make install' is performed this script should be runnable with
-# `make test'. After `make install' it should work as `perl BAS-TVShow-Import.t'
+# `make test'. After `make install' it should work as `perl BAS-TVShow-Organize.t'
 
 #########################
 
@@ -10,14 +10,14 @@ use Data::Dumper;
 use Test::More;
 use Test::Carp;
 use Cwd;
-BEGIN {use_ok( 'Video::File::TVShow::Import' ) };
+BEGIN {use_ok( 'Video::File::TVShow::Organize' ) };
 
 #########################
 
 # Insert your test code below, the Test::More module is use()ed here so read
 # its man page ( perldoc Test::More ) for help writing this test script.
 
-my $obj = Video::File::TVShow::Import->new();
+my $obj = Video::File::TVShow::Organize->new();
 
 my $ShowDirectory = getcwd . '/t/TV Shows';
 
