@@ -5,6 +5,7 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
     NAME              => 'File::TVShow::Organize',
     VERSION_FROM      => 'lib/File/TVShow/Organize.pm', # finds $VERSION
+    MIN_PERL_VERSION => '5.10.0',
     PREREQ_PM         => { 'Video::Filename' => 0,
                            'File::Path' => 0,
                            'File::Copy' => 0,
