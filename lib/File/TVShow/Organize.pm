@@ -4,10 +4,11 @@ use 5.012004;
 use strict;
 use warnings;
 use Carp;
-
+use lib '/Users/aspann/Documents/Development/Perl/File-TVShow-Parse/lib';
 use File::Path qw(make_path);
 use File::Copy;
-use Video::Filename;
+#use Video::Filename;
+use File::TVShow::Info;
 
 require Exporter;
 
