@@ -183,24 +183,28 @@ sub process_new_shows {
     next if ($file !~ m/s\d\de\d\d/i); # skip if SXXEXX is not present in file name
     my $showData;
     # Extract show name, Season and Episode
-    $showData = Video::Filename::new($file);
+    #$showData = Video::Filename::new($file);
+    $showData = File::TVShow::Info->new($file);
+    print "is_TV " . $showData->is_tv_show() . "\n";
+    next if !$showData->is_tv_show();
+    #print Data::Dumper::Dumper($showData); exit;
     # Apply special handling if the show is in the _exceptionList
-    if (exists $self->{_exceptionList}{$showData->{name}}) { ##Handle special cases like "S.W.A.T"
+    if (exists $self->{_exceptionList}{$showData->{show_name}}) { ##Handle special cases like "S.W.A.T"
       # Replace the original name value with the one found in _exceptionList
-      $showData->{name} = $self->{_exceptionList}{$showData->{name}};
+      $showData->{show_name} = $self->{_exceptionList}{$showData->{show_name}};
     } else {
       # Handle normally using '.' as the space marker name "Somthing.this" becomes "Something this"
-      $showData = Video::Filename::new($file, { spaces => '.'});
+      $showData = File::TVShow::Info->new($file, { spaces => '.'});
     }
 
     # If we don't have a show_path skip. Probably an unhandled show name
     # store it in the UnhandledFileNames hash for reporting later.
-    if (!defined $self->show_path($showData->{name})) {
-      $self->{UnhandledFileNames}{$file} = $showData->{name};
+    if (!defined $self->show_path($showData->{show_name})) {
+      $self->{UnhandledFileNames}{$file} = $showData->{show_name};
       next;
     }
     # Create the path string for storing the file in the right place
-    $destination = $self->show_folder() . $self->show_path($showData->{name});
+    $destination = $self->show_folder() . $self->show_path($showData->{show_name});
     # if this is true. Update the $destination and create the season subfolder if required.
     # if this is false. Do not append the season folder. files should just be stored in the root of the show folder.
     if($self->season_folder()) {
