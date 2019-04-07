@@ -4,16 +4,15 @@ use 5.012004;
 use strict;
 use warnings;
 use Carp;
-
 use File::Path qw(make_path);
 use File::Copy;
-use Video::Filename;
+use File::TVShow::Info;
 
 require Exporter;
 
 our @ISA = qw(Exporter);
 
-our $VERSION = '0.31';
+our $VERSION = '0.32';
 
 # Preloaded methods go here.
 
@@ -179,31 +178,34 @@ sub process_new_shows {
     } else {
       $self->process_new_shows($curr_dir . $file . "/") if -d $curr_dir . $file;
     };
-    next if ($file !~ m/s\d\de\d\d/i); # skip if SXXEXX is not present in file name
+    # next if ($file !~ m/s\d\de\d\d/i); # skip if SXXEXX is not present in file name
     my $showData;
     # Extract show name, Season and Episode
-    $showData = Video::Filename::new($file);
+    #$showData = Video::Filename::new($file);
+    $showData = File::TVShow::Info->new($file);
+    next if !$showData->is_tv_show();
     # Apply special handling if the show is in the _exceptionList
-    if (exists $self->{_exceptionList}{$showData->{name}}) { ##Handle special cases like "S.W.A.T"
+    if (exists $self->{_exceptionList}{$showData->{organize_name}}) { ##Handle special cases like "S.W.A.T"
       # Replace the original name value with the one found in _exceptionList
-      $showData->{name} = $self->{_exceptionList}{$showData->{name}};
+      $showData->{organize_name} = $self->{_exceptionList}{$showData->{organize_name}};
     } else {
       # Handle normally using '.' as the space marker name "Somthing.this" becomes "Something this"
-      $showData = Video::Filename::new($file, { spaces => '.'});
+      # Strip periods from name.
+      $showData->{organize_name} =~ s/\./ /g;
     }
 
     # If we don't have a show_path skip. Probably an unhandled show name
     # store it in the UnhandledFileNames hash for reporting later.
-    if (!defined $self->show_path($showData->{name})) {
-      $self->{UnhandledFileNames}{$file} = $showData->{name};
+    if (!defined $self->show_path($showData->{organize_name})) {
+      $self->{UnhandledFileNames}{$file} = $showData->{organize_name};
       next;
     }
     # Create the path string for storing the file in the right place
-    $destination = $self->show_folder() . $self->show_path($showData->{name});
+    $destination = $self->show_folder() . $self->show_path($showData->{organize_name});
     # if this is true. Update the $destination and create the season subfolder if required.
     # if this is false. Do not append the season folder. files should just be stored in the root of the show folder.
     if($self->season_folder()) {
-      $destination = $self->create_season_folder($destination, $showData->{season});
+      $destination = $self->create_season_folder($destination, int($showData->{season}));
     };
     # Import the file. This will use rsync to copy the file into place and either rename or delete.
     # see move_show() for implementation details
@@ -325,7 +327,7 @@ sub create_season_folder {
 
   my $path = $_path .  '/';
 
-  if (length($season) == 0) {
+  if ($season == 0) {
     $path = $path . 'Specials'
   } else {
     $path = $path . 'Season' . $season;
