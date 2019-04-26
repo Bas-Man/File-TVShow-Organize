@@ -1,6 +1,6 @@
 package File::TVShow::Organize;
 
-use 5.012004;
+use 5.10.0
 use strict;
 use warnings;
 use Carp;
