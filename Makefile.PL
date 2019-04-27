@@ -13,5 +13,5 @@ WriteMakefile(
                            'Carp' => 0 }, # e.g., Module::Name => 1.1
     ($] >= 5.005 ?     ## Add these new keywords supported since 5.005
       (ABSTRACT_FROM  => 'lib/File/TVShow/Organize.pm', # retrieve abstract from module
-       AUTHOR         => 'Adam Spann <adam_spann@hotmail.com>') : ()),
+       AUTHOR         => 'Adam Spann <bans@cpan.org>') : ()),
 )
