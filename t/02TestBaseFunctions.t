@@ -10,7 +10,6 @@ use Data::Dumper;
 use Test::More;
 use Test::Carp;
 BEGIN { use_ok('File::TVShow::Organize') };
-BEGIN { use_ok('Video::Filename') };
 BEGIN { use_ok('File::Path')};
 BEGIN { use_ok('File::Copy')};
 BEGIN { use_ok('Cwd')};
