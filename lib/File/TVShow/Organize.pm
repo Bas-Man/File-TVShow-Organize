@@ -1,5 +1,6 @@
 package File::TVShow::Organize;
 
+use 5.10.0;
 use strict;
 use warnings;
 use Carp;
@@ -11,7 +12,7 @@ require Exporter;
 
 our @ISA = qw(Exporter);
 
-our $VERSION = '0.32';
+our $VERSION = '0.32.1';
 
 # Preloaded methods go here.
 
