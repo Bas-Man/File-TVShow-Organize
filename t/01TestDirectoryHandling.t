@@ -9,7 +9,6 @@ use Data::Dumper;
 
 use Test::More;
 use Test::Carp;
-use lib '../lib/';
 use File::TVShow::Organize;
 use File::Path;
 use File::Copy;
