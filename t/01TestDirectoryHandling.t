@@ -10,8 +10,6 @@ use Data::Dumper;
 use Test::More;
 use Test::Carp;
 use File::TVShow::Organize;
-use File::Path;
-use File::Copy;
 use Cwd;
 
 #########################
