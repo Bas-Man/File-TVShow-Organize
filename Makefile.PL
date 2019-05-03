@@ -9,6 +9,7 @@ WriteMakefile(
     PREREQ_PM         => { 'File::TVShow::Info' => 0,
                            'File::Path' => 0,
                            'File::Copy' => 0,
+                           'IPC::Cmd' => 0,
                            'Carp' => 0 }, # e.g., Module::Name => 1.1
     TEST_REQUIRES    => {
                           'Test::More' => 0,
