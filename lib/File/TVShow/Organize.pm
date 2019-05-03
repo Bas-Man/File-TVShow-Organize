@@ -5,6 +5,7 @@ use strict;
 use warnings;
 use Carp;
 use File::Path qw(make_path);
+use IPC::Cmd qw(can_run);
 use File::Copy;
 use File::TVShow::Info;
 
@@ -358,7 +359,10 @@ sub move_show {
 
   # create the command string to be used in system() call
   # Set --progress if verbose is true
-  my $command = "/usr/bin/env rsync -ta ";
+
+  # Get path to rsync using IPC::Cmd
+  my $command = can_run('rsync');
+  $command .=  " -ta ";
   $command = $command . "--progress " if ($self->verbose);
   $command = $command . $source . $file . " " . $destination;
 
