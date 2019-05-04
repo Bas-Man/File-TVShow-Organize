@@ -5,6 +5,7 @@ use strict;
 use warnings;
 use Carp;
 use File::Path qw(make_path);
+use IPC::Cmd qw(can_run);
 use File::Copy;
 use File::TVShow::Info;
 
@@ -12,7 +13,7 @@ require Exporter;
 
 our @ISA = qw(Exporter);
 
-our $VERSION = '0.34';
+our $VERSION = '0.35';
 
 # Preloaded methods go here.
 
@@ -358,7 +359,10 @@ sub move_show {
 
   # create the command string to be used in system() call
   # Set --progress if verbose is true
-  my $command = "/usr/bin/env rsync -ta ";
+
+  # Get path to rsync using IPC::Cmd
+  my $command = can_run('rsync');
+  $command .=  " -ta ";
   $command = $command . "--progress " if ($self->verbose);
   $command = $command . $source . $file . " " . $destination;
 
@@ -412,7 +416,7 @@ matching Show Folder on a media server.
 
 =head1 VERSION
 
-VERSION 0.34
+VERSION 0.35
 
 =head1 SYNOPSIS
 
