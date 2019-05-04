@@ -3,12 +3,13 @@
 
 #########################
 
+use 5.006;
 use strict;
 use warnings;
 use Data::Dumper;
 use Test::More; #tests => 6;
 use Test::Carp;
-BEGIN { use_ok( 'File::TVShow::Organize' ) };
+use File::TVShow::Organize;
 use Cwd;
 
 #########################
