@@ -842,6 +842,10 @@ I have not tested anycases where file names might be
 
 =item   L<File::Copy>
 
+=item   L<Carp>
+
+=$item  L<IPC::Cmd>
+
 =item   L<File::TVShow::Info>
 
 =back
