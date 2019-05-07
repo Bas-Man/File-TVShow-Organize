@@ -18,6 +18,7 @@ WriteMakefile(
                           'Cwd' => 0,
                           'Data::Dumper' => 0,
                           'Archive::Tar' => 0,
+                          'IPC::Cmd' => 0,
 
     },
     ($] >= 5.005 ?     ## Add these new keywords supported since 5.005
