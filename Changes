@@ -39,3 +39,14 @@ Revision history for Perl extension Video::File::TVShow::Import.
 0.32 Sunday April 7th 2019
 	- Removed Video::Filename as a requirement.
 	- Now using my own module File::TVShow::Info to get information from Filename
+
+0.35
+	- No functional changes. This release is part of getting the module to passed
+	CPAN tester tests.
+
+0.36
+	- Added tests to ensure that we can find 'rsync' if we are not able to finds
+	this command. We abort any further tests and will not install. This should
+	help with some of the CPAN testers.
+	- Started using IPC::Cmd to determine if we can find and use 'rsync' command.
+	
