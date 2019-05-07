@@ -3,11 +3,11 @@ use 5.006;
 use strict;
 use warnings;
 use Test::More;
+use IPC::Cmd qw(can_run);
 
-plan tests => 1;
+plan tests => 2;
 
-BEGIN {
-    use_ok( 'File::TVShow::Organize' ) || print "Bail out!\n";
-}
+use_ok( 'File::TVShow::Organize' ) || BAIL_OUT("Unable to load module\n");
 
-diag( "Testing File::TVShow::Organize $File::TVShow::Info::VERSION, Perl $], $^X" );
+my $command = can_run('rsync');
+like($command, qr/rsync$/, "Found rsync command\n") || BAIL_OUT("rsync not found\n");
