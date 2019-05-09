@@ -362,7 +362,7 @@ sub move_show {
 
   # Get path to rsync using IPC::Cmd
   my $command = can_run('rsync');
-  $command .=  " -ta ";
+  $command .=  " -a ";
   $command = $command . "--progress " if ($self->verbose);
   $command = $command . $source . $file . " " . $destination;
 
