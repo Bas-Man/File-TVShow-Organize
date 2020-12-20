@@ -17,5 +17,5 @@ inc/
 nytprof.out
 pod2htm*.tmp
 pm_to_blib
-File-TVShow-Parse-*
-File-TVShow-Parse-*.tar.gz
+File-TVShow-Organize-*
+File-TVShow-Organize-*.tar.gz
