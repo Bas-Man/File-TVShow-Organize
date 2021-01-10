@@ -42,3 +42,12 @@ Revision history for Perl extension Video::File::TVShow::Import.
 
 0.35.1 Wednesday December 9th 2020
 	- Update Makefile.PL with new meta data to handle rt.cpan.org being sunset.
+0.35
+	- No functional changes. This release is part of getting the module to passed
+	CPAN tester tests.
+
+0.36
+	- Added tests to ensure that we can find 'rsync' if we are not able to finds
+	this command. We abort any further tests and will not install. This should
+	help with some of the CPAN testers.
+	- Started using IPC::Cmd to determine if we can find and use 'rsync' command.

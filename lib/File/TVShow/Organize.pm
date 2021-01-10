@@ -362,7 +362,7 @@ sub move_show {
 
   # Get path to rsync using IPC::Cmd
   my $command = can_run('rsync');
-  $command .=  " -ta ";
+  $command .=  " -a ";
   $command = $command . "--progress " if ($self->verbose);
   $command = $command . $source . $file . " " . $destination;
 
@@ -841,6 +841,10 @@ I have not tested anycases where file names might be
 =item   L<File::Path>
 
 =item   L<File::Copy>
+
+=item   L<Carp>
+
+=$item  L<IPC::Cmd>
 
 =item   L<File::TVShow::Info>
 

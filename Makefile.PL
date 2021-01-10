@@ -18,6 +18,7 @@ WriteMakefile(
                           'Cwd' => 0,
                           'Data::Dumper' => 0,
                           'Archive::Tar' => 0,
+                          'IPC::Cmd' => 0,
 
     },
     (eval { ExtUtils::MakeMaker->VERSION(6.46)} ? (META_MERGE => {
